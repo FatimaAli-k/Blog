@@ -17,8 +17,14 @@
         >
 
     </androidx.recyclerview.widget.RecyclerView>
-    <include
-        layout="@layout/comment_bar"
+<!--    <include-->
+<!--        layout="@layout/comment_bar"-->
+<!--        />-->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/commentBarFrame"
+        android:name="com.example.commentBarFrame"
         />
 
 

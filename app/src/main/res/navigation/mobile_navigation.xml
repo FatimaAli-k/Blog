@@ -18,6 +18,9 @@
             android:name="loggedOut"
             app:argType="boolean"
             android:defaultValue="false" />
+        <action
+            android:id="@+id/action_nav_home_to_nav_post"
+            app:destination="@id/nav_post" />
     </fragment>
 
     <fragment
@@ -80,7 +83,15 @@
         >
         <argument android:defaultValue="true"
             android:name="loggedOut" />
+
     </action>
+
+
+    <fragment
+        android:id="@+id/nav_post"
+        android:name="com.example.blog.ui.home.ExpandedPostFragment"
+        android:label=""
+        tools:layout="@layout/expanded_post"/>
 <!--    <fragment-->
 <!--        android:id="@+id/nav_send"-->
 <!--        android:name="com.example.blog.ui.send.SendFragment"-->

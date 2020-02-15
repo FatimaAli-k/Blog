@@ -5,21 +5,21 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.blog.R;
 import com.example.blog.model.Posts;
-import com.example.blog.ui.comments.CommentsFragment;
+import com.example.blog.ui.comments.CommentsDialogFragment;
 import com.facebook.login.LoginManager;
-import com.squareup.picasso.Picasso;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
@@ -41,9 +41,7 @@ public class HomeFragment extends Fragment implements PostRecyclerViewAdapter.It
         if(getArguments().getBoolean("loggedOut")){
 
             LoginManager.getInstance().logOut();
-
             Intent intent = getActivity().getIntent();
-
             startActivity(intent);
         }
 
@@ -96,7 +94,10 @@ try {
 //        Toast.makeText(getContext(), "pos: " + position+" id: "+ catList.get(position).getId(), Toast.LENGTH_SHORT).show();
 
 
-
+//        Bundle bundle = new Bundle();
+//        bundle.putInt("catId",catList.get(position).getId());
+        Navigation.findNavController(view).navigate(R.id.action_nav_home_to_nav_post);
+//
 // Toast.makeText(getContext(), "pos: " + position, Toast.LENGTH_SHORT).show();
 
     }
@@ -109,7 +110,7 @@ try {
         bundle.putInt("postId",postid);
 
 
-        CommentsFragment cf=new CommentsFragment();
+        CommentsDialogFragment cf=new CommentsDialogFragment();
         cf.setArguments(bundle);
         FragmentTransaction ft =  getChildFragmentManager().beginTransaction();
         Fragment prev =  getChildFragmentManager().findFragmentByTag("dialog");
