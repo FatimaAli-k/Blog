@@ -5,6 +5,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -13,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.blog.R;
 
 import com.example.blog.model.Posts;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -24,6 +26,7 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
 
     private ItemClickListener mClickListener;
     private CommentClickListener mCommentClickListener;
+    private PicClickListener mPicClickListener;
 
     // data is passed into the constructor
 //    MyRecyclerViewAdapter(Context context, List<String> data) {
@@ -60,6 +63,15 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
        // holder.itemId.setText(item.getId());
         holder.postTitle.setText(posts.getTitle());
         holder.postDetails.setText(posts.getContent());
+
+
+        String img=posts.getImage();
+
+        if(img != null){
+
+            holder.postPic.setVisibility(View.VISIBLE);
+            Picasso.with(holder.postPic.getContext()).load(img).fit().centerCrop().into(holder.postPic);
+        }
 //
 
     }
@@ -75,12 +87,14 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
        TextView postTitle,postDetails,seeMore,postId,viewCount,comments;
 
+       ImageView postPic;
 
        LinearLayout contentll;
 
         ViewHolder(View itemView) {
             super(itemView);
 
+            postPic=itemView.findViewById(R.id.post_pic);
             postTitle=itemView.findViewById(R.id.postTitle);
             postDetails=itemView.findViewById(R.id.postDetails);
             postId=itemView.findViewById(R.id.psi_postId);
@@ -110,6 +124,7 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
             });
 
             comments.setOnClickListener(commnetListener);
+            postPic.setOnClickListener(picListener);
 
 
 
@@ -128,6 +143,14 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
             @Override
             public void onClick(android.view.View view) {
                 if (mCommentClickListener != null)mCommentClickListener.onCommentClick(view, getAdapterPosition());
+
+            }
+        };
+
+        View.OnClickListener picListener = new View.OnClickListener() {
+            @Override
+            public void onClick(android.view.View view) {
+                if (mPicClickListener != null)mPicClickListener.onPicClick(view, getAdapterPosition());
 
             }
         };
@@ -151,11 +174,22 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
 
 
 
+    //on comment click
     void setCommentClickListener(CommentClickListener commentClickListener) {
         this.mCommentClickListener = commentClickListener;
     }
     public interface CommentClickListener {
         void onCommentClick(View view, int position);
+    }
+
+
+
+    //on pic click
+    void setPicClickListener(PicClickListener picClickListener) {
+        this.mPicClickListener = picClickListener;
+    }
+    public interface PicClickListener {
+        void onPicClick(View view, int position);
     }
 
 }

@@ -187,7 +187,7 @@ public class MainActivity extends AppCompatActivity {
 //        if (id == R.id.nav_home) {
 //            fragment = new HomeFragment();
 //        } else if (id == R.id.nav_share) {
-//            fragment = new ShareFragment();
+//            fragment = new ProfileFragment();
 //        }
 //
 //            if (fragment != null) {

@@ -5,17 +5,13 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.Nullable;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -23,10 +19,11 @@ import com.example.blog.R;
 import com.example.blog.model.Posts;
 import com.example.blog.ui.comments.CommentsFragment;
 import com.facebook.login.LoginManager;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
-public class HomeFragment extends Fragment implements PostRecyclerViewAdapter.ItemClickListener, PostRecyclerViewAdapter.CommentClickListener{
+public class HomeFragment extends Fragment implements PostRecyclerViewAdapter.ItemClickListener, PostRecyclerViewAdapter.CommentClickListener, PostRecyclerViewAdapter.PicClickListener{
 
 //
    PostRecyclerViewAdapter adapter;
@@ -51,14 +48,20 @@ public class HomeFragment extends Fragment implements PostRecyclerViewAdapter.It
         }
 
        Posts post=new Posts();
+        post.setImage("https://square.github.io/picasso/static/sample.png");
+
+        post.setId(54);
         post.setTitle("title");
         post.setContent("content content content content content content content content content content content content content content" +
-                " content content content content content content content content content content" +
-                " content content content content content content content content content content" +
-                " content content content content content content content content content content");
+                " content content content content content content content content content content" );
         postsList.add(post);
-        for(int i=0;i<10;i++){
+
+        for(int i=0;i<5;i++){
            post=new Posts();
+//           post.setImage("https://square.github.io/picasso/static/sample.png");
+
+
+            post.setId(i);
             post.setTitle("title"+i);
             post.setContent("content content content content content content content content content content content content content content" +
                     " content content content content content content content content content content" +
@@ -77,6 +80,7 @@ try {
     adapter = new PostRecyclerViewAdapter(getContext(), postsList);
     adapter.setClickListener(this);
     adapter.setCommentClickListener(this);
+    adapter.setPicClickListener(this);
     recyclerView.setAdapter(adapter);
 }catch (Exception e){}
 
@@ -91,30 +95,9 @@ try {
     public void onItemClick(View view, final int position) {
 //        Toast.makeText(getContext(), "pos: " + position+" id: "+ catList.get(position).getId(), Toast.LENGTH_SHORT).show();
 
-//        final int postid= postsList.get(position).getId();
-//        final TextView commentsCount=view.findViewById(R.id.commentsCount);
-//        commentsCount.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//
-//                Bundle bundle = new Bundle();
-//                bundle.putInt("postId",postid);
-//
-//
-//                CommentsFragment cf=new CommentsFragment();
-//                cf.setArguments(bundle);
-//                FragmentTransaction ft =  getChildFragmentManager().beginTransaction();
-//                Fragment prev =  getChildFragmentManager().findFragmentByTag("dialog");
-//                if (prev != null) {
-//                    ft.remove(prev);
-//                }
-//                ft.addToBackStack(null);
-//
-//
-//                cf.show(ft, "dialog");
-//            }
-//        });
- Toast.makeText(getContext(), "pos: " + position, Toast.LENGTH_SHORT).show();
+
+
+// Toast.makeText(getContext(), "pos: " + position, Toast.LENGTH_SHORT).show();
 
     }
 
@@ -137,6 +120,18 @@ try {
 
 
         cf.show(ft, "dialog");
+    }
+
+
+    @Override
+    public void onPicClick(View view, final int position) {
+
+
+        PopUpClass popUpClass = new PopUpClass();
+        popUpClass.showPopupWindow(view,postsList.get(position).getImage());
+
+//        Toast.makeText(getContext(), "ooooooooooooo" , Toast.LENGTH_SHORT).show();
+
     }
 
 }
