@@ -26,6 +26,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.example.blog.model.Categories;
 import com.example.blog.volley.AppController;
 
 import org.json.JSONArray;
@@ -34,12 +35,14 @@ import org.json.JSONObject;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class WritePostActivity extends AppCompatActivity {
 
     private static String TAG = WritePostActivity.class.getSimpleName();
     ProgressDialog pDialog;
     LinearLayout mLayout;
+    ArrayList<Categories> catList=new ArrayList<>();
 
 
     @Override
@@ -52,13 +55,14 @@ public class WritePostActivity extends AppCompatActivity {
         pDialog = new ProgressDialog(this);
         pDialog.setMessage("Please wait...");
         pDialog.setCancelable(false);
+
         mLayout = (LinearLayout) findViewById(R.id.catLinearLayout);
-        Button login=findViewById(R.id.sendPostBtn);
+        Button sendPost=findViewById(R.id.sendPostBtn);
 
-        TextView textView = new TextView(this);
-        textView.setText("New text");
+//        TextView textView = new TextView(this);
+//        textView.setText("New text");
 
-        login.setOnClickListener(new View.OnClickListener() {
+       sendPost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent=new Intent(getApplicationContext(),MainActivity.class);
@@ -68,42 +72,72 @@ public class WritePostActivity extends AppCompatActivity {
         });
 
         final Button addCat=findViewById(R.id.addCatBtn);
-       addCat.setOnClickListener(new View.OnClickListener() {
+        final TextView catId=findViewById(R.id.writePost_catId);
+
+
+        Categories categories=new Categories(0,"others");
+        catList.add(categories);
+        categories=new Categories(2,"smthin");
+        catList.add(categories);
+        categories=new Categories(46,"hmmm");
+        catList.add(categories);
+
+
+
+
+            addCat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 //                getCat();
-                catName="others,something,somethingelse,blaaaaaaa,blaaaaaaaaaah,blaaaaaaaaaah";
-                String[] options=catName.split(",");
                 PopupMenu menu = new PopupMenu(getApplicationContext(), view);
-                for(int i=0;i<options.length;i++) {
 
-                    menu.getMenu().add(options[i]);
+                for(int i=0;i<catList.size();i++) {
+
+                    menu.getMenu().add(catList.get(i).getName());
 
                 }
 
+
                 menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+
 
                     @Override
                     public boolean onMenuItemClick(MenuItem popupItem) {
 
+                        int index=0;
                         String name=popupItem.getTitle().toString();
-//                        addCat.setText(name);
+                        addCat.setText(name);
 
-//                        mLayout.addView(createNewTextView(name));
-//                        mLayout.addView(createNewTag(name));
-                        final LinearLayout layout=(LinearLayout)getLayoutInflater().inflate(R.layout.tag,null);
+                        for(int i=0;i<catList.size();i++) {
 
-                        Button tagName= layout.findViewById(R.id.tag);
-                        tagName.setText(name);
-                        tagName.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                mLayout.removeView(layout);
+                           if(name.equals(catList.get(i).getName())) {
+                                index = catList.get(i).getId();
+                                break;
 
                             }
-                        });
 
-                        mLayout.addView(layout);
+                        }
+                        catId.setText(index);
+
+////                        catId.setText(catList.get(popupItem.getItemId()).getId());
+
+                        Toast.makeText(getApplicationContext(),"//"+index,Toast.LENGTH_LONG).show();
+
+
+                        //more than one tag
+//                        final LinearLayout layout=(LinearLayout)getLayoutInflater().inflate(R.layout.tag,null);
+//
+//                        Button tagName= layout.findViewById(R.id.tag);
+//                        tagName.setText(name);
+//                        tagName.setOnClickListener(new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View view) {
+//                                mLayout.removeView(layout);
+//
+//                            }
+//                        });
+//
+//                        mLayout.addView(layout);
 
                         return true;
                     }
@@ -125,21 +159,7 @@ public class WritePostActivity extends AppCompatActivity {
 //        return textView;
 //    }
 
-    private LinearLayout createNewTag(String text) {
 
-        LinearLayout layout=(LinearLayout)getLayoutInflater().inflate(R.layout.tag,null);
-
-       Button tagName= layout.findViewById(R.id.tag);
-       tagName.setText(text);
-       tagName.setOnClickListener(new View.OnClickListener() {
-           @Override
-           public void onClick(View view) {
-
-           }
-       });
-
-        return  layout;
-    }
 
 
 
@@ -208,58 +228,8 @@ public class WritePostActivity extends AppCompatActivity {
      * Method to make json array request where response starts with [
      * */
 
-    String catName="";
 
 
-    private void getCat() {
-        showpDialog();
-
-        String url="https://jsonblob.com/api/33e90975-4cc5-11ea-97f8-0138070f897a";
-        JsonArrayRequest req = new JsonArrayRequest(url,
-                new Response.Listener<JSONArray>() {
-                    @Override
-                    public void onResponse(JSONArray response) {
-                        Log.d(TAG, response.toString());
-
-                        try {
-                            // Parsing json array response
-                            // loop through each json object
-                           catName = "";
-                            for (int i = 0; i < response.length(); i++) {
-
-                                JSONObject object = (JSONObject) response
-                                        .get(i);
-
-                                String name = object.getString("name");
 
 
-                               catName += name + ",";
-
-
-                            }
-
-//
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                            Toast.makeText(getApplicationContext(),
-                                    "Error: " + e.getMessage(),
-                                    Toast.LENGTH_LONG).show();
-                        }
-
-                        hidepDialog();
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                VolleyLog.d(TAG, "Error: " + error.getMessage());
-                Toast.makeText(getApplicationContext(),
-                        error.getMessage(), Toast.LENGTH_SHORT).show();
-                hidepDialog();
-            }
-        });
-
-        // Adding request to request queue
-        AppController.getInstance().addToRequestQueue(req);
-    }
 }

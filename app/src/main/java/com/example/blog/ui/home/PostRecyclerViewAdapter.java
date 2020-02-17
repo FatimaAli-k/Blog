@@ -119,11 +119,12 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
         ProgressBar progressBar;
        TextView postTitle,postDetails,seeMore,postId,viewCount,comments;
        ImageView postPic;
-       LinearLayout contentll;
+       LinearLayout contentll,catLL;
 
         ViewHolder(View itemView) {
             super(itemView);
             if(type){
+
             postPic = itemView.findViewById(R.id.post_pic);
             postTitle = itemView.findViewById(R.id.postTitle);
             postDetails = itemView.findViewById(R.id.postDetails);
@@ -132,6 +133,9 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
             contentll = itemView.findViewById(R.id.contentLL);
             viewCount = itemView.findViewById(R.id.viewsCount);
             comments = itemView.findViewById(R.id.commentsCount);
+
+            catLL=itemView.findViewById(R.id.post_catLL);
+
 
             if(postDetails.getLineCount()<3){
                 seeMore.setVisibility(View.GONE);

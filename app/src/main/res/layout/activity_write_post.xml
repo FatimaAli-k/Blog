@@ -89,6 +89,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
 
+
     <Button
         android:id="@+id/addCatBtn"
         android:layout_width="0dp"
@@ -125,15 +126,11 @@
             android:layout_height="match_parent"
             android:orientation="horizontal"
             >
-<!--            <TextView-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:text="cat"-->
-<!--                android:textSize="20sp"-->
-<!--                android:background="@drawable/bg_button"-->
-<!--                android:paddingHorizontal="20dp"-->
-<!--                android:layout_marginHorizontal="5dp"-->
-<!--                />-->
+             <TextView
+                 android:id="@+id/writePost_catId"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:visibility="gone" />
 
 
         </LinearLayout>
