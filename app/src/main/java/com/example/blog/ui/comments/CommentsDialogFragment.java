@@ -42,9 +42,12 @@ public class CommentsDialogFragment extends DialogFragment implements CommentsRe
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-       View view = inflater.inflate(R.layout.fragment_comments, container,false);
+       View view = inflater.inflate(R.layout.dialog_comments_fragment, container,false);
+        CommentBarFragment commentBar=new CommentBarFragment();
+        getChildFragmentManager().beginTransaction().replace(R.id.commentBarFrame, commentBar, "commentBarFrame").commit();
 
         getDialog().setTitle("CommentsDialogFragment");
+        getDialog().getWindow().setBackgroundDrawableResource(R.drawable.bg_round_corner);
 
 //        int width = LinearLayout.LayoutParams.MATCH_PARENT;
 //        int height = LinearLayout.LayoutParams.MATCH_PARENT;
@@ -55,29 +58,29 @@ public class CommentsDialogFragment extends DialogFragment implements CommentsRe
 //        //Set the location of the window on the screen
 //        popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
 
-        int postId=0;
-
-
-
-        if(getArguments()!=null) {
-            postId = getArguments().getInt("postId");
-
-        }
-
-        Comments com=new Comments();
-        com.setContent("comments"+postId);
-        commentsList.add(com);
-
-        RecyclerView recyclerView = view.findViewById(R.id.comments_recycler_view);
-        commentsLinearLayout = view.findViewById(R.id.commentsLinearLayout);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        adapter= new CommentsRecyclerViewAdapter( getContext(), commentsList);
-        adapter.setClickListener(this);
-        recyclerView.setAdapter(adapter);
-
-       CommentBarFragment commentBar=new CommentBarFragment();
-        FragmentManager fm = getChildFragmentManager();
-        fm.beginTransaction().replace(R.id.commentBarFrame, commentBar, "commentBarFrame").commit();
+//        int postId=0;
+//
+//
+//
+//        if(getArguments()!=null) {
+//            postId = getArguments().getInt("postId");
+//
+//        }
+//
+//        Comments com=new Comments();
+//        com.setContent("comments"+postId);
+//        commentsList.add(com);
+//
+//        RecyclerView recyclerView = view.findViewById(R.id.comments_recycler_view);
+//        commentsLinearLayout = view.findViewById(R.id.commentsLinearLayout);
+//        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+//        adapter= new CommentsRecyclerViewAdapter( getContext(), commentsList);
+//        adapter.setClickListener(this);
+//        recyclerView.setAdapter(adapter);
+//
+//       CommentBarFragment commentBar=new CommentBarFragment();
+//        FragmentManager fm = getChildFragmentManager();
+//        fm.beginTransaction().replace(R.id.commentBarFrame, commentBar, "commentBarFrame").commit();
 
         return view;
     }

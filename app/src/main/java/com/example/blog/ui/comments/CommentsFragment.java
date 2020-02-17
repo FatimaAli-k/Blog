@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -31,6 +32,7 @@ import java.util.Map;
 public class CommentsFragment extends Fragment implements CommentsRecyclerViewAdapter.ItemClickListener {
 
 
+    RecyclerView recyclerView;
     private String TAG = "commentsFragment";
     IResult mResultCallback = null;
     FetchJson mVolleyService;
@@ -41,6 +43,7 @@ public class CommentsFragment extends Fragment implements CommentsRecyclerViewAd
   CommentsRecyclerViewAdapter adapter;
     LinearLayout commentsLinearLayout;
     ArrayList<Comments> commentsList =new ArrayList<>();
+
 
     public CommentsFragment(){}
 
@@ -60,34 +63,41 @@ public class CommentsFragment extends Fragment implements CommentsRecyclerViewAd
         }
 
 
-        pDialog = new ProgressDialog(getContext());
-        pDialog.setMessage("Please wait...");
-        pDialog.setCancelable(false);
+
 
         initVolleyCallback();
         mVolleyService = new FetchJson(mResultCallback,getContext());
 //        mVolleyService.getDataVolley("GETCALL","https://api.androidhive.info/volley/person_object.json");
+  String url="https://jsonblob.com/api/b3efca9c-398d-11ea-a91b-41682e589a1a";
+  mVolleyService.getArrayDataVolley("GETCALL",url);
 
-        showpDialog();
-//        mVolleyService.getArrayDataVolley("GETCALL","https://api.androidhive.info/volley/person_array.json");
-        JSONObject sendObj = null;
-
-        Map<String, Integer> params = new HashMap<>();
-        params.put("post_id", postId);
-        sendObj = new JSONObject(params);
-        mVolleyService.postDataVolley("POSTCALL", "http://192.168.1.150/datatest/post/data", sendObj);
-
+        //post request
+//        JSONObject sendObj = null;
+//        Map<String, Integer> params = new HashMap<>();
+//        params.put("post_id", postId);
+////        params.put("id", sellMenuId);
+////        params.put("user_sell_it_id", session.getshared("id"));
+//        sendObj = new JSONObject(params);
+//        mVolleyService.postDataVolley("POSTCALL", "http://192.168.1.150/datatest/post/data", sendObj);
 
 //
 
-        RecyclerView recyclerView = view.findViewById(R.id.comments_recycler_view);
+//
+
+        recyclerView = view.findViewById(R.id.comments_recycler_view);
         commentsLinearLayout = view.findViewById(R.id.commentsLinearLayout);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         adapter= new CommentsRecyclerViewAdapter( getContext(), commentsList);
         adapter.setClickListener(this);
         recyclerView.setAdapter(adapter);
 
-
+        Toolbar toolbar=getActivity().findViewById(R.id.toolbar);
+        toolbar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                recyclerView.smoothScrollToPosition(0);
+            }
+        });
 
         return view;
     }
@@ -122,6 +132,7 @@ public class CommentsFragment extends Fragment implements CommentsRecyclerViewAd
                 Log.d(TAG, "Volley requester " + requestType);
                 Log.d(TAG, "Volley JSON post" + response);
                 parsJsonArray(response);
+
 //                Toast.makeText(getContext(),"//"+response,Toast.LENGTH_LONG).show();
 
             }
@@ -129,7 +140,7 @@ public class CommentsFragment extends Fragment implements CommentsRecyclerViewAd
             @Override
             public void notifyError(String requestType,VolleyError error) {
                 Log.d(TAG, "Volley requester " + requestType);
-                Log.d(TAG, "Volley JSON post" + "That didn't work!");
+                Log.d(TAG, "Volley JSON post" + error);
             }
         };
     }
@@ -145,7 +156,7 @@ public class CommentsFragment extends Fragment implements CommentsRecyclerViewAd
                         .get(i);
 
                 String name = person.getString("name");
-                String email = person.getString("email");
+//                String email = person.getString("email");
 
 
 
@@ -156,7 +167,7 @@ public class CommentsFragment extends Fragment implements CommentsRecyclerViewAd
             }
 
             adapter.notifyDataSetChanged();
-            hidepDialog();
+
         }catch (JSONException e) {
             e.printStackTrace();
             Toast.makeText(getContext(),
@@ -166,13 +177,5 @@ public class CommentsFragment extends Fragment implements CommentsRecyclerViewAd
 
     }
 
-    private void showpDialog() {
-        if (!pDialog.isShowing())
-            pDialog.show();
-    }
 
-    private void hidepDialog() {
-        if (pDialog.isShowing())
-            pDialog.dismiss();
-    }
 }

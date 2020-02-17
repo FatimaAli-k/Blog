@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,7 +31,8 @@ import java.util.ArrayList;
 
 import static com.example.blog.ui.home.PaginationScrollListener.PAGE_START;
 
-public class HomeFragment extends Fragment implements PostRecyclerViewAdapter.ItemClickListener, PostRecyclerViewAdapter.CommentClickListener, PostRecyclerViewAdapter.PicClickListener, SwipeRefreshLayout.OnRefreshListener{
+public class HomeFragment extends Fragment implements PostRecyclerViewAdapter.ItemClickListener, PostRecyclerViewAdapter.CommentClickListener,
+        PostRecyclerViewAdapter.PicClickListener, SwipeRefreshLayout.OnRefreshListener{
 
 //
    PostRecyclerViewAdapter adapter;
@@ -50,7 +52,7 @@ public class HomeFragment extends Fragment implements PostRecyclerViewAdapter.It
 //
         View root = inflater.inflate(R.layout.fragment_home, container, false);
 //
-        Toast.makeText(getActivity(),"id"+getArguments().getInt("catId"),Toast.LENGTH_LONG).show();
+//        Toast.makeText(getActivity(),"id"+getArguments().getInt("catId"),Toast.LENGTH_LONG).show();
 
         if(getArguments().getBoolean("loggedOut")){
 
@@ -59,10 +61,14 @@ public class HomeFragment extends Fragment implements PostRecyclerViewAdapter.It
             startActivity(intent);
         }
 
+        Toast.makeText(getActivity(),"s/"+postsList.size(),Toast.LENGTH_LONG).show();
+
+//
+        FloatingActionButton fab = ((MainActivity) getActivity()).getFloatingActionButton();
+        fab.show();
 
 
-
-    swipeRefresh=root.findViewById(R.id.swipeRefresh);
+        swipeRefresh=root.findViewById(R.id.swipeRefresh);
     swipeRefresh.setOnRefreshListener(this);
     recyclerView = root.findViewById(R.id.posts_recycler_view);
     postsRelativeLayout = root.findViewById(R.id.postsRelativeLayout);
@@ -132,7 +138,7 @@ public class HomeFragment extends Fragment implements PostRecyclerViewAdapter.It
     @Override
     public void onCommentClick(View view, final int position) {
         final int postid= postsList.get(position).getId();
-       
+
         Bundle bundle = new Bundle();
         bundle.putInt("postId",postid);
 
@@ -180,11 +186,12 @@ public class HomeFragment extends Fragment implements PostRecyclerViewAdapter.It
                 for(int i=0;i<10;i++){
                     itemCount++;
 
+
                     post=new Posts();
                     post.setImage("https://square.github.io/picasso/static/sample.png");
                     post.setId(i);
                     post.setTitle("title"+i);
-                    post.setContent("content");
+                    post.setContent("vv"+itemCount);
                     postsList.add(post);
                 }
 
@@ -209,8 +216,10 @@ public class HomeFragment extends Fragment implements PostRecyclerViewAdapter.It
         itemCount = 0;
         currentPage = PAGE_START;
         isLastPage = false;
-//        adapter.clear();
+        postsList.clear();
+        adapter.notifyDataSetChanged();
         doApiCall();
+
     }
 
 

@@ -40,9 +40,10 @@ import java.util.ArrayList;
 public class WritePostActivity extends AppCompatActivity {
 
     private static String TAG = WritePostActivity.class.getSimpleName();
-    ProgressDialog pDialog;
     LinearLayout mLayout;
     ArrayList<Categories> catList=new ArrayList<>();
+    Button addCat;
+    TextView catId;
 
 
     @Override
@@ -52,11 +53,9 @@ public class WritePostActivity extends AppCompatActivity {
 //        setContentView(R.layout.terms_and_conditions);
 
 
-        pDialog = new ProgressDialog(this);
-        pDialog.setMessage("Please wait...");
-        pDialog.setCancelable(false);
 
-        mLayout = (LinearLayout) findViewById(R.id.catLinearLayout);
+
+//        mLayout = (LinearLayout) findViewById(R.id.catLinearLayout);
         Button sendPost=findViewById(R.id.sendPostBtn);
 
 //        TextView textView = new TextView(this);
@@ -71,8 +70,8 @@ public class WritePostActivity extends AppCompatActivity {
             }
         });
 
-        final Button addCat=findViewById(R.id.addCatBtn);
-        final TextView catId=findViewById(R.id.writePost_catId);
+        addCat=findViewById(R.id.addCatBtn);
+        catId=findViewById(R.id.writePost_catId);
 
 
         Categories categories=new Categories(0,"others");
@@ -117,10 +116,9 @@ public class WritePostActivity extends AppCompatActivity {
                             }
 
                         }
-                        catId.setText(index);
+                        catId.setText(""+index);
 
-////                        catId.setText(catList.get(popupItem.getItemId()).getId());
-
+////
                         Toast.makeText(getApplicationContext(),"//"+index,Toast.LENGTH_LONG).show();
 
 
@@ -150,86 +148,6 @@ public class WritePostActivity extends AppCompatActivity {
 
 
     }
-//
-//    private TextView createNewTextView(String text) {
-//
-//        final TextView textView =(TextView)getLayoutInflater().inflate(R.layout.tag, null);
-//
-//        textView.setText(text);
-//        return textView;
-//    }
-
-
-
-
-
-    private void showpDialog() {
-        if (!pDialog.isShowing())
-            pDialog.show();
-    }
-
-    private void hidepDialog() {
-        if (pDialog.isShowing())
-            pDialog.dismiss();
-    }
-
-//    private void makeJsonObjectRequest() {
-//        showpDialog();
-//
-//        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
-//                urlJsonObj, null, new Response.Listener<JSONObject>() {
-//
-//            @Override
-//            public void onResponse(JSONObject response) {
-//                Log.d(TAG, response.toString());
-//
-//                try {
-//                    // Parsing json object response
-//                    // response will be a json object
-//                    String name = response.getString("name");
-//                    String email = response.getString("email");
-//                    JSONObject phone = response.getJSONObject("phone");
-//                    String home = phone.getString("home");
-//                    String mobile = phone.getString("mobile");
-//
-//                    jsonResponse = "";
-//                    jsonResponse += "Name: " + name + "\n\n";
-//                    jsonResponse += "Email: " + email + "\n\n";
-//                    jsonResponse += "Home: " + home + "\n\n";
-//                    jsonResponse += "Mobile: " + mobile + "\n\n";
-//
-//                    txtResponse.setText(jsonResponse);
-//
-//                } catch (JSONException e) {
-//                    e.printStackTrace();
-//                    Toast.makeText(getApplicationContext(),
-//                            "Error: " + e.getMessage(),
-//                            Toast.LENGTH_LONG).show();
-//                }
-//                hidepDialog();
-//            }
-//        }, new Response.ErrorListener() {
-//
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//                VolleyLog.d(TAG, "Error: " + error.getMessage());
-//                Toast.makeText(getApplicationContext(),
-//                        error.getMessage(), Toast.LENGTH_SHORT).show();
-//                // hide the progress dialog
-//                hidepDialog();
-//            }
-//        });
-//
-//        // Adding request to request queue
-//        AppController.getInstance().addToRequestQueue(jsonObjReq);
-//    }
-
-    /**
-     * Method to make json array request where response starts with [
-     * */
-
-
-
 
 
 }

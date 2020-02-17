@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:text="cat"
         android:textSize="16sp"
-        android:background="@drawable/bg_button"
+        android:background="@drawable/bg_button_tag"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         android:layout_marginRight="5dp"

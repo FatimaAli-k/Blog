@@ -119,6 +119,7 @@ public class MainActivity extends AppCompatActivity {
 //        });
 
 
+
         View headerView =  navigationView.inflateHeaderView(R.layout.nav_header_main);
         profilePic = headerView.findViewById(R.id.profilePic);
         nameTextView=headerView.findViewById(R.id.nameTextView);
@@ -225,6 +226,7 @@ public class MainActivity extends AppCompatActivity {
     public FloatingActionButton getFloatingActionButton() {
         return fab;
     }
+
 
 
 }

@@ -34,6 +34,7 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
     private boolean isLoaderVisible = false;
     boolean type;
 
+
     // data is passed into the constructor
 //    MyRecyclerViewAdapter(Context context, List<String> data) {
 //
@@ -44,6 +45,7 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
 
         this.mInflater = LayoutInflater.from(context);
         this.postsList = itemData;
+
     }
 
     // inflates the row layout from xml when needed
@@ -75,6 +77,7 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
 //    }
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
+
 
         Posts posts= postsList.get(position);
 
@@ -123,6 +126,7 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
 
         ViewHolder(View itemView) {
             super(itemView);
+
             if(type){
 
             postPic = itemView.findViewById(R.id.post_pic);
@@ -159,6 +163,7 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
 
             comments.setOnClickListener(commnetListener);
             postPic.setOnClickListener(picListener);
+
 
 //
         }

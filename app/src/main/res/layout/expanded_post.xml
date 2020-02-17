@@ -27,6 +27,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1" />
 
+
             <FrameLayout
                 android:id="@+id/fragment2"
                 android:name="com.example.FragmentTwo"
