@@ -16,6 +16,12 @@
 
 
         <include layout="@layout/profile_header"/>
+<!--        <ImageView-->
+<!--            android:id="@+id/profile_background"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="150dp"-->
+<!--            android:background="@drawable/aqlamdefault"-->
+<!--            />-->
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

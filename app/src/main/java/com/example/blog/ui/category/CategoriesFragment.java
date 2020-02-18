@@ -1,6 +1,7 @@
 package com.example.blog.ui.category;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,16 +14,26 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.VolleyError;
 import com.example.blog.R;
 import com.example.blog.model.Categories;
+import com.example.blog.volley.FetchJson;
+import com.example.blog.volley.IResult;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
 
 public class CategoriesFragment extends Fragment implements CategoriesRecyclerViewAdapter.ItemClickListener {
 
-//    private CategoriesViewModel categoriesViewModel;
 
+
+    private String TAG = "commentsFragment";
+    IResult mResultCallback = null;
+    FetchJson mVolleyService;
    CategoriesRecyclerViewAdapter adapter;
     RelativeLayout catRelativeLayout;
     ArrayList<Categories>catList=new ArrayList<>();
@@ -32,24 +43,17 @@ public class CategoriesFragment extends Fragment implements CategoriesRecyclerVi
                              ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_categories, container,false);
 
-//        categoriesViewModel =
-//                ViewModelProviders.of(this).get(CategoriesViewModel.class);
-//        View root = inflater.inflate(R.layout.fragment_categories, container, false);
-//        final TextView textView = root.findViewById(R.id.text_tools);
-//        categoriesViewModel.getText().observe(this, new Observer<String>() {
-//            @Override
-//            public void onChanged(@Nullable String s) {
-//                textView.setText(s);
-//            }
-//        });
+        String url="http://192.168.9.108:8000/api/cat";
+        initVolleyCallback();
+        mVolleyService =new FetchJson(mResultCallback,getContext());
 
 
-        Categories cat=new Categories(2,"test");
+        mVolleyService.getArrayDataVolley("GETCALL",url);
+//
 
-        for(int i=0;i<10;i++){
-            cat=new Categories(i,"test"+i);
-            catList.add(cat);
-        }
+
+
+
 
 
 
@@ -74,4 +78,64 @@ public class CategoriesFragment extends Fragment implements CategoriesRecyclerVi
 //
 
     }
+
+
+
+    void initVolleyCallback(){
+        mResultCallback = new IResult() {
+            @Override
+            public void notifySuccess(String requestType,JSONObject response) {
+                Log.d(TAG, "Volley requester " + requestType);
+                Log.d(TAG, "Volley JSON post" + response);
+//                Toast.makeText(getContext(),"//"+response,Toast.LENGTH_LONG).show();
+
+            }
+            @Override
+            public void notifySuccessJsonArray(String requestType,JSONArray response) {
+                Log.d(TAG, "Volley requester " + requestType);
+                Log.d(TAG, "Volley JSON post" + response);
+                parsJsonArray(response);
+
+//                Toast.makeText(getContext(),"//"+response,Toast.LENGTH_LONG).show();
+
+            }
+
+            @Override
+            public void notifyError(String requestType, VolleyError error) {
+                Log.d(TAG, "Volley requester " + requestType);
+                Log.d(TAG, "Volley JSON post" + error);
+            }
+        };
+    }
+
+    void parsJsonArray(JSONArray response){
+
+
+        try {
+
+            for (int i = 0; i < response.length(); i++) {
+
+                JSONObject obj = (JSONObject) response
+                        .get(i);
+
+               int id= obj.getInt("id");
+                String name = obj.getString("name");
+                name=name.replaceAll("\n","");
+//
+        Categories cat=new Categories(id,name);
+        catList.add(cat);
+
+            }
+
+            adapter.notifyDataSetChanged();
+
+        }catch (JSONException e) {
+            e.printStackTrace();
+            Toast.makeText(getContext(),
+                    "Error: " + e.getMessage(),
+                    Toast.LENGTH_LONG).show();
+        }
+
+    }
+
 }

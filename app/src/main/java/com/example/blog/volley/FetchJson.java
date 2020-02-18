@@ -26,10 +26,10 @@ import org.json.JSONObject;
 import java.io.UnsupportedEncodingException;
 
 public class FetchJson {
-    CommentsFragment.IResult mResultCallback = null;
+   IResult mResultCallback = null;
     Context mContext;
 
-    public FetchJson(CommentsFragment.IResult resultCallback, Context context){
+    public FetchJson(IResult resultCallback, Context context){
         mResultCallback = resultCallback;
         mContext = context;
     }

@@ -52,7 +52,7 @@ public class HomeFragment extends Fragment implements PostRecyclerViewAdapter.It
 //
         View root = inflater.inflate(R.layout.fragment_home, container, false);
 //
-//        Toast.makeText(getActivity(),"id"+getArguments().getInt("catId"),Toast.LENGTH_LONG).show();
+        Toast.makeText(getActivity(),"id"+getArguments().getInt("catId"),Toast.LENGTH_LONG).show();
 
         if(getArguments().getBoolean("loggedOut")){
 
@@ -61,7 +61,6 @@ public class HomeFragment extends Fragment implements PostRecyclerViewAdapter.It
             startActivity(intent);
         }
 
-        Toast.makeText(getActivity(),"s/"+postsList.size(),Toast.LENGTH_LONG).show();
 
 //
         FloatingActionButton fab = ((MainActivity) getActivity()).getFloatingActionButton();

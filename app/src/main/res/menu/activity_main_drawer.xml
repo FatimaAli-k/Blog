@@ -42,6 +42,8 @@
                 android:icon="@drawable/ic_menu_share"
                 android:title="@string/menu_register" />
 
+           
+
         </menu>
     </item>
 

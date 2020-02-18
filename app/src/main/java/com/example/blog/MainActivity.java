@@ -130,6 +130,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //go to profile
+//                Intent intent =new Intent(getApplicationContext(),ProfileActivity.class);
+//                startActivity(intent);
+                navController.navigate(R.id.nav_profile);
+
             }
         });
 //

@@ -14,11 +14,13 @@
         android:text="cat"
         android:textAlignment="center"
         android:background="@drawable/bg_button"
-        android:textSize="30sp"
+        android:textSize="26sp"
         android:padding="5dp"
+        android:paddingRight="10dp"
+        android:paddingLeft="10dp"
         android:layout_marginTop="10dp"
         android:layout_margin="5dp"
-        android:layout_marginLeft="5dp"
+        android:gravity="center"
         android:fontFamily="@font/myfont"
 
         />

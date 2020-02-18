@@ -19,6 +19,7 @@ import com.android.volley.VolleyError;
 import com.example.blog.R;
 import com.example.blog.model.Comments;
 import com.example.blog.volley.FetchJson;
+import com.example.blog.volley.IResult;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -36,7 +37,6 @@ public class CommentsFragment extends Fragment implements CommentsRecyclerViewAd
     private String TAG = "commentsFragment";
     IResult mResultCallback = null;
     FetchJson mVolleyService;
-    String res;
     Comments com;
     private ProgressDialog pDialog;
 
@@ -69,6 +69,9 @@ public class CommentsFragment extends Fragment implements CommentsRecyclerViewAd
         mVolleyService = new FetchJson(mResultCallback,getContext());
 //        mVolleyService.getDataVolley("GETCALL","https://api.androidhive.info/volley/person_object.json");
   String url="https://jsonblob.com/api/b3efca9c-398d-11ea-a91b-41682e589a1a";
+//        String url="http://192.168.9.108:8000/api/cat";
+
+
   mVolleyService.getArrayDataVolley("GETCALL",url);
 
         //post request
@@ -112,11 +115,7 @@ public class CommentsFragment extends Fragment implements CommentsRecyclerViewAd
         super.onResume();
 
     }
-    public interface IResult {
-         void notifySuccess(String requestType, JSONObject response);
-         void notifySuccessJsonArray(String requestType, JSONArray response);
-         void notifyError(String requestType, VolleyError error);
-    }
+
 
     void initVolleyCallback(){
         mResultCallback = new IResult() {
@@ -152,13 +151,10 @@ public class CommentsFragment extends Fragment implements CommentsRecyclerViewAd
 
             for (int i = 0; i < response.length(); i++) {
 
-                JSONObject person = (JSONObject) response
+                JSONObject obj = (JSONObject) response
                         .get(i);
 
-                String name = person.getString("name");
-//                String email = person.getString("email");
-
-
+                String name = obj.getString("name");
 
                 com=new Comments();
                 com.setContent(name);
