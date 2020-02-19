@@ -78,8 +78,7 @@ public class CommentsFragment extends Fragment implements CommentsRecyclerViewAd
 //        JSONObject sendObj = null;
 //        Map<String, Integer> params = new HashMap<>();
 //        params.put("post_id", postId);
-////        params.put("id", sellMenuId);
-////        params.put("user_sell_it_id", session.getshared("id"));
+////
 //        sendObj = new JSONObject(params);
 //        mVolleyService.postDataVolley("POSTCALL", "http://192.168.1.150/datatest/post/data", sendObj);
 

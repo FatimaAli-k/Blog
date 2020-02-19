@@ -1,5 +1,6 @@
 package com.example.blog.ui.home;
 
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.example.blog.MainActivity;
 import com.example.blog.R;
+import com.example.blog.model.Posts;
 import com.example.blog.ui.comments.CommentBarFragment;
 import com.example.blog.ui.comments.CommentsDialogFragment;
 import com.example.blog.ui.comments.CommentsFragment;
@@ -28,7 +30,9 @@ public class ExpandedPostFragment extends Fragment {
         FloatingActionButton fab = ((MainActivity) getActivity()).getFloatingActionButton();
         fab.hide();
 
-        postId=getArguments().getInt("postId");
+        Posts post=new Posts();
+        if(getArguments()!=null)
+            post=getArguments().getParcelable("post");
 
         FullPostFragment postFragment=new FullPostFragment();
         CommentsFragment commentsFragment = new CommentsFragment();
@@ -36,7 +40,8 @@ public class ExpandedPostFragment extends Fragment {
 
         //
         Bundle bundle=new Bundle();
-        bundle.putInt("postId",postId);
+        bundle.putInt("postId",post.getId());
+        bundle.putParcelable("post",post);
         postFragment.setArguments(bundle);
         commentsFragment.setArguments(bundle);
 

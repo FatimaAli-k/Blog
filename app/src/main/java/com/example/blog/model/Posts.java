@@ -1,8 +1,11 @@
 package com.example.blog.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.sql.Date;
 
-public class Posts {
+public class Posts implements Parcelable {
     int id,rate,views,status;
     String user_id,title,content,image,tags,category_id;
     Date created_at;
@@ -10,6 +13,48 @@ public class Posts {
     public Posts(){}
 
 
+    protected Posts(Parcel in) {
+        id = in.readInt();
+        rate = in.readInt();
+        views = in.readInt();
+        status = in.readInt();
+        user_id = in.readString();
+        title = in.readString();
+        content = in.readString();
+        image = in.readString();
+        tags = in.readString();
+        category_id = in.readString();
+    }
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeInt(id);
+        parcel.writeInt(rate);
+        parcel.writeInt(views);
+        parcel.writeInt(status);
+        parcel.writeString(user_id);
+        parcel.writeString(title);
+        parcel.writeString(content);
+        parcel.writeString(image);
+        parcel.writeString(tags);
+        parcel.writeString(category_id);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<Posts> CREATOR = new Creator<Posts>() {
+        @Override
+        public Posts createFromParcel(Parcel in) {
+            return new Posts(in);
+        }
+
+        @Override
+        public Posts[] newArray(int size) {
+            return new Posts[size];
+        }
+    };
 
     public int getId() {
         return id;
@@ -98,4 +143,6 @@ public class Posts {
     public void setCreated_at(Date created_at) {
         this.created_at = created_at;
     }
+
+
 }

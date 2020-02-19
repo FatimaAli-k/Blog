@@ -3,7 +3,6 @@ package com.example.blog.ui.home;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Parcelable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,31 +19,42 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.android.volley.VolleyError;
 import com.example.blog.MainActivity;
 import com.example.blog.R;
 import com.example.blog.model.Posts;
 import com.example.blog.ui.comments.CommentsDialogFragment;
+import com.example.blog.volley.FetchJson;
+import com.example.blog.volley.IResult;
 import com.facebook.login.LoginManager;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
-import static com.example.blog.ui.home.PaginationScrollListener.PAGE_START;
 
-public class HomeFragment extends Fragment implements PostRecyclerViewAdapter.ItemClickListener, PostRecyclerViewAdapter.CommentClickListener,
-        PostRecyclerViewAdapter.PicClickListener, SwipeRefreshLayout.OnRefreshListener{
+public class HomeFragment extends Fragment implements  SwipeRefreshLayout.OnRefreshListener, ClickListenerInterface{
 
-//
-   PostRecyclerViewAdapter adapter;
+    //
+    PostRecyclerAdapter adapter;
     RelativeLayout postsRelativeLayout;
-    ArrayList<Posts> postsList=new ArrayList<>();
+    //    ArrayList<Posts> postsList=new ArrayList<>();
     RecyclerView recyclerView;
     SwipeRefreshLayout swipeRefresh;
-    private int currentPage = PAGE_START;
-    private boolean isLastPage = false;
-    private int totalPage = 10;
+
+
+    private static final int PAGE_START = 1;
     private boolean isLoading = false;
-    int itemCount = 0;
+    private boolean isLastPage = false;
+    private int TOTAL_PAGES = 3;
+    private int currentPage = PAGE_START;
+
+    private String TAG = "commentsFragment";
+    IResult mResultCallback = null;
+    FetchJson mVolleyService;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -68,48 +78,62 @@ public class HomeFragment extends Fragment implements PostRecyclerViewAdapter.It
 
 
         swipeRefresh=root.findViewById(R.id.swipeRefresh);
-    swipeRefresh.setOnRefreshListener(this);
-    recyclerView = root.findViewById(R.id.posts_recycler_view);
-    postsRelativeLayout = root.findViewById(R.id.postsRelativeLayout);
-    LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
-    recyclerView.setLayoutManager(layoutManager);
-    adapter = new PostRecyclerViewAdapter(getContext(), postsList);
-    adapter.setClickListener(this);
-    adapter.setCommentClickListener(this);
-    adapter.setPicClickListener(this);
-    recyclerView.setAdapter(adapter);
+        swipeRefresh.setOnRefreshListener(this);
+        recyclerView = root.findViewById(R.id.posts_recycler_view);
+        postsRelativeLayout = root.findViewById(R.id.postsRelativeLayout);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        recyclerView.setLayoutManager(layoutManager);
+        adapter = new PostRecyclerAdapter(getContext());
+
+        adapter.setClickListener(this);
+        adapter.setCommentClickListener(this);
+        adapter.setPicClickListener(this);
+        recyclerView.setAdapter(adapter);
 
 
         //scroll to top
-    Toolbar toolbar=getActivity().findViewById(R.id.toolbar);
-    toolbar.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            recyclerView.smoothScrollToPosition(0);
-        }
-    });
+        Toolbar toolbar=getActivity().findViewById(R.id.toolbar);
+        toolbar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                recyclerView.smoothScrollToPosition(0);
+            }
+        });
 
-    //get posts from api
-        try {
-            doApiCall();
-        }catch (Exception e){
-            Toast.makeText(getContext(),"/"+e,Toast.LENGTH_LONG).show();
-        }
+        //get posts from api
+
+        loadFirstPage();
+//
+//\/2CAL2433ZeIihfX1Hb2139CX0pW.jpg
 
         /**
          * add scroll listener while user reach in bottom load more will call
          */
-        recyclerView.addOnScrollListener(new PaginationScrollListener(layoutManager) {
-            @Override
+        recyclerView.addOnScrollListener(new PaginationListener(layoutManager) {
             protected void loadMoreItems() {
                 isLoading = true;
-                currentPage++;
-                doApiCall();
+                currentPage += 1;
+
+                // mocking network delay for API call
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        loadNextPage();
+
+                    }
+                }, 1000);
             }
+
+            @Override
+            public int getTotalPageCount() {
+                return TOTAL_PAGES;
+            }
+
             @Override
             public boolean isLastPage() {
                 return isLastPage;
             }
+
             @Override
             public boolean isLoading() {
                 return isLoading;
@@ -117,26 +141,192 @@ public class HomeFragment extends Fragment implements PostRecyclerViewAdapter.It
         });
 
 
+//        String url="http://192.168.9.108:8000/api/post";
+//        String url="https://api.themoviedb.org/3/movie/top_rated?api_key=ee462a4199c4e7ec8d93252494ba661b&language=en-US&page=1";
+////        initVolleyCallback();
+//        mVolleyService =new FetchJson(mResultCallback,getContext());
+//        mVolleyService.getDataVolley("GETCALL",url);
 
 
 
         return root;
     }
 
-    //on post click open expanded post fragment
+
+    private void loadFirstPage() {
+        Log.d(TAG, "loadFirstPage: ");
+////        List<Posts> movies = Movie.createMovies(adapter.getItemCount());
+////        progressBar.setVisibility(View.GONE);
+//        Posts post;
+////
+//        ArrayList<Posts> postsList=new ArrayList<>();
+//
+//        for(int i=0;i<10;i++){
+//
+//            post=new Posts();
+////                    post.setImage("https://square.github.io/picasso/static/sample.png");
+//            post.setTitle(""+i);
+//
+//            postsList.add(post);
+//        }
+//        adapter.addAll(postsList);
+//
+//        if (currentPage <= TOTAL_PAGES) adapter.addLoadingFooter();
+//        else isLastPage = true;
+
+        String url="https://api.themoviedb.org/3/tv/popular?api_key=ee462a4199c4e7ec8d93252494ba661b&language=en-US&page=1";
+        initVolleyCallback();
+        mVolleyService =new FetchJson(mResultCallback,getContext());
+        mVolleyService.getDataVolley("GETCALL",url);
+
+    }
+
+    private void loadNextPage() {
+        Log.d(TAG, "loadNextPage: " + currentPage);
+
+        String url="https://api.themoviedb.org/3/tv/popular?api_key=ee462a4199c4e7ec8d93252494ba661b&language=en-US&page="+currentPage;
+        initVolleyCallback();
+        mVolleyService =new FetchJson(mResultCallback,getContext());
+        mVolleyService.getDataVolley("GETCALL",url);
+    }
+
+
     @Override
-    public void onItemClick(View view, final int position) {
+    public void onRefresh() {
+        // itemCount = 0;
+        currentPage = PAGE_START;
+        isLastPage = false;
+        adapter.clear();
+        loadFirstPage();
+    }
+
+    void initVolleyCallback(){
+        mResultCallback = new IResult() {
+            @Override
+            public void notifySuccess(String requestType,final JSONObject response) {
+                Log.d(TAG, "Volley requester " + requestType);
+                Log.d(TAG, "Volley JSON post" + response);
+//                Toast.makeText(getContext(),"//"+response,Toast.LENGTH_LONG).show();
+
+                adapter.removeLoadingFooter();
+                isLoading = false;
+                Posts post;
+//
+                ArrayList<Posts> postsList=new ArrayList<>();
+
+//
+
+                postsList= parsJsonObj(response);
+                swipeRefresh.setRefreshing(false);
+                adapter.addAll(postsList);
+
+
+                if (currentPage <= TOTAL_PAGES) adapter.addLoadingFooter();
+                else isLastPage = true;
+                //
+                Toast.makeText(getContext(),"//"+currentPage,Toast.LENGTH_LONG).show();
+
+
+            }
+            @Override
+            public void notifySuccessJsonArray(String requestType, JSONArray response) {
+                Log.d(TAG, "Volley requester " + requestType);
+                Log.d(TAG, "Volley JSON post" + response);
+
+
+//                Toast.makeText(getContext(),"//"+response,Toast.LENGTH_LONG).show();
+
+            }
+
+            @Override
+            public void notifyError(String requestType, VolleyError error) {
+                Log.d(TAG, "Volley requester " + requestType);
+                Log.d(TAG, "Volley JSON post" + error);
+            }
+        };
+    }
+    //
+    ArrayList<Posts> parsJsonObj(JSONObject response){
+
+        ArrayList<Posts> postsList=new ArrayList<>();
+        try {
+
+//            currentPage=response.getInt("current_page");
+//
+//            totalPage=response.getInt("last_page");
+//
+//           JSONArray data=response.getJSONArray("data");
+//           Toast.makeText(getContext(),""+data.length(),Toast.LENGTH_LONG).show();
+//           for(int i=0;i<data.length();i++){
+//               itemCount++;
+//               JSONObject obj=data.getJSONObject(i);
+//               int id=obj.getInt("id");
+//               String title=obj.getString("title");
+//               String content=obj.getString("content");
+
+//            currentPage=response.getInt("page");
+//
+            TOTAL_PAGES=response.getInt("total_pages");
+
+            JSONArray data=response.getJSONArray("results");
+            Toast.makeText(getContext(),""+data.length(),Toast.LENGTH_LONG).show();
+            for(int i=0;i<data.length();i++){
+//                itemCount++;
+                JSONObject obj=data.getJSONObject(i);
+                int id=obj.getInt("id");
+                String title=obj.getString("name");
+                String content=obj.getString("overview");
+                String img=obj.getString("poster_path");
+
+                img=img.replace("\\","");
+              String imgUrl= "https://image.tmdb.org/t/p/original/"+img;
+
+                Posts post=new Posts();
+                post.setId(id);
+                post.setImage(imgUrl);
+                post.setTitle(title);
+                post.setContent(content);
+                postsList.add(post);
+            }
+
+
+
+
+//            adapter.notifyDataSetChanged();
+
+        }catch (JSONException e) {
+            e.printStackTrace();
+            Toast.makeText(getContext(),
+                    "Error: " + e.getMessage(),
+                    Toast.LENGTH_LONG).show();
+        }
+
+        return postsList;
+    }
+
+    @Override
+    public void onItemClick(View view, int position) {
+
         Bundle bundle = new Bundle();
-        bundle.putInt("postId",postsList.get(position).getId());
+//        bundle.putInt("post",adapter.getItem(position).getId());
+        bundle.putParcelable("post",adapter.getItem(position));
+
         Navigation.findNavController(view).navigate(R.id.action_nav_home_to_nav_post,bundle);
 //
- Toast.makeText(getContext(), "pos: " + position, Toast.LENGTH_SHORT).show();
+    }
+
+
+    @Override
+    public void onPicClick(View view, int position) {
+        PopUpClass popUpClass = new PopUpClass();
+        popUpClass.showPopupWindow(view,adapter.getItem(position).getImage());
 
     }
 
     @Override
-    public void onCommentClick(View view, final int position) {
-        final int postid= postsList.get(position).getId();
+    public void onCommentClick(View view, int position) {
+
+        final int postid= adapter.getItem(position).getId();
 
         Bundle bundle = new Bundle();
         bundle.putInt("postId",postid);
@@ -154,72 +344,4 @@ public class HomeFragment extends Fragment implements PostRecyclerViewAdapter.It
 
         cf.show(ft, "dialog");
     }
-
-
-    @Override
-    public void onPicClick(View view, final int position) {
-
-
-        PopUpClass popUpClass = new PopUpClass();
-        popUpClass.showPopupWindow(view,postsList.get(position).getImage());
-
-//        Toast.makeText(getContext(), "ooooooooooooo" , Toast.LENGTH_SHORT).show();
-
-    }
-
-
-
-    /**
-     * do api call here to fetch data from server
-     */
-    private void doApiCall() {
-
-        new Handler().postDelayed(new Runnable() {
-            //put all run() method code on Success of APIs
-            @Override
-            public void run() {
-                //get json data from api
-
-                Posts post;
-
-                for(int i=0;i<10;i++){
-                    itemCount++;
-
-
-                    post=new Posts();
-                    post.setImage("https://square.github.io/picasso/static/sample.png");
-                    post.setId(i);
-                    post.setTitle("title"+i);
-                    post.setContent("vv"+itemCount);
-                    postsList.add(post);
-                }
-
-                /**
-                 * manage progress view
-                 */
-                if (currentPage != PAGE_START) adapter.removeLoading();
-                adapter.addItems(postsList);
-                swipeRefresh.setRefreshing(false);
-                // check weather is last page or not
-                if (currentPage < totalPage) {
-                    adapter.addLoading();
-                } else {
-                    isLastPage = true;
-                }
-                isLoading = false;
-            }
-        }, 1500);
-    }
-    @Override
-    public void onRefresh() {
-        itemCount = 0;
-        currentPage = PAGE_START;
-        isLastPage = false;
-        postsList.clear();
-        adapter.notifyDataSetChanged();
-        doApiCall();
-
-    }
-
-
 }
