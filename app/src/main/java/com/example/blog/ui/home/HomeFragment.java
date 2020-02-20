@@ -131,8 +131,7 @@ public class HomeFragment extends Fragment implements  SwipeRefreshLayout.OnRefr
 //        Parcelable state = layoutManager.onSaveInstanceState();
 //        layoutManager.onRestoreInstanceState(state);
 
-//        loadFirstPage();
-loadNextPage();
+        loadFirstPage();
 
         /**
          * add scroll listener while user reach in bottom load more will call
@@ -140,7 +139,7 @@ loadNextPage();
         recyclerView.addOnScrollListener(new PaginationListener(layoutManager) {
             protected void loadMoreItems() {
                  isLoading = true;
-                currentPage += 1;
+//                currentPage += 1;
 
 //                // mocking network delay for API call
 //                new Handler().postDelayed(new Runnable() {
@@ -262,8 +261,9 @@ loadNextPage();
             public void notifySuccess(String requestType,final JSONObject response) {
                 Log.d(TAG, "Volley requester " + requestType);
                 Log.d(TAG, "Volley JSON post" + response);
+                errortxt.setVisibility(View.GONE);
 //                Toast.makeText(getContext(),"//"+response,Toast.LENGTH_LONG).show();
-
+                currentPage += 1;
                 adapter.removeLoadingFooter();
                 isLoading = false;
 
@@ -277,7 +277,7 @@ loadNextPage();
                 if (currentPage <= TOTAL_PAGES) adapter.addLoadingFooter();
                 else isLastPage = true;
                 //
-                Toast.makeText(getContext(),"//"+currentPage,Toast.LENGTH_LONG).show();
+//                Toast.makeText(getContext(),"//"+currentPage,Toast.LENGTH_LONG).show();
 
 
             }
@@ -295,12 +295,13 @@ loadNextPage();
             public void notifyError(String requestType, VolleyError error) {
                 Log.d(TAG, "Volley requester " + requestType);
                 Log.d(TAG, "Volley JSON post" + error);
-                errortxt.setText("no connection... "+error);
+                errortxt.setText("no connection... ");
+                Toast.makeText(getContext(),""+error,Toast.LENGTH_LONG).show();
                 errortxt.setVisibility(View.VISIBLE);
                 swipeRefresh.setRefreshing(false);
 
-//                adapter.removeLoadingFooter();
-//                isLoading = false;
+                adapter.removeLoadingFooter();
+                isLoading = false;
 
 
             }
