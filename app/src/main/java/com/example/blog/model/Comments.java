@@ -5,7 +5,7 @@ import java.sql.Date;
 public class Comments {
     int id,post_id;
     String user_id,content;
-    Date created_at;
+    String created_at;
 
     public Comments(){}
 
@@ -41,11 +41,11 @@ public class Comments {
         this.content = content;
     }
 
-    public Date getCreated_at() {
+    public String getCreated_at() {
         return created_at;
     }
 
-    public void setCreated_at(Date created_at) {
+    public void setCreated_at(String created_at) {
         this.created_at = created_at;
     }
 }

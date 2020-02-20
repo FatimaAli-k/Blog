@@ -3,11 +3,14 @@ package com.example.blog.ui.home;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -19,11 +22,17 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.blog.MainActivity;
 import com.example.blog.R;
+import com.example.blog.URLs;
 import com.example.blog.model.Posts;
 import com.example.blog.ui.comments.CommentsDialogFragment;
+import com.example.blog.volley.AppController;
 import com.example.blog.volley.FetchJson;
 import com.example.blog.volley.IResult;
 import com.facebook.login.LoginManager;
@@ -34,16 +43,22 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class HomeFragment extends Fragment implements  SwipeRefreshLayout.OnRefreshListener, ClickListenerInterface{
 
-    //
+     LinearLayoutManager layoutManager;
     PostRecyclerAdapter adapter;
     RelativeLayout postsRelativeLayout;
     //    ArrayList<Posts> postsList=new ArrayList<>();
     RecyclerView recyclerView;
     SwipeRefreshLayout swipeRefresh;
+//
+    private final String KEY_RECYCLER_STATE = "recycler_state";
+    private static Bundle mBundleRecyclerViewState;
+
 
 
     private static final int PAGE_START = 1;
@@ -51,12 +66,23 @@ public class HomeFragment extends Fragment implements  SwipeRefreshLayout.OnRefr
     private boolean isLastPage = false;
     private int TOTAL_PAGES = 3;
     private int currentPage = PAGE_START;
-
+    URLs baseUrl=new URLs();
+    final String postRoute ="post";
+    final String viewsRoute="updateviews";
     private String TAG = "commentsFragment";
     IResult mResultCallback = null;
     FetchJson mVolleyService;
+    TextView errortxt;
 
+    String firstPageUrl,incViewUrl;
 
+//
+//    @Override
+//    public void onSaveInstanceState(Bundle outState) {
+//        outState.putBundle(KEY_RECYCLER_STATE, mBundleRecyclerViewState);
+//        super.onSaveInstanceState(outState);
+//    }
+    
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 //
@@ -71,8 +97,10 @@ public class HomeFragment extends Fragment implements  SwipeRefreshLayout.OnRefr
             startActivity(intent);
         }
 
+       firstPageUrl=baseUrl.getUrl(postRoute);
+       incViewUrl=baseUrl.getUrl(viewsRoute);
 
-//
+
         FloatingActionButton fab = ((MainActivity) getActivity()).getFloatingActionButton();
         fab.show();
 
@@ -81,14 +109,17 @@ public class HomeFragment extends Fragment implements  SwipeRefreshLayout.OnRefr
         swipeRefresh.setOnRefreshListener(this);
         recyclerView = root.findViewById(R.id.posts_recycler_view);
         postsRelativeLayout = root.findViewById(R.id.postsRelativeLayout);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+       layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
         adapter = new PostRecyclerAdapter(getContext());
 
         adapter.setClickListener(this);
         adapter.setCommentClickListener(this);
         adapter.setPicClickListener(this);
+        adapter.setPostExpandClickListener(this);
         recyclerView.setAdapter(adapter);
+
+
 
 
         //scroll to top
@@ -102,9 +133,11 @@ public class HomeFragment extends Fragment implements  SwipeRefreshLayout.OnRefr
 
         //get posts from api
 
+//        Parcelable state = layoutManager.onSaveInstanceState();
+//        layoutManager.onRestoreInstanceState(state);
+
         loadFirstPage();
-//
-//\/2CAL2433ZeIihfX1Hb2139CX0pW.jpg
+
 
         /**
          * add scroll listener while user reach in bottom load more will call
@@ -141,17 +174,43 @@ public class HomeFragment extends Fragment implements  SwipeRefreshLayout.OnRefr
         });
 
 
-//        String url="http://192.168.9.108:8000/api/post";
-//        String url="https://api.themoviedb.org/3/movie/top_rated?api_key=ee462a4199c4e7ec8d93252494ba661b&language=en-US&page=1";
-////        initVolleyCallback();
-//        mVolleyService =new FetchJson(mResultCallback,getContext());
-//        mVolleyService.getDataVolley("GETCALL",url);
 
+        errortxt=root.findViewById(R.id.homeErrorTextView);
 
 
         return root;
     }
 
+
+
+//    @Override
+    public void onPause()
+    {
+        super.onPause();
+        Log.d(TAG, "save: ");
+        // save RecyclerView state
+        mBundleRecyclerViewState = new Bundle();
+        Parcelable listState = layoutManager.onSaveInstanceState();
+        mBundleRecyclerViewState.putParcelable(KEY_RECYCLER_STATE, listState);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        Log.d(TAG, "restore: ");
+
+        new Handler().postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                if (mBundleRecyclerViewState != null){
+                Parcelable listState = mBundleRecyclerViewState.getParcelable(KEY_RECYCLER_STATE);
+               layoutManager.onRestoreInstanceState(listState);}
+
+            }
+        }, 500);
+    }
 
     private void loadFirstPage() {
         Log.d(TAG, "loadFirstPage: ");
@@ -174,20 +233,22 @@ public class HomeFragment extends Fragment implements  SwipeRefreshLayout.OnRefr
 //        if (currentPage <= TOTAL_PAGES) adapter.addLoadingFooter();
 //        else isLastPage = true;
 
-        String url="https://api.themoviedb.org/3/tv/popular?api_key=ee462a4199c4e7ec8d93252494ba661b&language=en-US&page=1";
+
+//        String url="https://api.themoviedb.org/3/tv/popular?api_key=ee462a4199c4e7ec8d93252494ba661b&language=en-US&page=1";
         initVolleyCallback();
         mVolleyService =new FetchJson(mResultCallback,getContext());
-        mVolleyService.getDataVolley("GETCALL",url);
+        mVolleyService.getDataVolley("GETCALL",firstPageUrl);
 
     }
 
     private void loadNextPage() {
         Log.d(TAG, "loadNextPage: " + currentPage);
 
-        String url="https://api.themoviedb.org/3/tv/popular?api_key=ee462a4199c4e7ec8d93252494ba661b&language=en-US&page="+currentPage;
+        String nextPageUrl=baseUrl.getNextPageUrl(postRoute,currentPage);
+//        String url="https://api.themoviedb.org/3/tv/popular?api_key=ee462a4199c4e7ec8d93252494ba661b&language=en-US&page="+currentPage;
         initVolleyCallback();
         mVolleyService =new FetchJson(mResultCallback,getContext());
-        mVolleyService.getDataVolley("GETCALL",url);
+        mVolleyService.getDataVolley("GETCALL",nextPageUrl);
     }
 
 
@@ -210,11 +271,8 @@ public class HomeFragment extends Fragment implements  SwipeRefreshLayout.OnRefr
 
                 adapter.removeLoadingFooter();
                 isLoading = false;
-                Posts post;
-//
-                ArrayList<Posts> postsList=new ArrayList<>();
 
-//
+                ArrayList<Posts> postsList;
 
                 postsList= parsJsonObj(response);
                 swipeRefresh.setRefreshing(false);
@@ -242,6 +300,11 @@ public class HomeFragment extends Fragment implements  SwipeRefreshLayout.OnRefr
             public void notifyError(String requestType, VolleyError error) {
                 Log.d(TAG, "Volley requester " + requestType);
                 Log.d(TAG, "Volley JSON post" + error);
+                errortxt.setText("something is wrong with the server... ");
+                errortxt.setVisibility(View.VISIBLE);
+                swipeRefresh.setRefreshing(false);
+
+
             }
         };
     }
@@ -251,41 +314,53 @@ public class HomeFragment extends Fragment implements  SwipeRefreshLayout.OnRefr
         ArrayList<Posts> postsList=new ArrayList<>();
         try {
 
-//            currentPage=response.getInt("current_page");
+//  //movieDB api test
+////            TOTAL_PAGES=response.getInt("total_pages");
+////
+////            JSONArray data=response.getJSONArray("results");
+////            Toast.makeText(getContext(),""+data.length(),Toast.LENGTH_LONG).show();
+////            for(int i=0;i<data.length();i++){
+//////                itemCount++;
+////                JSONObject obj=data.getJSONObject(i);
+////                int id=obj.getInt("id");
+////                String title=obj.getString("name");
+////                String content=obj.getString("overview");
+////                String img=obj.getString("poster_path");
+////
+////                img=img.replace("\\","");
+////              String imgUrl= "https://image.tmdb.org/t/p/original/"+img;
 //
-//            totalPage=response.getInt("last_page");
-//
-//           JSONArray data=response.getJSONArray("data");
-//           Toast.makeText(getContext(),""+data.length(),Toast.LENGTH_LONG).show();
-//           for(int i=0;i<data.length();i++){
-//               itemCount++;
-//               JSONObject obj=data.getJSONObject(i);
-//               int id=obj.getInt("id");
-//               String title=obj.getString("title");
-//               String content=obj.getString("content");
 
-//            currentPage=response.getInt("page");
-//
-            TOTAL_PAGES=response.getInt("total_pages");
 
-            JSONArray data=response.getJSONArray("results");
-            Toast.makeText(getContext(),""+data.length(),Toast.LENGTH_LONG).show();
-            for(int i=0;i<data.length();i++){
-//                itemCount++;
-                JSONObject obj=data.getJSONObject(i);
-                int id=obj.getInt("id");
-                String title=obj.getString("name");
-                String content=obj.getString("overview");
-                String img=obj.getString("poster_path");
+            TOTAL_PAGES=response.getInt("last_page");
 
-                img=img.replace("\\","");
-              String imgUrl= "https://image.tmdb.org/t/p/original/"+img;
+           JSONArray data=response.getJSONArray("data");
+           Toast.makeText(getContext(),""+data.length(),Toast.LENGTH_LONG).show();
+           for(int i=0;i<data.length();i++){
 
-                Posts post=new Posts();
+               JSONObject obj=data.getJSONObject(i);
+               int id=obj.getInt("id");
+               String title=obj.getString("title");
+               String content=obj.getString("content");
+               String created_at=obj.getString("created_at");
+               String image=obj.getString("image");
+               int views=obj.getInt("views");
+               int rate=obj.getInt("rate");
+               int status=obj.getInt("status");
+               int cat_id=obj.getInt("category_id");
+
+
+               Posts post=new Posts();
                 post.setId(id);
-                post.setImage(imgUrl);
+                post.setImage(image);
                 post.setTitle(title);
+                post.setCreated_at(created_at);
+                post.setViews(views);
+                post.setRate(rate);
+                post.setCategory_id(cat_id);
+                post.setStatus(status);
                 post.setContent(content);
+
                 postsList.add(post);
             }
 
@@ -307,12 +382,76 @@ public class HomeFragment extends Fragment implements  SwipeRefreshLayout.OnRefr
     @Override
     public void onItemClick(View view, int position) {
 
+        updateViews(incViewUrl,adapter.getItem(position).getId());
         Bundle bundle = new Bundle();
+
 //        bundle.putInt("post",adapter.getItem(position).getId());
         bundle.putParcelable("post",adapter.getItem(position));
 
         Navigation.findNavController(view).navigate(R.id.action_nav_home_to_nav_post,bundle);
 //
+    }
+
+    @Override
+    public void onPostExpandClick(View view, int position) {
+        TextView postDetails=view.findViewById(R.id.postDetails);
+        TextView seeMore = view.findViewById(R.id.seeMore);
+        Log.d("line count", ""+postDetails.getLineCount());
+                    if (postDetails.getMaxLines() == 3) {
+                        postDetails.setMaxLines(40);
+                        seeMore.setVisibility(View.GONE);
+                        //incViews
+                        updateViews(incViewUrl,adapter.getItem(position).getId());
+                    } else {
+                        postDetails.setMaxLines(3);
+                        seeMore.setVisibility(View.VISIBLE);
+
+                    }
+    }
+
+    private void updateViews(String url, int postId) {
+
+        Map<String, String> params = new HashMap<>();
+        params.put("id", String.valueOf(postId));
+
+
+
+        JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST,
+               url, new JSONObject(params), new Response.Listener<JSONObject>() {
+
+            @Override
+            public void onResponse(JSONObject response) {
+                Log.d(TAG, response.toString());
+
+                try {
+
+
+//                    Toast.makeText(getApplicationContext(),
+//                            " "+  response.getString("message"), Toast.LENGTH_LONG).show();
+//
+////
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Log.d(TAG, "onErrorResponse: "+e.getMessage());
+
+                }
+
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.d(TAG, "Error: " + error.getMessage());
+
+
+            }
+
+        });
+
+        // Adding request to request queue
+        AppController.getInstance().addToRequestQueue(req);
+
     }
 
 

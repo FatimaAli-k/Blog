@@ -2,6 +2,7 @@ package com.example.blog.ui.comments;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,10 +15,13 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.android.volley.VolleyError;
 import com.example.blog.R;
+import com.example.blog.URLs;
 import com.example.blog.model.Comments;
+import com.example.blog.ui.home.PaginationListener;
 import com.example.blog.volley.FetchJson;
 import com.example.blog.volley.IResult;
 
@@ -30,26 +34,34 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-public class CommentsFragment extends Fragment implements CommentsRecyclerViewAdapter.ItemClickListener {
+public class CommentsFragment extends Fragment{
 
 
     RecyclerView recyclerView;
+//    SwipeRefreshLayout swipeRefresh;
+    CommentsRecyclerViewAdapter adapter;
+    LinearLayout commentsLinearLayout;
+    LinearLayoutManager layoutManager;
+
     private String TAG = "commentsFragment";
     IResult mResultCallback = null;
     FetchJson mVolleyService;
-    Comments com;
-    private ProgressDialog pDialog;
+    private static final int PAGE_START = 1;
+    private boolean isLoading = false;
+    private boolean isLastPage = false;
+    private int TOTAL_PAGES = 3;
+    private int currentPage = PAGE_START;
 
-  CommentsRecyclerViewAdapter adapter;
-    LinearLayout commentsLinearLayout;
-    ArrayList<Comments> commentsList =new ArrayList<>();
+    //
+    URLs baseUrl=new URLs();
+    String firstPageUrl;
 
 
     public CommentsFragment(){}
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-       View view = inflater.inflate(R.layout.fragment_comments, container,false);
+       View root = inflater.inflate(R.layout.fragment_comments, container,false);
 
 
 //
@@ -63,52 +75,59 @@ public class CommentsFragment extends Fragment implements CommentsRecyclerViewAd
         }
 
 
+        firstPageUrl=baseUrl.getUrl("post");
 
-
-        initVolleyCallback();
-        mVolleyService = new FetchJson(mResultCallback,getContext());
-//        mVolleyService.getDataVolley("GETCALL","https://api.androidhive.info/volley/person_object.json");
-  String url="https://jsonblob.com/api/b3efca9c-398d-11ea-a91b-41682e589a1a";
-//        String url="http://192.168.9.108:8000/api/cat";
-
-
-  mVolleyService.getArrayDataVolley("GETCALL",url);
-
-        //post request
-//        JSONObject sendObj = null;
-//        Map<String, Integer> params = new HashMap<>();
-//        params.put("post_id", postId);
-////
-//        sendObj = new JSONObject(params);
-//        mVolleyService.postDataVolley("POSTCALL", "http://192.168.1.150/datatest/post/data", sendObj);
 
 //
 
-//
-
-        recyclerView = view.findViewById(R.id.comments_recycler_view);
-        commentsLinearLayout = view.findViewById(R.id.commentsLinearLayout);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        adapter= new CommentsRecyclerViewAdapter( getContext(), commentsList);
-        adapter.setClickListener(this);
+//        swipeRefresh=root.findViewById(R.id.swipeRefresh);
+        recyclerView = root.findViewById(R.id.comments_recycler_view);
+        commentsLinearLayout = root.findViewById(R.id.commentsLinearLayout);
+        layoutManager=new LinearLayoutManager(getActivity());
+        recyclerView.setLayoutManager(layoutManager);
+        adapter= new CommentsRecyclerViewAdapter(getContext());
         recyclerView.setAdapter(adapter);
 
-        Toolbar toolbar=getActivity().findViewById(R.id.toolbar);
-        toolbar.setOnClickListener(new View.OnClickListener() {
+        recyclerView.addOnScrollListener(new PaginationListener(layoutManager) {
+            protected void loadMoreItems() {
+                isLoading = true;
+                currentPage += 1;
+
+                // mocking network delay for API call
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        loadNextPage();
+
+                    }
+                }, 1000);
+            }
+
             @Override
-            public void onClick(View view) {
-                recyclerView.smoothScrollToPosition(0);
+            public int getTotalPageCount() {
+                return TOTAL_PAGES;
+            }
+
+            @Override
+            public boolean isLastPage() {
+                return isLastPage;
+            }
+
+            @Override
+            public boolean isLoading() {
+                return isLoading;
             }
         });
 
-        return view;
-    }
-    @Override
-    public void onItemClick(View view, int position) {
-//        Toast.makeText(getContext(), "pos: " + position+" id: "+ commentsList.get(position).getId(), Toast.LENGTH_SHORT).show();
 
 
+
+
+        loadFirstPage();
+
+        return root;
     }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -116,52 +135,143 @@ public class CommentsFragment extends Fragment implements CommentsRecyclerViewAd
     }
 
 
+    private void loadFirstPage() {
+
+//////
+//        Comments post;
+////
+//        ArrayList<Comments> postsList=new ArrayList<>();
+//
+//        for(int i=0;i<10;i++){
+//
+//            post=new Comments();
+////                    post.setImage("https://square.github.io/picasso/static/sample.png");
+//            post.setContent(""+i);
+//
+//            postsList.add(post);
+//        }
+//        adapter.addAll(postsList);
+//
+//        if (currentPage <= TOTAL_PAGES) adapter.addLoadingFooter();
+//        else isLastPage = true;
+
+//        String url="https://api.themoviedb.org/3/tv/popular?api_key=ee462a4199c4e7ec8d93252494ba661b&language=en-US&page=1";
+        initVolleyCallback();
+        mVolleyService =new FetchJson(mResultCallback,getContext());
+        mVolleyService.getDataVolley("GETCALL",firstPageUrl);
+
+    }
+
+    private void loadNextPage() {
+        Log.d(TAG, "loadNextPage: " + currentPage);
+
+      String nextPageUrl=baseUrl.getNextPageUrl("post",currentPage);
+
+//        String url="https://api.themoviedb.org/3/tv/popular?api_key=ee462a4199c4e7ec8d93252494ba661b&language=en-US&page="+currentPage;
+        initVolleyCallback();
+        mVolleyService =new FetchJson(mResultCallback,getContext());
+        mVolleyService.getDataVolley("GETCALL",nextPageUrl);
+    }
+
+
+//    @Override
+//    public void onRefresh() {
+//        // itemCount = 0;
+//        currentPage = PAGE_START;
+//        isLastPage = false;
+//        adapter.clear();
+//        loadFirstPage();
+//    }
+
     void initVolleyCallback(){
         mResultCallback = new IResult() {
             @Override
-            public void notifySuccess(String requestType,JSONObject response) {
+            public void notifySuccess(String requestType,final JSONObject response) {
                 Log.d(TAG, "Volley requester " + requestType);
                 Log.d(TAG, "Volley JSON post" + response);
 //                Toast.makeText(getContext(),"//"+response,Toast.LENGTH_LONG).show();
 
+                adapter.removeLoadingFooter();
+                isLoading = false;
+
+                ArrayList<Comments> commentsList;
+
+                commentsList= parsJsonObj(response);
+//                swipeRefresh.setRefreshing(false);
+                adapter.addAll(commentsList);
+
+
+                if (currentPage <= TOTAL_PAGES) adapter.addLoadingFooter();
+                else isLastPage = true;
+                //
+                Toast.makeText(getContext(),"//"+currentPage,Toast.LENGTH_LONG).show();
+
+
             }
             @Override
-            public void notifySuccessJsonArray(String requestType,JSONArray response) {
+            public void notifySuccessJsonArray(String requestType, JSONArray response) {
                 Log.d(TAG, "Volley requester " + requestType);
                 Log.d(TAG, "Volley JSON post" + response);
-                parsJsonArray(response);
+
 
 //                Toast.makeText(getContext(),"//"+response,Toast.LENGTH_LONG).show();
 
             }
 
             @Override
-            public void notifyError(String requestType,VolleyError error) {
+            public void notifyError(String requestType, VolleyError error) {
                 Log.d(TAG, "Volley requester " + requestType);
                 Log.d(TAG, "Volley JSON post" + error);
+//                swipeRefresh.setRefreshing(false);
+
+
             }
         };
     }
+    //
+    ArrayList<Comments> parsJsonObj(JSONObject response){
 
-    void parsJsonArray(JSONArray response){
-
-
+        ArrayList<Comments> commentsList=new ArrayList<>();
         try {
 
-            for (int i = 0; i < response.length(); i++) {
+//  //movieDB api test
+////            TOTAL_PAGES=response.getInt("total_pages");
+////
+////            JSONArray data=response.getJSONArray("results");
+////            Toast.makeText(getContext(),""+data.length(),Toast.LENGTH_LONG).show();
+////            for(int i=0;i<data.length();i++){
+//////                itemCount++;
+////                JSONObject obj=data.getJSONObject(i);
+////                int id=obj.getInt("id");
+////                String title=obj.getString("name");
+////                String content=obj.getString("overview");
+////                String img=obj.getString("poster_path");
+////
+////                img=img.replace("\\","");
+////              String imgUrl= "https://image.tmdb.org/t/p/original/"+img;
+//
 
-                JSONObject obj = (JSONObject) response
-                        .get(i);
 
-                String name = obj.getString("name");
+            TOTAL_PAGES=response.getInt("last_page");
 
-                com=new Comments();
-                com.setContent(name);
-                commentsList.add(com);
+            JSONArray data=response.getJSONArray("data");
+            Toast.makeText(getContext(),""+data.length(),Toast.LENGTH_LONG).show();
+            for(int i=0;i<data.length();i++){
 
+                JSONObject obj=data.getJSONObject(i);
+                int id=obj.getInt("id");
+                String title=obj.getString("title");
+
+
+               Comments comments=new Comments();
+               comments.setContent(title);
+               commentsList.add(comments);
             }
 
-            adapter.notifyDataSetChanged();
+
+
+
+//            adapter.notifyDataSetChanged();
 
         }catch (JSONException e) {
             e.printStackTrace();
@@ -170,7 +280,10 @@ public class CommentsFragment extends Fragment implements CommentsRecyclerViewAd
                     Toast.LENGTH_LONG).show();
         }
 
+        return commentsList;
     }
+
+
 
 
 }

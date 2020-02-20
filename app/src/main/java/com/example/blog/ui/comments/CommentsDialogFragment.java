@@ -21,6 +21,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.blog.R;
 import com.example.blog.model.Categories;
@@ -30,10 +31,11 @@ import com.example.blog.ui.category.CategoriesRecyclerViewAdapter;
 import java.util.ArrayList;
 
 
-public class CommentsDialogFragment extends DialogFragment implements CommentsRecyclerViewAdapter.ItemClickListener {
+public class CommentsDialogFragment extends DialogFragment  {
 
 //    private CategoriesViewModel categoriesViewModel;
 
+    SwipeRefreshLayout swipeRefresh;
   CommentsRecyclerViewAdapter adapter;
     LinearLayout commentsLinearLayout;
     ArrayList<Comments> commentsList =new ArrayList<>();
@@ -42,9 +44,12 @@ public class CommentsDialogFragment extends DialogFragment implements CommentsRe
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
+
        View view = inflater.inflate(R.layout.dialog_comments_fragment, container,false);
+       CommentsFragment commentsFragment=new CommentsFragment();
+       getChildFragmentManager().beginTransaction().replace(R.id.dialogFrame,commentsFragment,"dialogFrame").commit();
         CommentBarFragment commentBar=new CommentBarFragment();
-        getChildFragmentManager().beginTransaction().replace(R.id.commentBarFrame, commentBar, "commentBarFrame").commit();
+        getChildFragmentManager().beginTransaction().replace(R.id.dialogCommentBarFrame, commentBar, "commentBarFrame").commit();
 
         getDialog().setTitle("CommentsDialogFragment");
         getDialog().getWindow().setBackgroundDrawableResource(R.drawable.bg_round_corner);
@@ -84,12 +89,7 @@ public class CommentsDialogFragment extends DialogFragment implements CommentsRe
 
         return view;
     }
-    @Override
-    public void onItemClick(View view, int position) {
-//        Toast.makeText(getContext(), "pos: " + position+" id: "+ commentsList.get(position).getId(), Toast.LENGTH_SHORT).show();
 
-
-    }
     @Override
     public void onResume() {
         super.onResume();

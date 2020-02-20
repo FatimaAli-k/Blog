@@ -3,12 +3,12 @@ package com.example.blog.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.sql.Date;
+import java.util.Date;
 
 public class Posts implements Parcelable {
-    int id,rate,views,status;
-    String user_id,title,content,image,tags,category_id;
-    Date created_at;
+    int id,rate,views,status,category_id;
+    String user_id,title,content,image,tags;
+    String created_at;
 
     public Posts(){}
 
@@ -23,7 +23,8 @@ public class Posts implements Parcelable {
         content = in.readString();
         image = in.readString();
         tags = in.readString();
-        category_id = in.readString();
+        category_id = in.readInt();
+        created_at=in.readString();
     }
     @Override
     public void writeToParcel(Parcel parcel, int i) {
@@ -36,7 +37,8 @@ public class Posts implements Parcelable {
         parcel.writeString(content);
         parcel.writeString(image);
         parcel.writeString(tags);
-        parcel.writeString(category_id);
+        parcel.writeInt(category_id);
+        parcel.writeString(created_at);
     }
 
     @Override
@@ -128,19 +130,19 @@ public class Posts implements Parcelable {
         this.tags = tags;
     }
 
-    public String getCategory_id() {
+    public int getCategory_id() {
         return category_id;
     }
 
-    public void setCategory_id(String category_id) {
+    public void setCategory_id(int category_id) {
         this.category_id = category_id;
     }
 
-    public Date getCreated_at() {
+    public String getCreated_at() {
         return created_at;
     }
 
-    public void setCreated_at(Date created_at) {
+    public void setCreated_at(String created_at) {
         this.created_at = created_at;
     }
 

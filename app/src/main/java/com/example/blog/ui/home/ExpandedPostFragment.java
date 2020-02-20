@@ -5,8 +5,10 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ScrollView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -51,6 +53,16 @@ public class ExpandedPostFragment extends Fragment {
         getChildFragmentManager().beginTransaction().replace(R.id.commentBarFrame, commentBar, "commentBarFrame").commit();
 
 
+        final ScrollView scrollView=root.findViewById(R.id.scrollView_post);
+//        scrollView.fullScroll(ScrollView.FOCUS_UP);
+        Toolbar toolbar=getActivity().findViewById(R.id.toolbar);
+        toolbar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+               scrollView.fullScroll(ScrollView.FOCUS_UP);
+
+            }
+        });
 
         return root;
     }

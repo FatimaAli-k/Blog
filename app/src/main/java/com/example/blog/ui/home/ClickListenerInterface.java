@@ -12,6 +12,7 @@ public interface ClickListenerInterface {
     void onItemClick(View view, int position);
     void onCommentClick(View view, int position);
     void onPicClick(View view, int position);
+    void onPostExpandClick(View view, int position);
 }
 
 

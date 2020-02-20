@@ -2,9 +2,11 @@ package com.example.blog.ui.home;
 
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -14,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.blog.R;
+import com.example.blog.TimeAgo;
 import com.example.blog.model.Posts;
 import com.squareup.picasso.Picasso;
 
@@ -26,7 +29,7 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private List<Posts> postsList;
     private LayoutInflater mInflater;
 
-    private ClickListenerInterface mClickListener,mCommentClickListener,mPicClickListener;
+    private ClickListenerInterface mClickListener,mCommentClickListener,mPicClickListener,mPostExpandClickListener;
 
 
 
@@ -43,11 +46,11 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         postsList = new ArrayList<>();
     }
 
-    public List<Posts> getMovies() {
+    public List<Posts> getPosts() {
         return postsList;
     }
 
-    public void setMovies(List<Posts> movies) {
+    public void setPosts(List<Posts> movies) {
         this.postsList = movies;
     }
 
@@ -87,6 +90,13 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
                 postVH.postTitle.setText(posts.getTitle());
                 postVH.postDetails.setText(posts.getContent());
+                TimeAgo timeago=new TimeAgo();
+
+                String time= timeago.covertTimeToText(posts.getCreated_at());
+                postVH.timeStamp.setText(time);
+
+                postVH.catId.setText(""+posts.getCategory_id());
+                postVH.viewCount.setText(""+posts.getViews());
 
 
                 String img = posts.getImage();
@@ -185,9 +195,10 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
      * Main list's content ViewHolder
      */
     protected class PostVH extends RecyclerView.ViewHolder {
-        TextView postTitle,postDetails,seeMore,postId,viewCount,comments;
+        TextView postTitle,postDetails,seeMore,postId,viewCount,comments,timeStamp,catId;
         ImageView postPic;
         LinearLayout contentll,catLL;
+        Button catBtn;
 
         public PostVH(View itemView) {
             super(itemView);
@@ -199,32 +210,36 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             contentll = itemView.findViewById(R.id.contentLL);
             viewCount = itemView.findViewById(R.id.viewsCount);
             comments = itemView.findViewById(R.id.commentsCount);
+            timeStamp=itemView.findViewById(R.id.time);
 
             catLL=itemView.findViewById(R.id.post_catLL);
 
-
-//            if(postDetails.getLineCount()>3){
-//                seeMore.setVisibility(View.VISIBLE);
-//            }
+            catBtn=itemView.findViewById(R.id.catBtn);
+            catId=itemView.findViewById(R.id.cat_Id);
+//
 
 
             itemView.setOnClickListener(postClickListener);
             comments.setOnClickListener(commnetListener);
             postPic.setOnClickListener(picListener);
 
-            contentll.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (postDetails.getMaxLines() == 3) {
-                        postDetails.setMaxLines(40);
-                        seeMore.setVisibility(View.GONE);
-                    } else {
-                        postDetails.setMaxLines(3);
-                        seeMore.setVisibility(View.VISIBLE);
 
-                    }
-                }
-            });
+
+            contentll.setOnClickListener(postListener);
+//                @Override
+//                public void onClick(View view) {
+//                    Log.d("line count", ""+postDetails.getLineCount());
+//                    if (postDetails.getMaxLines() == 3) {
+//                        postDetails.setMaxLines(40);
+//                        seeMore.setVisibility(View.GONE);
+//                        //incViews
+//                    } else {
+//                        postDetails.setMaxLines(3);
+//                        seeMore.setVisibility(View.VISIBLE);
+//
+//                    }
+//                }
+//            });
 
 
         }
@@ -251,6 +266,13 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
             }
         };
+        View.OnClickListener postListener = new View.OnClickListener() {
+            @Override
+            public void onClick(android.view.View view) {
+                if (mPostExpandClickListener != null)mPostExpandClickListener.onPostExpandClick(view, getAdapterPosition());
+
+            }
+        };
     }
 
 
@@ -261,7 +283,7 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
     }
 
-    //post expand
+    //post click
     void setClickListener(ClickListenerInterface itemClickListener) {
         this.mClickListener = itemClickListener;
     }
@@ -273,6 +295,11 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     //on pic click
     void setPicClickListener(ClickListenerInterface picClickListener) {
         this.mPicClickListener = picClickListener;
+    }
+
+    //on text expand
+    void setPostExpandClickListener(ClickListenerInterface postExpandClickListener) {
+        this.mPostExpandClickListener = postExpandClickListener;
     }
 
 

@@ -5,108 +5,209 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.blog.R;
+import com.example.blog.TimeAgo;
 import com.example.blog.model.Comments;
+import com.example.blog.model.Posts;
+import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class CommentsRecyclerViewAdapter extends RecyclerView.Adapter<CommentsRecyclerViewAdapter.ViewHolder> {
+public class CommentsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  {
 
-    private List<String> mData;
+
     private List<Comments> commentsList;
     private LayoutInflater mInflater;
 
-    private ItemClickListener mClickListener;
 
-    // data is passed into the constructor
-//    MyRecyclerViewAdapter(Context context, List<String> data) {
-//
-//        this.mInflater = LayoutInflater.from(context);
-//        this.mData = data;
-//    }
-    CommentsRecyclerViewAdapter(Context context, List<Comments> itemData) {
+    private static final int ITEM = 0;
+    private static final int LOADING = 1;
+    private Context context;
 
-        this.mInflater = LayoutInflater.from(context);
-        this.commentsList = itemData;
+
+    private boolean isLoadingAdded = false;
+
+    public CommentsRecyclerViewAdapter(Context context) {
+        this.context = context;
+        commentsList = new ArrayList<>();
     }
 
-    // inflates the row layout from xml when needed
+    public List<Comments> getComments() {
+        return commentsList;
+    }
+
+    public void setComments(List<Comments> comments) {
+        this.commentsList = comments;
+    }
+
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = mInflater.inflate(R.layout.comment_single_item, parent, false);
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        RecyclerView.ViewHolder viewHolder = null;
+        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
 
-        return new ViewHolder(view);
+        switch (viewType) {
+            case ITEM:
+                viewHolder = getViewHolder(parent, inflater);
+                break;
+            case LOADING:
+                View v2 = inflater.inflate(R.layout.item_loading, parent, false);
+                viewHolder = new LoadingVH(v2);
+                break;
+        }
+        return viewHolder;
     }
 
-    // binds the data to the TextView in each row
+    @NonNull
+    private RecyclerView.ViewHolder getViewHolder(ViewGroup parent, LayoutInflater inflater) {
+        RecyclerView.ViewHolder viewHolder;
+        View v1 = inflater.inflate(R.layout.comment_single_item, parent, false);
+        viewHolder = new PostVH(v1);
+        return viewHolder;
+    }
 
-//    @Override
-//    public void onBindViewHolder(ViewHolder holder, int position) {
-//        String id = mData.get(position);
-//
-//        holder.itemId.setText(id);
-//    }
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 
-        Comments comments= commentsList.get(position);
-       // holder.itemId.setText(item.getId());
-        holder.comment.setText(comments.getContent());
+       Comments comments = commentsList.get(position);
 
-//
+        switch (getItemViewType(position)) {
+            case ITEM:
+                PostVH postVH = (PostVH) holder;
+
+                postVH.comment.setText(comments.getContent());
+
+                TimeAgo timeago=new TimeAgo();
+                String fTime= timeago.covertTimeToText(comments.getCreated_at());
+                postVH.time.setText(fTime);
+
+                //get name from user_id
+//                postVH.name.setText("");
+
+
+                break;
+            case LOADING:
+//                Do nothing
+                break;
+        }
 
     }
 
-    // total number of rows
+
+
     @Override
     public int getItemCount() {
-        return commentsList.size();
+        return commentsList == null ? 0 : commentsList.size();
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return (position == commentsList.size() - 1 && isLoadingAdded) ? LOADING : ITEM;
+    }
+
+    /*
+   Helpers
+   _________________________________________________________________________________________________
+    */
+
+    public void add(Comments mc) {
+        commentsList.add(mc);
+        notifyItemInserted(commentsList.size() - 1);
+    }
+
+    public void addAll(List<Comments> mcList) {
+        for (Comments mc : mcList) {
+            add(mc);
+        }
+    }
+
+    public void remove(Comments c) {
+        int position = commentsList.indexOf(c);
+        if (position > -1) {
+            commentsList.remove(position);
+            notifyItemRemoved(position);
+        }
+    }
+
+    public void clear() {
+        isLoadingAdded = false;
+        while (getItemCount() > 0) {
+            remove(getItem(0));
+        }
+    }
+
+    public boolean isEmpty() {
+        return getItemCount() == 0;
     }
 
 
-    // stores and recycles views as they are scrolled off screen
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-       TextView comment,userId,postId;
+    public void addLoadingFooter() {
+        isLoadingAdded = true;
+        add(new Comments());
+    }
+
+    public void removeLoadingFooter() {
+        isLoadingAdded = false;
+
+        if(commentsList.size()!=0) {
+            int position = commentsList.size() - 1;
+            Comments item = getItem(position);
+
+            if (item != null) {
+                commentsList.remove(position);
+                notifyItemRemoved(position);
+            }
+        }
+    }
+
+    public Comments getItem(int position) {
+        return commentsList.get(position);
+    }
 
 
+   /*
+   View Holders
+   _________________________________________________________________________________________________
+    */
 
-        ViewHolder(View itemView) {
+    /**
+     * Main list's content ViewHolder
+     */
+    protected class PostVH extends RecyclerView.ViewHolder {
+        TextView comment,userId,postId,name,time;
+
+
+        public PostVH(View itemView) {
             super(itemView);
+            comment = itemView.findViewById(R.id.comment);
+            name=itemView.findViewById(R.id.commenterName);
+            time= itemView.findViewById(R.id.commentPostTime);
 
-            comment=itemView.findViewById(R.id.comment);
             userId=itemView.findViewById(R.id.userId);
             postId=itemView.findViewById(R.id.postId);
 
-            itemView.setOnClickListener(this);
-
 
         }
 
+    }
 
-        @Override
-        public void onClick(View view) {
-            if (mClickListener != null) mClickListener.onItemClick(view, getAdapterPosition());
+
+    protected class LoadingVH extends RecyclerView.ViewHolder {
+
+        public LoadingVH(View itemView) {
+            super(itemView);
         }
     }
 
-    // convenience method for getting data at click position
-//    String getItem(int id) {
-//        return mData.get(id);
-//    }
 
-    // allows clicks events to be caught
-    void setClickListener(ItemClickListener itemClickListener) {
-        this.mClickListener = itemClickListener;
-    }
 
-    // parent activity will implement this method to respond to click events
-    public interface ItemClickListener {
-        void onItemClick(View view, int position);
-    }
 
 }
