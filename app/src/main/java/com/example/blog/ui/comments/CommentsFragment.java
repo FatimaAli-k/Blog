@@ -234,23 +234,7 @@ public class CommentsFragment extends Fragment{
         ArrayList<Comments> commentsList=new ArrayList<>();
         try {
 
-//  //movieDB api test
-////            TOTAL_PAGES=response.getInt("total_pages");
-////
-////            JSONArray data=response.getJSONArray("results");
-////            Toast.makeText(getContext(),""+data.length(),Toast.LENGTH_LONG).show();
-////            for(int i=0;i<data.length();i++){
-//////                itemCount++;
-////                JSONObject obj=data.getJSONObject(i);
-////                int id=obj.getInt("id");
-////                String title=obj.getString("name");
-////                String content=obj.getString("overview");
-////                String img=obj.getString("poster_path");
-////
-////                img=img.replace("\\","");
-////              String imgUrl= "https://image.tmdb.org/t/p/original/"+img;
 //
-
 
             TOTAL_PAGES=response.getInt("last_page");
 
@@ -261,6 +245,7 @@ public class CommentsFragment extends Fragment{
                 JSONObject obj=data.getJSONObject(i);
                 int id=obj.getInt("id");
                 String title=obj.getString("title");
+                String created_at=obj.getString("created_at");
 
 
                Comments comments=new Comments();

@@ -76,12 +76,7 @@ public class HomeFragment extends Fragment implements  SwipeRefreshLayout.OnRefr
 
     String firstPageUrl,incViewUrl;
 
-//
-//    @Override
-//    public void onSaveInstanceState(Bundle outState) {
-//        outState.putBundle(KEY_RECYCLER_STATE, mBundleRecyclerViewState);
-//        super.onSaveInstanceState(outState);
-//    }
+
     
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -136,25 +131,25 @@ public class HomeFragment extends Fragment implements  SwipeRefreshLayout.OnRefr
 //        Parcelable state = layoutManager.onSaveInstanceState();
 //        layoutManager.onRestoreInstanceState(state);
 
-        loadFirstPage();
-
+//        loadFirstPage();
+loadNextPage();
 
         /**
          * add scroll listener while user reach in bottom load more will call
          */
         recyclerView.addOnScrollListener(new PaginationListener(layoutManager) {
             protected void loadMoreItems() {
-                isLoading = true;
+                 isLoading = true;
                 currentPage += 1;
 
-                // mocking network delay for API call
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
+//                // mocking network delay for API call
+//                new Handler().postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
                         loadNextPage();
 
-                    }
-                }, 1000);
+//                    }
+//                }, 1000);
             }
 
             @Override
@@ -183,7 +178,7 @@ public class HomeFragment extends Fragment implements  SwipeRefreshLayout.OnRefr
 
 
 
-//    @Override
+    @Override
     public void onPause()
     {
         super.onPause();
@@ -238,7 +233,7 @@ public class HomeFragment extends Fragment implements  SwipeRefreshLayout.OnRefr
         initVolleyCallback();
         mVolleyService =new FetchJson(mResultCallback,getContext());
         mVolleyService.getDataVolley("GETCALL",firstPageUrl);
-
+//
     }
 
     private void loadNextPage() {
@@ -300,9 +295,12 @@ public class HomeFragment extends Fragment implements  SwipeRefreshLayout.OnRefr
             public void notifyError(String requestType, VolleyError error) {
                 Log.d(TAG, "Volley requester " + requestType);
                 Log.d(TAG, "Volley JSON post" + error);
-                errortxt.setText("something is wrong with the server... ");
+                errortxt.setText("no connection... "+error);
                 errortxt.setVisibility(View.VISIBLE);
                 swipeRefresh.setRefreshing(false);
+
+//                adapter.removeLoadingFooter();
+//                isLoading = false;
 
 
             }
@@ -315,20 +313,20 @@ public class HomeFragment extends Fragment implements  SwipeRefreshLayout.OnRefr
         try {
 
 //  //movieDB api test
-////            TOTAL_PAGES=response.getInt("total_pages");
-////
-////            JSONArray data=response.getJSONArray("results");
-////            Toast.makeText(getContext(),""+data.length(),Toast.LENGTH_LONG).show();
-////            for(int i=0;i<data.length();i++){
-//////                itemCount++;
-////                JSONObject obj=data.getJSONObject(i);
-////                int id=obj.getInt("id");
-////                String title=obj.getString("name");
-////                String content=obj.getString("overview");
-////                String img=obj.getString("poster_path");
-////
-////                img=img.replace("\\","");
-////              String imgUrl= "https://image.tmdb.org/t/p/original/"+img;
+//            TOTAL_PAGES=response.getInt("total_pages");
+//
+//            JSONArray data=response.getJSONArray("results");
+//            Toast.makeText(getContext(),""+data.length(),Toast.LENGTH_LONG).show();
+//            for(int i=0;i<data.length();i++){
+////                itemCount++;
+//                JSONObject obj=data.getJSONObject(i);
+//                int id=obj.getInt("id");
+//                String title=obj.getString("name");
+//                String content=obj.getString("overview");
+//                String img=obj.getString("poster_path");
+//
+//                img=img.replace("\\","");
+//              String image= "https://image.tmdb.org/t/p/w185/"+img;
 //
 
 

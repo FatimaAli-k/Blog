@@ -86,8 +86,9 @@ public class CommentsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
                 postVH.comment.setText(comments.getContent());
 
                 TimeAgo timeago=new TimeAgo();
-                String fTime= timeago.covertTimeToText(comments.getCreated_at());
-                postVH.time.setText(fTime);
+//                String fTime="";
+//                fTime= timeago.covertTimeToText(comments.getCreated_at());
+//                postVH.time.setText(fTime);
 
                 //get name from user_id
 //                postVH.name.setText("");

@@ -92,11 +92,11 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 postVH.postDetails.setText(posts.getContent());
                 TimeAgo timeago=new TimeAgo();
 
-                String time= timeago.covertTimeToText(posts.getCreated_at());
-                postVH.timeStamp.setText(time);
+//                String time= timeago.covertTimeToText(posts.getCreated_at());
+//                postVH.timeStamp.setText(time);
 
-                postVH.catId.setText(""+posts.getCategory_id());
-                postVH.viewCount.setText(""+posts.getViews());
+//                postVH.catId.setText(""+posts.getCategory_id());
+//                postVH.viewCount.setText(""+posts.getViews());
 
 
                 String img = posts.getImage();
@@ -105,6 +105,7 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
                     postVH.postPic.setVisibility(View.VISIBLE);
                     Picasso.with( postVH.postPic.getContext()).load(img).fit().centerCrop().into( postVH.postPic);
+
                 }
                 break;
             case LOADING:
