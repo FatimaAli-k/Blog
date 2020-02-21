@@ -23,5 +23,9 @@
 <!--            android:background="@drawable/aqlamdefault"-->
 <!--            />-->
 
+        <FrameLayout
+            android:id="@+id/myPosts_frame"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

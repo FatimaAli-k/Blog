@@ -2,6 +2,7 @@ package com.example.blog;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -12,6 +13,7 @@ public class ProfileActivity extends AppCompatActivity {
 
     ImageView profilePic,background;
     TextView name;
+    String userId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -23,6 +25,14 @@ public class ProfileActivity extends AppCompatActivity {
 
 
         Picasso.with(this).load(R.drawable.aqlamdefault).fit().into(background);
+
+
+        Intent intent = getIntent();
+        userId= intent.getStringExtra("user_id");
+
+        TextView username=findViewById(R.id.ph_name);
+        username.setText("name"+userId);
+
 
 
 

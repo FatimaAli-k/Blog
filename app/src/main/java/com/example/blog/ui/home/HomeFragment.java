@@ -28,6 +28,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.blog.MainActivity;
+import com.example.blog.ProfileActivity;
 import com.example.blog.R;
 import com.example.blog.URLs;
 import com.example.blog.model.Posts;
@@ -108,10 +109,13 @@ public class HomeFragment extends Fragment implements  SwipeRefreshLayout.OnRefr
         recyclerView.setLayoutManager(layoutManager);
         adapter = new PostRecyclerAdapter(getContext());
 
+        //click listeners
         adapter.setClickListener(this);
         adapter.setCommentClickListener(this);
         adapter.setPicClickListener(this);
         adapter.setPostExpandClickListener(this);
+        adapter.setProfileClickListener(this);
+
         recyclerView.setAdapter(adapter);
 
 
@@ -348,7 +352,10 @@ public class HomeFragment extends Fragment implements  SwipeRefreshLayout.OnRefr
                int rate=obj.getInt("rate");
                int status=obj.getInt("status");
                int cat_id=obj.getInt("category_id");
+               String userId=obj.getString("user_id");
 
+               if(image != null && !image.equals(""))
+                   image="https://alkafeelblog.edu.turathalanbiaa.com/aqlam/image/"+image;
 
                Posts post=new Posts();
                 post.setId(id);
@@ -360,6 +367,7 @@ public class HomeFragment extends Fragment implements  SwipeRefreshLayout.OnRefr
                 post.setCategory_id(cat_id);
                 post.setStatus(status);
                 post.setContent(content);
+                post.setUser_id(userId);
 
                 //get username and profile pic
                post.setUsername("اسم المستخدم ");
@@ -486,5 +494,13 @@ public class HomeFragment extends Fragment implements  SwipeRefreshLayout.OnRefr
 
 
         cf.show(ft, "dialog");
+    }
+
+    @Override
+    public void onProfileClick(View view, int position) {
+        Intent intent =new Intent(getContext(), ProfileActivity.class);
+        Log.d(TAG, "onProfileClick: "+adapter.getItem(position).getUser_id());
+        intent.putExtra("user_id",adapter.getItem(position).getUser_id());
+        startActivity(intent);
     }
 }

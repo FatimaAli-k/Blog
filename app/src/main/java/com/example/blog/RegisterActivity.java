@@ -2,34 +2,141 @@ package com.example.blog;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Log;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import java.util.regex.Pattern;
 
 public class RegisterActivity extends AppCompatActivity {
 
-
+    EditText username,fullname,password,repeatPassword;
+    Button register;
+    boolean checkUsername=false,checkFullname=false,checkPassword=false,passwordMatch=false;
+    Pattern special;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
         termsAndConditions();
+        username=findViewById(R.id.user_name);
+        fullname=findViewById(R.id.public_name);
+        password=findViewById(R.id.password);
+        repeatPassword=findViewById(R.id.password_repeat);
+//        special = Pattern.compile ("[!@#$%&*()_+=|<>?{}\\[\\]~-]");
 
-        Button register=findViewById(R.id.registerBtn);
-        register.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent=new Intent(getApplicationContext(), MainActivity.class);
-                startActivity(intent);
+
+        username.addTextChangedListener(new TextValidator(username) {
+            @Override public void validate(TextView textView, String text) {
+
+               if(!Patterns.EMAIL_ADDRESS.matcher(text).matches()){
+                   username.setError("not an email");
+                   checkUsername=false;
+               }
+                else if(text.isEmpty()){
+                    username.setError("field required");
+                    checkUsername=false;
+                }
+               else
+                   checkUsername=true;
+            }
+        });
+        fullname.addTextChangedListener(new TextValidator(fullname) {
+            @Override public void validate(TextView textView, String text) {
+
+                if(text.isEmpty()){
+                    fullname.setError("field required");
+                    checkFullname=false;
+                }
+
+                else checkFullname=true;
+
             }
         });
 
 
+
+        password.addTextChangedListener(new TextValidator(password) {
+            @Override public void validate(TextView textView, String text) {
+
+//                if(special.matcher(text).find()){
+//                    password.setError("field required");
+//                    checkPassword=false;
+//                }
+                if(text.length()<6){
+                    password.setError("min 6 charachters");
+                    passwordMatch=false;
+                }
+                else if(text.isEmpty()){
+                    password.setError("field required");
+                    passwordMatch=false;
+                }
+                else passwordMatch=true;
+
+            }
+        });
+
+        repeatPassword.addTextChangedListener(new TextValidator(repeatPassword) {
+            @Override public void validate(TextView textView, String text) {
+
+                if(! text.equals(password.getText().toString())){
+                    Log.d("psw", "validate: "+text+"//"+password.getText());
+                    repeatPassword.setError("password doesnt match");
+                    checkPassword=false;
+                }
+                else if(text.isEmpty()){
+                    repeatPassword.setError("field required");
+                    checkPassword=false;
+                }
+                else checkPassword=true;
+
+            }
+        });
+
+
+
+        register=findViewById(R.id.registerBtn);
+        register.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if (checkData()) {
+                    //send reg request
+                    //on success log in and go to main page
+                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                    startActivity(intent);
+                }
+                else
+                    Toast.makeText(getApplicationContext(),"please check fields for errors",Toast.LENGTH_LONG).show();
+
+            }
+
+        });
+
+
+    }
+
+
+    private Boolean checkData() {
+        boolean dataCorrect=false;
+
+        if(checkUsername && checkFullname && checkPassword && passwordMatch)
+            dataCorrect=true;
+
+
+        return dataCorrect;
     }
 
     void termsAndConditions(){
@@ -47,4 +154,6 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
     }
+
+
 }

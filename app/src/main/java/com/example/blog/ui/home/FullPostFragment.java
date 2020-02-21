@@ -1,6 +1,8 @@
 package com.example.blog.ui.home;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +13,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import com.example.blog.ProfileActivity;
 import com.example.blog.R;
 import com.example.blog.TimeAgo;
 import com.example.blog.model.Posts;
@@ -20,7 +23,9 @@ public class FullPostFragment extends Fragment {
 
     TextView postTitle,postDetails,postId,viewCount,comments,userName,created_at;
     ImageView postPic,profilePic,profileBackground;
-    int post_id;
+
+    Posts post;
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
           View root = inflater.inflate(R.layout.full_post, container, false);
@@ -44,8 +49,6 @@ public class FullPostFragment extends Fragment {
             profileBackground=root.findViewById(R.id.profile_background);
 
 
-
-        Posts post=new Posts();
 
         post=getArguments().getParcelable("post");
 
@@ -90,6 +93,22 @@ public class FullPostFragment extends Fragment {
         });
 
 
+        userName.setOnClickListener(profileListener);
+        profilePic.setOnClickListener(profileListener);
+
+
         return root;
     }
+
+    View.OnClickListener profileListener = new View.OnClickListener() {
+        @Override
+        public void onClick(android.view.View view) {
+
+            Intent intent =new Intent(getContext(), ProfileActivity.class);
+            intent.putExtra("user_id",post.getUser_id());
+            Log.d("tag", "onClick: "+post.getUser_id());
+            startActivity(intent);
+
+        }
+    };
 }

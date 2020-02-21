@@ -29,7 +29,8 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private List<Posts> postsList;
     private LayoutInflater mInflater;
 
-    private ClickListenerInterface mClickListener,mCommentClickListener,mPicClickListener,mPostExpandClickListener;
+    private ClickListenerInterface mClickListener,mCommentClickListener,
+            mPicClickListener,mPostExpandClickListener,mProfileClickListener;
 
 
 
@@ -243,7 +244,8 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             comments.setOnClickListener(commnetListener);
             postPic.setOnClickListener(picListener);
 
-
+            profilePic.setOnClickListener(profileListener);
+            userName.setOnClickListener(profileListener);
 
             contentll.setOnClickListener(postListener);
 //                @Override
@@ -293,6 +295,13 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
             }
         };
+        View.OnClickListener profileListener = new View.OnClickListener() {
+            @Override
+            public void onClick(android.view.View view) {
+                if (mProfileClickListener!= null)mProfileClickListener.onProfileClick(view, getAdapterPosition());
+
+            }
+        };
     }
 
 
@@ -320,6 +329,11 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     //on text expand
     void setPostExpandClickListener(ClickListenerInterface postExpandClickListener) {
         this.mPostExpandClickListener = postExpandClickListener;
+    }
+
+    //on profile click
+    void setProfileClickListener(ClickListenerInterface profileClickListener) {
+        this.mProfileClickListener = profileClickListener;
     }
 
 

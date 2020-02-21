@@ -71,7 +71,7 @@ public class LoginActivity extends AppCompatActivity {
                 //loginResult.getRecentlyDeniedPermissions()
                 //loginResult.getRecentlyGrantedPermissions()
                 boolean loggedIn = AccessToken.getCurrentAccessToken() == null;
-                Log.d("API123", loggedIn + " ??");
+                Log.d("facebook login", loggedIn + " ??");
                 Intent intent=new Intent(getApplicationContext(),MainActivity.class);
 
                 startActivity(intent);
@@ -81,12 +81,12 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onCancel() {
-                // App code
+
             }
 
             @Override
             public void onError(FacebookException exception) {
-                // App code
+
             }
         });
 

@@ -239,7 +239,6 @@ public class CommentsFragment extends Fragment{
             TOTAL_PAGES=response.getInt("last_page");
 
             JSONArray data=response.getJSONArray("data");
-            Toast.makeText(getContext(),""+data.length(),Toast.LENGTH_LONG).show();
             for(int i=0;i<data.length();i++){
 
                 JSONObject obj=data.getJSONObject(i);

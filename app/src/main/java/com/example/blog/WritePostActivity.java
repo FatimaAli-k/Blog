@@ -50,12 +50,6 @@ public class WritePostActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_write_post);
-//        setContentView(R.layout.terms_and_conditions);
-
-
-
-
-//        mLayout = (LinearLayout) findViewById(R.id.catLinearLayout);
         Button sendPost=findViewById(R.id.sendPostBtn);
 
 //        TextView textView = new TextView(this);
