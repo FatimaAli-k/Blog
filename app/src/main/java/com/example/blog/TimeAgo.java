@@ -60,6 +60,7 @@ public class TimeAgo
             } else if (day < 7) {
                 if(day==1){convTime =prefix+"يوم "+suffix;}
                 else if(day==2){convTime =prefix+ "يومين "+suffix;}
+                else if(day>2 && day<11){ convTime =prefix+ day+" ايام "+suffix;}
                 else
                 convTime =prefix+ day+" يوم "+suffix;
             }

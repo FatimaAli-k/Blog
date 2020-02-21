@@ -7,9 +7,11 @@ import android.os.Bundle;
 import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
+import com.facebook.Profile;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 
 import androidx.navigation.NavController;
@@ -78,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 //
-        boolean loggedOut = AccessToken.getCurrentAccessToken() == null;
+        final boolean loggedOut = AccessToken.getCurrentAccessToken() == null;
 
         if (!loggedOut) {
 //            Picasso.with(this).load(Profile.getCurrentProfile().getProfilePictureUri(200, 200)).into(imageView);
@@ -130,12 +132,17 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //go to profile
-//                Intent intent =new Intent(getApplicationContext(),ProfileActivity.class);
-//                startActivity(intent);
-                navController.navigate(R.id.nav_profile);
+                if(!loggedOut) {
+                    Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
+                    intent.putExtra("user_id", Profile.getCurrentProfile().getId());
+                    startActivity(intent);
+//                navController.navigate(R.id.nav_profile);
+                }
 
             }
         });
+
+
 //
 
 //        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {

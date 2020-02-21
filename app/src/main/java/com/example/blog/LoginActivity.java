@@ -46,6 +46,16 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+        Button register=findViewById(R.id.register);
+        register.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent=new Intent(getApplicationContext(),RegisterActivity.class);
+                startActivity(intent);
+            }
+        });
+
+
        fbLogin = findViewById(R.id.login_button);
 
        Button fbLoginCustomBtn=findViewById(R.id.fb_login);
