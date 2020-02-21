@@ -32,7 +32,7 @@ public class TimeAgo
 
 
             if (second < 60) {
-                convTime =prefix+ second+" ثواني "+suffix;
+                convTime =" الان ";
             } else if (minute < 60) {
                 if (minute==1){convTime =prefix+ "دقيقة واحده"+suffix;}
                 else if(minute==2){convTime =prefix+ "دقيقتين "+suffix;}
@@ -59,7 +59,7 @@ public class TimeAgo
                 }
             } else if (day < 7) {
                 if(day==1){convTime =prefix+"يوم "+suffix;}
-                else if(day==2){convTime =prefix+ day+" يومين "+suffix;}
+                else if(day==2){convTime =prefix+ "يومين "+suffix;}
                 else
                 convTime =prefix+ day+" يوم "+suffix;
             }

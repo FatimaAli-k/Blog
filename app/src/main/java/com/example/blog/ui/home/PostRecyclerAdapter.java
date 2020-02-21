@@ -88,20 +88,35 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             case ITEM:
                 PostVH postVH = (PostVH) holder;
 
+                //profile pic, get from user
+                Picasso.with( postVH.profilePic.getContext()).
+                        load(posts.getProfilePic()).into( postVH.profilePic);
+
+                //name
+                postVH.userName.setText(posts.getUsername());
+
+                //background pic
+                Picasso.with( postVH.backgroundPic.getContext()).
+                        load(R.drawable.aqlamdefault).fit().centerCrop().into( postVH.backgroundPic);
+
+
+
+
                 postVH.postTitle.setText(posts.getTitle());
                 postVH.postDetails.setText(posts.getContent());
                 TimeAgo timeago=new TimeAgo();
 
-//                String time= timeago.covertTimeToText(posts.getCreated_at());
-//                postVH.timeStamp.setText(time);
+                String time= timeago.covertTimeToText(posts.getCreated_at());
+                postVH.timeStamp.setText(time);
 
-//                postVH.catId.setText(""+posts.getCategory_id());
-//                postVH.viewCount.setText(""+posts.getViews());
+                postVH.catId.setText(""+posts.getCategory_id());
+                postVH.viewCount.setText(""+posts.getViews());
 
 
                 String img = posts.getImage();
 
-                if (img != null) {
+                Log.d("rv", "onBindViewHolder: "+img);
+                if (img != null && !img.equals("")) {
 
                     postVH.postPic.setVisibility(View.VISIBLE);
                     Picasso.with( postVH.postPic.getContext()).load(img).fit().centerCrop().into( postVH.postPic);
@@ -197,9 +212,10 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
      */
     protected class PostVH extends RecyclerView.ViewHolder {
         TextView postTitle,postDetails,seeMore,postId,viewCount,comments,timeStamp,catId;
-        ImageView postPic;
+        ImageView postPic,profilePic,backgroundPic;
         LinearLayout contentll,catLL;
         Button catBtn;
+        TextView userName;
 
         public PostVH(View itemView) {
             super(itemView);
@@ -218,6 +234,9 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             catBtn=itemView.findViewById(R.id.catBtn);
             catId=itemView.findViewById(R.id.cat_Id);
 //
+            profilePic=itemView.findViewById(R.id.ph_profilePic);
+            userName=itemView.findViewById(R.id.ph_name);
+            backgroundPic=itemView.findViewById(R.id.profile_background);
 
 
             itemView.setOnClickListener(postClickListener);

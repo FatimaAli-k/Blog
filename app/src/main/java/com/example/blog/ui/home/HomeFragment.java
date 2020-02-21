@@ -267,6 +267,7 @@ public class HomeFragment extends Fragment implements  SwipeRefreshLayout.OnRefr
                 adapter.removeLoadingFooter();
                 isLoading = false;
 
+
                 ArrayList<Posts> postsList;
 
                 postsList= parsJsonObj(response);
@@ -359,6 +360,10 @@ public class HomeFragment extends Fragment implements  SwipeRefreshLayout.OnRefr
                 post.setCategory_id(cat_id);
                 post.setStatus(status);
                 post.setContent(content);
+
+                //get username and profile pic
+               post.setUsername("اسم المستخدم ");
+               post.setProfilePic("https://alkafeelblog.edu.turathalanbiaa.com/aqlam/image/000000.png");
 
                 postsList.add(post);
             }

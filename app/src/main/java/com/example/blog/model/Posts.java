@@ -9,6 +9,25 @@ public class Posts implements Parcelable {
     int id,rate,views,status,category_id;
     String user_id,title,content,image,tags;
     String created_at;
+    String username;
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getProfilePic() {
+        return profilePic;
+    }
+
+    public void setProfilePic(String profilePic) {
+        this.profilePic = profilePic;
+    }
+
+    String profilePic;
 
     public Posts(){}
 
@@ -25,6 +44,8 @@ public class Posts implements Parcelable {
         tags = in.readString();
         category_id = in.readInt();
         created_at=in.readString();
+        username=in.readString();
+        profilePic=in.readString();
     }
     @Override
     public void writeToParcel(Parcel parcel, int i) {
@@ -39,6 +60,8 @@ public class Posts implements Parcelable {
         parcel.writeString(tags);
         parcel.writeInt(category_id);
         parcel.writeString(created_at);
+        parcel.writeString(username);
+        parcel.writeString(profilePic);
     }
 
     @Override
