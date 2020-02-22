@@ -50,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
 //        TextView mTitle = (TextView) toolbar.findViewById(R.id.toolbar_title);
 //        mTitle.setText(getTitle());
         setSupportActionBar(toolbar);
+        final boolean loggedOut = AccessToken.getCurrentAccessToken() == null;
 
 
 
@@ -59,10 +60,13 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
 //                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
 //                        .setAction("Action", null).show();
+//                if(!loggedOut){
                 Intent intent =new Intent(getApplicationContext(),WritePostActivity.class);
                 startActivity(intent);
-
-
+//            }
+//                else {
+//                    Toast.makeText(getApplicationContext(),"must log in to post",Toast.LENGTH_SHORT).show();
+//                }
 
             }
         });
@@ -80,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 //
-        final boolean loggedOut = AccessToken.getCurrentAccessToken() == null;
+
 
         if (!loggedOut) {
 //            Picasso.with(this).load(Profile.getCurrentProfile().getProfilePictureUri(200, 200)).into(imageView);

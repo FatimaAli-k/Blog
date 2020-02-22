@@ -1,9 +1,13 @@
 package com.example.blog.ui.comments;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -11,27 +15,124 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import com.android.volley.VolleyError;
+import com.example.blog.MainActivity;
 import com.example.blog.R;
+import com.example.blog.tools.URLs;
+import com.example.blog.volley.FetchJson;
+import com.example.blog.volley.IResult;
+import com.facebook.AccessToken;
+import com.facebook.Profile;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import static android.content.Context.INPUT_METHOD_SERVICE;
 
 public class CommentBarFragment extends Fragment {
 
-//    private ProfileViewModel profileViewModel;
+    private static String TAG = "commentBar";
+    IResult mResultCallback = null;
+    FetchJson mVolleyService;
+
+
+    String sendPostUrl;
+    URLs baseUrl=new URLs();
+    final String route ="getcomment";
+    EditText comment;
+    String userID="0";
+    int postId;
+
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
         View root = inflater.inflate(R.layout.comment_bar, container, false);
 
-        Button sendComment=root.findViewById(R.id.sendComment);
-        EditText comment=root.findViewById(R.id.comment);
+        final boolean loggedOut = AccessToken.getCurrentAccessToken() == null;
+//
+        if(!loggedOut){
+            userID= Profile.getCurrentProfile().getId();
+        }
+        sendPostUrl=baseUrl.getUrl(route);
+        postId=getArguments().getInt("postId");
+        final Button sendComment=root.findViewById(R.id.sendComment);
+
+        comment=root.findViewById(R.id.commentEditText);
 
         sendComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getContext(),"send cmt",Toast.LENGTH_SHORT).show();
+                if(comment.getText().toString().isEmpty()) {
+                    comment.setError(getString(R.string.empty_field_error));
+                }
+                else
+                    sendCommentToDb(postId, userID, comment.getText().toString());
             }
         });
 
         return root;
+    }
+
+    private void sendCommentToDb(int postId,String userID, String content) {
+        Log.d(TAG, "sendCommentToDb: "+postId+"/"+userID+"/"+content);
+        Map<String,String> params=new HashMap<>();
+        params.put("user_id",userID);
+        params.put("post_id",""+postId);
+        params.put("content",content);
+        JSONObject sendObj =new JSONObject(params);
+        initVolleyCallback();
+        mVolleyService =new FetchJson(mResultCallback,getContext());
+        mVolleyService.postDataVolley("GETCALL",sendPostUrl,sendObj);
+    }
+
+    void initVolleyCallback(){
+        mResultCallback = new IResult() {
+            @Override
+            public void notifySuccess(String requestType,final JSONObject response) {
+                Log.d(TAG, "Volley requester " + requestType);
+                Log.d(TAG, "Volley JSON post" + response);
+                try  {
+                    InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
+                } catch (Exception e) {
+
+                }
+                comment.setText("");
+                comment.clearFocus();
+                Toast.makeText(getContext(),"comment sent",Toast.LENGTH_LONG).show();
+
+
+            }
+            @Override
+            public void notifySuccessJsonArray(String requestType, JSONArray response) {
+                Log.d(TAG, "Volley requester " + requestType);
+                Log.d(TAG, "Volley JSON post" + response);
+
+
+//                Toast.makeText(getContext(),"//"+response,Toast.LENGTH_LONG).show();
+
+            }
+
+            @Override
+            public void notifyError(String requestType, VolleyError error) {
+                Log.d(TAG, "Volley requester " + requestType);
+                Log.d(TAG, "Volley JSON post" + error);
+                try  {
+                    InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
+                } catch (Exception e) {
+
+                }
+
+                Toast.makeText(getContext(),""+error,Toast.LENGTH_LONG).show();
+
+
+
+            }
+        };
     }
 }

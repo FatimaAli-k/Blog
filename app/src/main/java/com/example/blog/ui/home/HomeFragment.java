@@ -8,7 +8,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,7 +29,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.blog.MainActivity;
 import com.example.blog.ProfileActivity;
 import com.example.blog.R;
-import com.example.blog.URLs;
+import com.example.blog.tools.URLs;
 import com.example.blog.model.Posts;
 import com.example.blog.ui.comments.CommentsDialogFragment;
 import com.example.blog.volley.AppController;
@@ -105,7 +104,7 @@ public class HomeFragment extends Fragment implements  SwipeRefreshLayout.OnRefr
         swipeRefresh.setOnRefreshListener(this);
         recyclerView = root.findViewById(R.id.posts_recycler_view);
         postsRelativeLayout = root.findViewById(R.id.postsRelativeLayout);
-       layoutManager = new LinearLayoutManager(getActivity());
+        layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
         adapter = new PostRecyclerAdapter(getContext());
 
@@ -372,6 +371,8 @@ public class HomeFragment extends Fragment implements  SwipeRefreshLayout.OnRefr
                 //get username and profile pic
                post.setUsername("اسم المستخدم ");
                post.setProfilePic("https://alkafeelblog.edu.turathalanbiaa.com/aqlam/image/000000.png");
+               //get cat name
+               post.setCategory_name("category");
 
                 postsList.add(post);
             }

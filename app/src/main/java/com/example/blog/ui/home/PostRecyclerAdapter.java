@@ -9,14 +9,13 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.blog.R;
-import com.example.blog.TimeAgo;
+import com.example.blog.tools.TimeAgo;
 import com.example.blog.model.Posts;
 import com.squareup.picasso.Picasso;
 
@@ -112,6 +111,8 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
                 postVH.catId.setText(""+posts.getCategory_id());
                 postVH.viewCount.setText(""+posts.getViews());
+
+                postVH.catBtn.setText(posts.getCategory_name());
 
 
                 String img = posts.getImage();

@@ -8,148 +8,148 @@
     >
 
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline_left"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_begin="30dp" />
+<!--    <androidx.constraintlayout.widget.Guideline-->
+<!--        android:id="@+id/guideline_left"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:orientation="vertical"-->
+<!--        app:layout_constraintGuide_begin="30dp" />-->
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline_right"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_end="30dp" />
+<!--    <androidx.constraintlayout.widget.Guideline-->
+<!--        android:id="@+id/guideline_right"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:orientation="vertical"-->
+<!--        app:layout_constraintGuide_end="30dp" />-->
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline_bottom"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_end="20dp" />
+<!--    <androidx.constraintlayout.widget.Guideline-->
+<!--        android:id="@+id/guideline_bottom"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:orientation="horizontal"-->
+<!--        app:layout_constraintGuide_end="20dp" />-->
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/inputLayoutTitle"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        app:layout_constraintEnd_toStartOf="@+id/guideline_right"
-        app:layout_constraintStart_toStartOf="@+id/guideline_left"
-        app:layout_constraintTop_toTopOf="parent">
-
-
-        <EditText
-            android:id="@+id/titleEditTxt"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="العنوان"
-            android:fontFamily="@font/myfont"
-            android:textSize="25dp"
-            android:textDirection="rtl"
-            />
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/inputLayoutDetails"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
-        app:layout_constraintBottom_toTopOf="@+id/addCatBtn"
-        app:layout_constraintEnd_toStartOf="@+id/guideline_right"
-        app:layout_constraintStart_toStartOf="@+id/guideline_left"
-        app:layout_constraintTop_toBottomOf="@id/inputLayoutTitle">
-
-        <androidx.core.widget.NestedScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fillViewport="true">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical" >
-
-                <EditText
-                    android:id="@+id/detailsEditTxt"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/myfont"
-                    android:hint="التفاصيل"
-                    android:textSize="25dp"
-                    android:textDirection="rtl"/>
+<!--    <com.google.android.material.textfield.TextInputLayout-->
+<!--        android:id="@+id/inputLayoutTitle"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="30dp"-->
+<!--        app:layout_constraintEnd_toStartOf="@+id/guideline_right"-->
+<!--        app:layout_constraintStart_toStartOf="@+id/guideline_left"-->
+<!--        app:layout_constraintTop_toTopOf="parent">-->
 
 
-            </LinearLayout>
-        </androidx.core.widget.NestedScrollView>
+<!--        <EditText-->
+<!--            android:id="@+id/titleEditTxt"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:hint="العنوان"-->
+<!--            android:fontFamily="@font/myfont"-->
+<!--            android:textSize="25dp"-->
+<!--            android:textDirection="rtl"-->
+<!--            />-->
+<!--    </com.google.android.material.textfield.TextInputLayout>-->
+
+<!--    <com.google.android.material.textfield.TextInputLayout-->
+<!--        android:id="@+id/inputLayoutDetails"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="0dp"-->
+<!--        android:layout_marginTop="10dp"-->
+<!--        android:layout_marginBottom="10dp"-->
+<!--        app:layout_constraintBottom_toTopOf="@+id/addCatBtn"-->
+<!--        app:layout_constraintEnd_toStartOf="@+id/guideline_right"-->
+<!--        app:layout_constraintStart_toStartOf="@+id/guideline_left"-->
+<!--        app:layout_constraintTop_toBottomOf="@id/inputLayoutTitle">-->
+
+<!--        <androidx.core.widget.NestedScrollView-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:fillViewport="true">-->
+
+<!--            <LinearLayout-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:orientation="vertical" >-->
+
+<!--                <EditText-->
+<!--                    android:id="@+id/detailsEditTxt"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:fontFamily="@font/myfont"-->
+<!--                    android:hint="التفاصيل"-->
+<!--                    android:textSize="25dp"-->
+<!--                    android:textDirection="rtl"/>-->
 
 
-
-    </com.google.android.material.textfield.TextInputLayout>
+<!--            </LinearLayout>-->
+<!--        </androidx.core.widget.NestedScrollView>-->
 
 
 
-    <Button
-        android:id="@+id/addCatBtn"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-       android:background="@drawable/bg_button2"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp"
-        android:text="الاصناف"
-        android:textAlignment="center"
-        android:fontFamily="@font/myfont"
-        android:gravity="right|center"
-        android:textSize="24dp"
-        android:drawableLeft="@drawable/ic_expand_more_black_24dp"
-        app:layout_constraintBottom_toTopOf="@+id/HorizontalScrollView"
-        app:layout_constraintEnd_toStartOf="@+id/guideline_right"
-        app:layout_constraintStart_toStartOf="@+id/guideline_left" />
-
-    <HorizontalScrollView
-        android:id="@+id/HorizontalScrollView"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
-        app:layout_constraintBottom_toTopOf="@+id/sendPostBtn"
-        app:layout_constraintEnd_toStartOf="@+id/guideline_right"
-        app:layout_constraintStart_toStartOf="@+id/guideline_left"
+<!--    </com.google.android.material.textfield.TextInputLayout>-->
 
 
-    >
 
-        <LinearLayout
-            android:id="@+id/catLinearLayout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            >
-             <TextView
-                 android:id="@+id/writePost_catId"
-                 android:layout_width="wrap_content"
-                 android:layout_height="wrap_content"
-                 android:visibility="gone" />
+<!--    <Button-->
+<!--        android:id="@+id/addCatBtn"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginBottom="10dp"-->
+<!--       android:background="@drawable/bg_button2"-->
+<!--        android:paddingLeft="20dp"-->
+<!--        android:paddingRight="20dp"-->
+<!--        android:text="الاصناف"-->
+<!--        android:textAlignment="center"-->
+<!--        android:fontFamily="@font/myfont"-->
+<!--        android:gravity="right|center"-->
+<!--        android:textSize="24dp"-->
+<!--        android:drawableLeft="@drawable/ic_expand_more_black_24dp"-->
+<!--        app:layout_constraintBottom_toTopOf="@+id/HorizontalScrollView"-->
+<!--        app:layout_constraintEnd_toStartOf="@+id/guideline_right"-->
+<!--        app:layout_constraintStart_toStartOf="@+id/guideline_left" />-->
+
+<!--    <HorizontalScrollView-->
+<!--        android:id="@+id/HorizontalScrollView"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginBottom="20dp"-->
+<!--        app:layout_constraintBottom_toTopOf="@+id/sendPostBtn"-->
+<!--        app:layout_constraintEnd_toStartOf="@+id/guideline_right"-->
+<!--        app:layout_constraintStart_toStartOf="@+id/guideline_left"-->
 
 
-        </LinearLayout>
-    </HorizontalScrollView>
+<!--    >-->
 
-    <Button
-        android:id="@+id/sendPostBtn"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="30dp"
-        android:layout_marginBottom="30dp"
-        android:background="@drawable/bg_button"
-        android:fontFamily="@font/myfont"
-        android:padding="15dp"
-        android:text="send"
-        android:textSize="24dp"
-        app:layout_constraintBottom_toTopOf="@+id/guideline_bottom"
-        app:layout_constraintEnd_toStartOf="@+id/guideline_right"
-        app:layout_constraintStart_toStartOf="@+id/guideline_left" />
+<!--        <LinearLayout-->
+<!--            android:id="@+id/catLinearLayout"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:orientation="horizontal"-->
+<!--            >-->
+<!--             <TextView-->
+<!--                 android:id="@+id/writePost_catId"-->
+<!--                 android:layout_width="wrap_content"-->
+<!--                 android:layout_height="wrap_content"-->
+<!--                 android:visibility="gone" />-->
+
+
+<!--        </LinearLayout>-->
+<!--    </HorizontalScrollView>-->
+
+<!--    <Button-->
+<!--        android:id="@+id/sendPostBtn"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginHorizontal="30dp"-->
+<!--        android:layout_marginBottom="30dp"-->
+<!--        android:background="@drawable/bg_button"-->
+<!--        android:fontFamily="@font/myfont"-->
+<!--        android:padding="15dp"-->
+<!--        android:text="send"-->
+<!--        android:textSize="24dp"-->
+<!--        app:layout_constraintBottom_toTopOf="@+id/guideline_bottom"-->
+<!--        app:layout_constraintEnd_toStartOf="@+id/guideline_right"-->
+<!--        app:layout_constraintStart_toStartOf="@+id/guideline_left" />-->
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

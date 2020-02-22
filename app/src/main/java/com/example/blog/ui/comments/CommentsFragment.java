@@ -1,6 +1,5 @@
 package com.example.blog.ui.comments;
 
-import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -11,15 +10,13 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.android.volley.VolleyError;
 import com.example.blog.R;
-import com.example.blog.URLs;
+import com.example.blog.tools.URLs;
 import com.example.blog.model.Comments;
 import com.example.blog.ui.home.PaginationListener;
 import com.example.blog.volley.FetchJson;
@@ -30,8 +27,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 
 public class CommentsFragment extends Fragment{
@@ -66,7 +61,7 @@ public class CommentsFragment extends Fragment{
 
 //
 
-        int postId=0;
+        int postId;
 
 
         if(getArguments()!=null) {

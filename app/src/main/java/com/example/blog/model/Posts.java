@@ -11,6 +11,16 @@ public class Posts implements Parcelable {
     String created_at;
     String username;
 
+    public String getCategory_name() {
+        return category_name;
+    }
+
+    public void setCategory_name(String category_name) {
+        this.category_name = category_name;
+    }
+
+    String category_name;
+
     public String getUsername() {
         return username;
     }
@@ -46,6 +56,7 @@ public class Posts implements Parcelable {
         created_at=in.readString();
         username=in.readString();
         profilePic=in.readString();
+        category_name=in.readString();
     }
     @Override
     public void writeToParcel(Parcel parcel, int i) {
@@ -62,6 +73,7 @@ public class Posts implements Parcelable {
         parcel.writeString(created_at);
         parcel.writeString(username);
         parcel.writeString(profilePic);
+        parcel.writeString(category_name);
     }
 
     @Override

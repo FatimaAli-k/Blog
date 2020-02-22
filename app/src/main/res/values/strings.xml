@@ -15,6 +15,15 @@
     <string name="menu_login">تسجيل الدخول</string>
     <string name="menu_logout">تسجيل الخروج</string>
 
+    //edit text errors
+    <string name="empty_field_error">field required</string>
+    <string name="min_char_error">min 6 char</string>
+    <string name="email_format_error">must enter valid email</string>
+    <string name="password_mismatch_error">password does not match</string>
+
+
+
+
 
     <string name="facebook_app_id">245801286410441</string>
     <string name="fb_login_protocol_scheme">fb245801286410441</string>

@@ -2,6 +2,7 @@ package com.example.blog.ui.comments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -47,8 +48,15 @@ public class CommentsDialogFragment extends DialogFragment  {
 
        View view = inflater.inflate(R.layout.dialog_comments_fragment, container,false);
        CommentsFragment commentsFragment=new CommentsFragment();
-       getChildFragmentManager().beginTransaction().replace(R.id.dialogFrame,commentsFragment,"dialogFrame").commit();
         CommentBarFragment commentBar=new CommentBarFragment();
+        int postId= getArguments().getInt("postId");
+
+        Bundle bundle=new Bundle();
+        bundle.putInt("postId",postId);
+        commentBar.setArguments(bundle);
+        commentsFragment.setArguments(bundle);
+
+       getChildFragmentManager().beginTransaction().replace(R.id.dialogFrame,commentsFragment,"dialogFrame").commit();
         getChildFragmentManager().beginTransaction().replace(R.id.dialogCommentBarFrame, commentBar, "commentBarFrame").commit();
 
         getDialog().setTitle("CommentsDialogFragment");

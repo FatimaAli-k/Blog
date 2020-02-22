@@ -1,4 +1,4 @@
-package com.example.blog;
+package com.example.blog.tools;
 
 public class URLs {
     private String baseUrl="http://192.168.9.108:8000/api/";

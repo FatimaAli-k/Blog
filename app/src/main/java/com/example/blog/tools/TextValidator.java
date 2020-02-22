@@ -1,4 +1,4 @@
-package com.example.blog;
+package com.example.blog.tools;
 
 import android.text.Editable;
 import android.text.TextWatcher;

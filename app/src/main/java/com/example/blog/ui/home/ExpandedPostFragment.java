@@ -42,10 +42,13 @@ public class ExpandedPostFragment extends Fragment {
 
         //
         Bundle bundle=new Bundle();
-        bundle.putInt("postId",post.getId());
         bundle.putParcelable("post",post);
         postFragment.setArguments(bundle);
         commentsFragment.setArguments(bundle);
+
+        Bundle bundle2=new Bundle();
+        bundle2.putInt("postId",post.getId());
+        commentBar.setArguments(bundle2);
 
         FragmentManager fm = getFragmentManager();
         fm.beginTransaction().replace(R.id.fragment1, postFragment, "fragmentone").commit();

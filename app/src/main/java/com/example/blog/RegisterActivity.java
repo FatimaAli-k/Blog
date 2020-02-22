@@ -2,13 +2,11 @@ package com.example.blog;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
@@ -16,6 +14,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.blog.tools.TextValidator;
 
 import java.util.regex.Pattern;
 
@@ -42,11 +42,11 @@ public class RegisterActivity extends AppCompatActivity {
             @Override public void validate(TextView textView, String text) {
 
                if(!Patterns.EMAIL_ADDRESS.matcher(text).matches()){
-                   username.setError("not an email");
+                   username.setError(getString(R.string.email_format_error));
                    checkUsername=false;
                }
                 else if(text.isEmpty()){
-                    username.setError("field required");
+                    username.setError(getString(R.string.empty_field_error));
                     checkUsername=false;
                 }
                else
@@ -57,7 +57,7 @@ public class RegisterActivity extends AppCompatActivity {
             @Override public void validate(TextView textView, String text) {
 
                 if(text.isEmpty()){
-                    fullname.setError("field required");
+                    fullname.setError(getString(R.string.empty_field_error));
                     checkFullname=false;
                 }
 
@@ -76,11 +76,11 @@ public class RegisterActivity extends AppCompatActivity {
 //                    checkPassword=false;
 //                }
                 if(text.length()<6){
-                    password.setError("min 6 charachters");
+                    password.setError(getString(R.string.min_char_error));
                     passwordMatch=false;
                 }
                 else if(text.isEmpty()){
-                    password.setError("field required");
+                    password.setError(getString(R.string.empty_field_error));
                     passwordMatch=false;
                 }
                 else passwordMatch=true;
@@ -93,11 +93,11 @@ public class RegisterActivity extends AppCompatActivity {
 
                 if(! text.equals(password.getText().toString())){
                     Log.d("psw", "validate: "+text+"//"+password.getText());
-                    repeatPassword.setError("password doesnt match");
+                    repeatPassword.setError(getString(R.string.password_mismatch_error));
                     checkPassword=false;
                 }
                 else if(text.isEmpty()){
-                    repeatPassword.setError("field required");
+                    repeatPassword.setError(getString(R.string.empty_field_error));
                     checkPassword=false;
                 }
                 else checkPassword=true;
@@ -154,6 +154,7 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
     }
+
 
 
 }

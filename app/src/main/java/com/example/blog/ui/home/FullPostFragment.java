@@ -6,8 +6,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -15,7 +15,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.blog.ProfileActivity;
 import com.example.blog.R;
-import com.example.blog.TimeAgo;
+import com.example.blog.tools.TimeAgo;
 import com.example.blog.model.Posts;
 import com.squareup.picasso.Picasso;
 
@@ -23,7 +23,7 @@ public class FullPostFragment extends Fragment {
 
     TextView postTitle,postDetails,postId,viewCount,comments,userName,created_at;
     ImageView postPic,profilePic,profileBackground;
-
+    Button catBtn;
     Posts post;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -43,6 +43,7 @@ public class FullPostFragment extends Fragment {
             viewCount=root.findViewById(R.id.viewsCount);
             comments=root.findViewById(R.id.commentsCount);
             created_at=root.findViewById(R.id.time);
+            catBtn=root.findViewById(R.id.catBtn);
 
             profilePic=root.findViewById(R.id.ph_profilePic);
             userName=root.findViewById(R.id.ph_name);
@@ -65,6 +66,8 @@ public class FullPostFragment extends Fragment {
         created_at.setText(time);
         Picasso.with(getContext()).
                 load(post.getProfilePic()).into(profilePic);
+
+        catBtn.setText(post.getCategory_name());
 
         //name
         userName.setText(post.getUsername());
