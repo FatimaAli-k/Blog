@@ -45,7 +45,7 @@ public class LoginActivity extends AppCompatActivity {
                 //make api call
                 SharedPreferences prefs = getSharedPreferences("profile", Activity.MODE_PRIVATE);
                 SharedPreferences.Editor editor = prefs.edit();
-                editor.putString("user_id","0");
+                editor.putString("user_id",password.getText().toString());
                 editor.putString("user_name",username.getText().toString());
                 editor.putString("profile_pic","https://alkafeelblog.edu.turathalanbiaa.com/aqlam/image/000000.png");
                 editor.apply();

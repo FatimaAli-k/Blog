@@ -88,13 +88,7 @@ public class HomeFragment extends Fragment implements  SwipeRefreshLayout.OnRefr
 //
         Toast.makeText(getActivity(),"id"+getArguments().getInt("catId"),Toast.LENGTH_LONG).show();
 
-        if(getArguments().getBoolean("loggedOut")){
 
-            LoginManager.getInstance().logOut();
-            Intent intent = getActivity().getIntent();
-            startActivity(intent);
-
-        }
 
        firstPageUrl=baseUrl.getPostsFeedUrl();
        incViewUrl=baseUrl.getIncViewsUrl();

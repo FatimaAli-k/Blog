@@ -13,11 +13,7 @@
         <argument
             android:name="catId"
             app:argType="integer"
-            android:defaultValue="-1" />
-        <argument
-            android:name="loggedOut"
-            app:argType="boolean"
-            android:defaultValue="false" />
+            android:defaultValue="0" />
         <action
             android:id="@+id/action_nav_home_to_nav_post"
             app:destination="@id/nav_post" />
