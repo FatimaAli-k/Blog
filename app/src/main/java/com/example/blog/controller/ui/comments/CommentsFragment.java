@@ -27,6 +27,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class CommentsFragment extends Fragment{
@@ -52,6 +54,9 @@ public class CommentsFragment extends Fragment{
     String firstPageUrl;
     String route="commentpagination";
 
+    Map<String,String> params=new HashMap<>();
+    JSONObject sendJson;
+
 
     public CommentsFragment(){}
 
@@ -67,6 +72,8 @@ public class CommentsFragment extends Fragment{
 
         if(getArguments()!=null) {
             postId = getArguments().getInt("postId");
+            params.put("post_id",""+postId);
+            sendJson=new JSONObject(params);
 
         }
 
@@ -133,28 +140,14 @@ public class CommentsFragment extends Fragment{
 
     private void loadFirstPage() {
 
-//////
-//        Comments post;
-////
-//        ArrayList<Comments> postsList=new ArrayList<>();
-//
-//        for(int i=0;i<10;i++){
-//
-//            post=new Comments();
-////                    post.setImage("https://square.github.io/picasso/static/sample.png");
-//            post.setContent(""+i);
-//
-//            postsList.add(post);
-//        }
-//        adapter.addAll(postsList);
-//
-//        if (currentPage <= TOTAL_PAGES) adapter.addLoadingFooter();
-//        else isLastPage = true;
 
-//        String url="https://api.themoviedb.org/3/tv/popular?api_key=ee462a4199c4e7ec8d93252494ba661b&language=en-US&page=1";
+
         initVolleyCallback();
         mVolleyService =new FetchJson(mResultCallback,getContext());
-        mVolleyService.getDataVolley("GETCALL",firstPageUrl);
+
+        mVolleyService.postDataVolley("GETCALL",firstPageUrl,sendJson);
+//        mVolleyService.getDataVolley("GETCALL",firstPageUrl);
+
 
     }
 
@@ -166,7 +159,8 @@ public class CommentsFragment extends Fragment{
 //        String url="https://api.themoviedb.org/3/tv/popular?api_key=ee462a4199c4e7ec8d93252494ba661b&language=en-US&page="+currentPage;
         initVolleyCallback();
         mVolleyService =new FetchJson(mResultCallback,getContext());
-        mVolleyService.getDataVolley("GETCALL",nextPageUrl);
+        mVolleyService.postDataVolley("GETCALL",nextPageUrl,sendJson);
+//
     }
 
 
@@ -233,6 +227,7 @@ public class CommentsFragment extends Fragment{
 //
 
             TOTAL_PAGES=response.getInt("last_page");
+            Log.d(TAG, "parsJsonObj: "+TOTAL_PAGES);
 
             JSONArray data=response.getJSONArray("data");
             for(int i=0;i<data.length();i++){
