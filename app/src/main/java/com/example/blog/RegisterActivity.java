@@ -41,14 +41,14 @@ public class RegisterActivity extends AppCompatActivity {
         username.addTextChangedListener(new TextValidator(username) {
             @Override public void validate(TextView textView, String text) {
 
-               if(!Patterns.EMAIL_ADDRESS.matcher(text).matches()){
-                   username.setError(getString(R.string.email_format_error));
+               if(text.isEmpty()){
+                   username.setError(getString(R.string.empty_field_error));
                    checkUsername=false;
                }
-                else if(text.isEmpty()){
-                    username.setError(getString(R.string.empty_field_error));
-                    checkUsername=false;
-                }
+//                else if(!Patterns.EMAIL_ADDRESS.matcher(text).matches()){
+//                   username.setError(getString(R.string.email_format_error));
+//                   checkUsername=false;
+//               }
                else
                    checkUsername=true;
             }

@@ -1,11 +1,8 @@
-package com.example.blog.ui.home;
+package com.example.blog;
 
 import android.view.View;
 
-import com.android.volley.VolleyError;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 
 public interface ClickListenerInterface {

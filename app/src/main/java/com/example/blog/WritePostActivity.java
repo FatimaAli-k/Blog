@@ -25,6 +25,7 @@ import com.facebook.AccessToken;
 import com.facebook.Profile;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -39,17 +40,20 @@ public class WritePostActivity extends AppCompatActivity {
     Button addCat;
     TextView catIdTextView;
     EditText title,content;
-    int cat_Id=0;
+    int cat_Id=1;
 
     IResult mResultCallback = null;
     FetchJson mVolleyService;
 
     String sendPostUrl;
+    String getCatUrl;
     URLs baseUrl=new URLs();
-    final String route ="getpost";
+//    final String route ="getpost";
     String userID="0";
 
     Boolean checkTitle=false, checkContent=false;
+
+
 
 
     @Override
@@ -58,7 +62,7 @@ public class WritePostActivity extends AppCompatActivity {
         setContentView(R.layout.create_post);
         Button sendPost=findViewById(R.id.sendPostBtn);
 
-        Button goBack=findViewById(R.id.goBack);
+//        Button goBack=findViewById(R.id.goBack);
         title=findViewById(R.id.titleEditTxt);
         content=findViewById(R.id.detailsEditTxt);
 
@@ -67,7 +71,8 @@ public class WritePostActivity extends AppCompatActivity {
         if(!loggedOut){
            userID=Profile.getCurrentProfile().getId();
         }
-        sendPostUrl=baseUrl.getUrl(route);
+        sendPostUrl=baseUrl.getSendPostUrl();
+        getCatUrl=baseUrl.getCategoriesUrl();
 
 
 //        TextView textView = new TextView(this);
@@ -87,12 +92,12 @@ public class WritePostActivity extends AppCompatActivity {
                 }
             }
         });
-       goBack.setOnClickListener(new View.OnClickListener() {
-           @Override
-           public void onClick(View view) {
-               finish();
-           }
-       });
+//       goBack.setOnClickListener(new View.OnClickListener() {
+//           @Override
+//           public void onClick(View view) {
+//               finish();
+//           }
+//       });
 
         title.addTextChangedListener(new TextValidator(title) {
             @Override public void validate(TextView textView, String text) {
@@ -121,12 +126,15 @@ public class WritePostActivity extends AppCompatActivity {
 //        catIdTextView =findViewById(R.id.writePost_catId);
 
 
-        Categories categories=new Categories(0,"others");
-        catList.add(categories);
-        categories=new Categories(2,"smthin");
-        catList.add(categories);
-        categories=new Categories(46,"hmmm");
-        catList.add(categories);
+        initVolleyCallback();
+        mVolleyService =new FetchJson(mResultCallback,getApplicationContext());
+        mVolleyService.getArrayDataVolley("getArray",getCatUrl);
+//        Categories categories=new Categories(0,"others");
+//        catList.add(categories);
+//        categories=new Categories(2,"smthin");
+//        catList.add(categories);
+//        categories=new Categories(46,"hmmm");
+//        catList.add(categories);
 
 
 
@@ -164,9 +172,6 @@ public class WritePostActivity extends AppCompatActivity {
 
                         }
                         cat_Id=index;
-//                        catIdTextView.setText(""+index);
-
-////
                         Toast.makeText(getApplicationContext(),"//"+index,Toast.LENGTH_LONG).show();
 
 
@@ -190,12 +195,38 @@ public class WritePostActivity extends AppCompatActivity {
                 });
 
                 menu.show();
-
             }
         });
 
 
     }
+
+    private ArrayList<Categories> getCatListFromDb(JSONArray response) {
+        ArrayList<Categories> list=new ArrayList<>();
+
+        try {
+
+            for (int i = 0; i < response.length(); i++) {
+
+                JSONObject obj = (JSONObject) response
+                        .get(i);
+
+                int id= obj.getInt("id");
+                String name = obj.getString("name");
+                name=name.replaceAll("\n","");
+//
+                Categories cat=new Categories(id,name);
+               list.add(cat);
+
+            }
+
+
+        }catch (JSONException e) {
+
+        }
+        return list;
+    }
+
     public void sendPostToDb(String userId, String title,String content,int cat_Id){
         Log.d(TAG, "sendPostToDb: "+userId+"/"+title+"/"+content+"/"+cat_Id);
 
@@ -207,7 +238,7 @@ public class WritePostActivity extends AppCompatActivity {
         JSONObject sendObj =new JSONObject(params);
         initVolleyCallback();
         mVolleyService =new FetchJson(mResultCallback,getApplicationContext());
-        mVolleyService.postDataVolley("GETCALL",sendPostUrl,sendObj);
+        mVolleyService.postDataVolley("send",sendPostUrl,sendObj);
 //
 
     }
@@ -221,6 +252,7 @@ public class WritePostActivity extends AppCompatActivity {
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(intent);
 
+
 //                Toast.makeText(getApplicationContext(),"//"+response,Toast.LENGTH_LONG).show();
 
 
@@ -229,8 +261,7 @@ public class WritePostActivity extends AppCompatActivity {
             public void notifySuccessJsonArray(String requestType, JSONArray response) {
                 Log.d(TAG, "Volley requester " + requestType);
                 Log.d(TAG, "Volley JSON post" + response);
-
-
+               catList=getCatListFromDb(response);
 //                Toast.makeText(getContext(),"//"+response,Toast.LENGTH_LONG).show();
 
             }

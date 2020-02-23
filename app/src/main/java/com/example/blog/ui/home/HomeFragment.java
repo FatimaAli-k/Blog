@@ -26,6 +26,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.example.blog.ClickListenerInterface;
 import com.example.blog.MainActivity;
 import com.example.blog.ProfileActivity;
 import com.example.blog.R;
@@ -47,12 +48,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-public class HomeFragment extends Fragment implements  SwipeRefreshLayout.OnRefreshListener, ClickListenerInterface{
+public class HomeFragment extends Fragment implements  SwipeRefreshLayout.OnRefreshListener, ClickListenerInterface {
 
-     LinearLayoutManager layoutManager;
+    LinearLayoutManager layoutManager;
     PostRecyclerAdapter adapter;
     RelativeLayout postsRelativeLayout;
-    //    ArrayList<Posts> postsList=new ArrayList<>();
+
     RecyclerView recyclerView;
     SwipeRefreshLayout swipeRefresh;
 //
@@ -67,7 +68,7 @@ public class HomeFragment extends Fragment implements  SwipeRefreshLayout.OnRefr
     private int TOTAL_PAGES = 3;
     private int currentPage = PAGE_START;
     URLs baseUrl=new URLs();
-    final String postRoute ="post";
+    final String postRoute ="posttpagination";
     final String viewsRoute="updateviews";
     private String TAG = "commentsFragment";
     IResult mResultCallback = null;
@@ -368,11 +369,22 @@ public class HomeFragment extends Fragment implements  SwipeRefreshLayout.OnRefr
                 post.setContent(content);
                 post.setUser_id(userId);
 
+                JSONObject user=obj.getJSONObject("user");
+                String userName=user.getString("name");
+                String profilePic=user.getString("picture");
+
+
+                JSONObject cat=obj.getJSONObject("cat");
+                String catName=cat.getString("name");
+
                 //get username and profile pic
-               post.setUsername("اسم المستخدم ");
+               post.setUsername(userName);
+//               profilePic=baseUrl.getImagePath(profilePic);
+
+               //database image path is outdated
                post.setProfilePic("https://alkafeelblog.edu.turathalanbiaa.com/aqlam/image/000000.png");
                //get cat name
-               post.setCategory_name("category");
+               post.setCategory_name(catName);
 
                 postsList.add(post);
             }
@@ -501,7 +513,12 @@ public class HomeFragment extends Fragment implements  SwipeRefreshLayout.OnRefr
     public void onProfileClick(View view, int position) {
         Intent intent =new Intent(getContext(), ProfileActivity.class);
         Log.d(TAG, "onProfileClick: "+adapter.getItem(position).getUser_id());
-        intent.putExtra("user_id",adapter.getItem(position).getUser_id());
+        Bundle bundle=new Bundle();
+        bundle.putString("user_name",adapter.getItem(position).getUsername());
+        bundle.putString("user_id",adapter.getItem(position).getUser_id());
+        bundle.putString("profile_pic",adapter.getItem(position).getProfilePic());
+//        intent.putExtra("user_id",adapter.getItem(position).getUser_id());
+        intent.putExtra("user",bundle);
         startActivity(intent);
     }
 }

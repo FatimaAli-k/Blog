@@ -117,11 +117,13 @@
 
                 <Button
                     android:id="@+id/catBtn"
-                    android:layout_width="50dp"
-                    android:layout_height="23dp"
-                    android:background="@drawable/bg_button"
-                    android:text="cat"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:background="@drawable/bg_button_tag"
+                    android:text="@string/menu_categories"
                     android:textSize="14sp"
+                    android:paddingRight="10dp"
+                    android:paddingLeft="10dp"
                     android:textStyle="italic"
                     android:layout_marginRight="5dp"
                     />

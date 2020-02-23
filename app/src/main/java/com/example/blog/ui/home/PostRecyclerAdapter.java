@@ -14,6 +14,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.blog.ClickListenerInterface;
 import com.example.blog.R;
 import com.example.blog.tools.TimeAgo;
 import com.example.blog.model.Posts;
@@ -50,8 +51,8 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         return postsList;
     }
 
-    public void setPosts(List<Posts> movies) {
-        this.postsList = movies;
+    public void setPosts(List<Posts> posts) {
+        this.postsList = posts;
     }
 
     @Override
@@ -89,8 +90,10 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 PostVH postVH = (PostVH) holder;
 
                 //profile pic, get from user
+                String profilePic=posts.getProfilePic();
+                if (profilePic != null && !profilePic.equals("")) {
                 Picasso.with( postVH.profilePic.getContext()).
-                        load(posts.getProfilePic()).into( postVH.profilePic);
+                        load(profilePic).into( postVH.profilePic);}
 
                 //name
                 postVH.userName.setText(posts.getUsername());
@@ -117,7 +120,7 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
                 String img = posts.getImage();
 
-                Log.d("rv", "onBindViewHolder: "+img);
+
                 if (img != null && !img.equals("")) {
 
                     postVH.postPic.setVisibility(View.VISIBLE);
@@ -160,8 +163,8 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
     }
 
-    public void remove(Posts city) {
-        int position = postsList.indexOf(city);
+    public void remove(Posts p) {
+        int position = postsList.indexOf(p);
         if (position > -1) {
             postsList.remove(position);
             notifyItemRemoved(position);

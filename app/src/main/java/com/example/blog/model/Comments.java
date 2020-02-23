@@ -6,6 +6,10 @@ public class Comments {
     int id,post_id;
     String user_id,content;
     String created_at;
+    String username;
+
+
+
 
     public Comments(){}
 
@@ -48,4 +52,13 @@ public class Comments {
     public void setCreated_at(String created_at) {
         this.created_at = created_at;
     }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
 }

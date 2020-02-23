@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.android.volley.VolleyError;
 import com.example.blog.R;
 import com.example.blog.model.Categories;
+import com.example.blog.tools.URLs;
 import com.example.blog.volley.FetchJson;
 import com.example.blog.volley.IResult;
 
@@ -37,6 +38,8 @@ public class CategoriesFragment extends Fragment implements CategoriesRecyclerVi
    CategoriesRecyclerViewAdapter adapter;
     RelativeLayout catRelativeLayout;
     ArrayList<Categories>catList=new ArrayList<>();
+    URLs baseUrl=new URLs();
+
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,

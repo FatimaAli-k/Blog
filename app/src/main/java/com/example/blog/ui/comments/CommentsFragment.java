@@ -50,6 +50,7 @@ public class CommentsFragment extends Fragment{
     //
     URLs baseUrl=new URLs();
     String firstPageUrl;
+    String route="commentpagination";
 
 
     public CommentsFragment(){}
@@ -70,7 +71,7 @@ public class CommentsFragment extends Fragment{
         }
 
 
-        firstPageUrl=baseUrl.getUrl("post");
+        firstPageUrl=baseUrl.getUrl(route);
 
 
 //
@@ -160,7 +161,7 @@ public class CommentsFragment extends Fragment{
     private void loadNextPage() {
         Log.d(TAG, "loadNextPage: " + currentPage);
 
-      String nextPageUrl=baseUrl.getNextPageUrl("post",currentPage);
+      String nextPageUrl=baseUrl.getNextPageUrl(route,currentPage);
 
 //        String url="https://api.themoviedb.org/3/tv/popular?api_key=ee462a4199c4e7ec8d93252494ba661b&language=en-US&page="+currentPage;
         initVolleyCallback();
@@ -238,13 +239,16 @@ public class CommentsFragment extends Fragment{
 
                 JSONObject obj=data.getJSONObject(i);
                 int id=obj.getInt("id");
-                String title=obj.getString("title");
+                String content=obj.getString("content");
                 String created_at=obj.getString("created_at");
+                JSONObject user=obj.getJSONObject("user");
+//                String username=user.getString("name");
 
 
-               Comments comments=new Comments();
-               comments.setContent(title);
-               commentsList.add(comments);
+                Comments comments=new Comments();
+                comments.setContent(content);
+
+                commentsList.add(comments);
             }
 
 
