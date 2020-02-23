@@ -53,7 +53,7 @@
 <!--        android:layout_width="match_parent"-->
 <!--        android:layout_height="wrap_content"-->
 <!--        android:id="@+id/commentBar"-->
-<!--        android:name="com.example.blog.ui.comments.CommentBarFragment"-->
+<!--        android:name="com.example.blog.controller.ui.comments.CommentBarFragment"-->
 
 <!--        />-->
 

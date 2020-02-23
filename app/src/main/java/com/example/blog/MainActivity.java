@@ -1,9 +1,13 @@
 package com.example.blog;
 
 
+import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
+import com.example.blog.controller.ProfileActivity;
+import com.example.blog.controller.WritePostActivity;
 import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
@@ -11,7 +15,6 @@ import com.facebook.Profile;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 
 import androidx.navigation.NavController;
@@ -41,6 +44,10 @@ public class MainActivity extends AppCompatActivity {
     ImageView profilePic;
     TextView nameTextView,emailTextView;
     FloatingActionButton fab;
+    String myId,myName;
+    Boolean actLoggedIn=false;
+    SharedPreferences prefs;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +59,10 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         final boolean loggedOut = AccessToken.getCurrentAccessToken() == null;
 
+        prefs = getSharedPreferences("profile", Activity.MODE_PRIVATE);
+        if(prefs.getString("user_id",null)!=null){
+            actLoggedIn=true;
+        }
 
 
        fab = findViewById(R.id.fab);
@@ -60,13 +71,13 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
 //                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
 //                        .setAction("Action", null).show();
-//                if(!loggedOut){
-                Intent intent =new Intent(getApplicationContext(),WritePostActivity.class);
+                if(!loggedOut || actLoggedIn){
+                Intent intent =new Intent(getApplicationContext(), WritePostActivity.class);
                 startActivity(intent);
-//            }
-//                else {
-//                    Toast.makeText(getApplicationContext(),"must log in to post",Toast.LENGTH_SHORT).show();
-//                }
+            }
+                else {
+                    Toast.makeText(getApplicationContext(),"must log in to post",Toast.LENGTH_SHORT).show();
+                }
 
             }
         });
@@ -95,8 +106,9 @@ public class MainActivity extends AppCompatActivity {
             navigationView.getMenu().findItem(R.id.nav_logout).setVisible(true);
             //Using Graph API
             getUserProfile(AccessToken.getCurrentAccessToken());
-        }
 
+
+        }
 
 
 //        NavGraph navGraph;
@@ -129,7 +141,6 @@ public class MainActivity extends AppCompatActivity {
         View headerView =  navigationView.inflateHeaderView(R.layout.nav_header_main);
         profilePic = headerView.findViewById(R.id.profilePic);
         nameTextView=headerView.findViewById(R.id.nameTextView);
-//        nameTextView.setText(Profile.getCurrentProfile().getName());
         emailTextView=headerView.findViewById(R.id.emailTextView);
 
         profilePic.setOnClickListener(new View.OnClickListener() {
@@ -142,12 +153,33 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(intent);
 //                navController.navigate(R.id.nav_profile);
                 }
+                else if(actLoggedIn){
+                    Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
+                    intent.putExtra("user_id",prefs.getString("user_id",null));
+                    startActivity(intent);
+
+                }
 
             }
         });
 
 
+        if(actLoggedIn){
+            navigationView.getMenu().findItem(R.id.nav_login).setVisible(false);
+            navigationView.getMenu().findItem(R.id.nav_logout).setVisible(true);
+
+            String img=prefs.getString("profile_pic",null);
+            if(img != null)
+            Picasso.with(MainActivity.this).load(img).into(profilePic);
+
+            nameTextView.setText(prefs.getString("user_name","guest"));
+        }
+        else{
+            nameTextView.setText("guest");
+        }
+
 //
+
 
 //        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
 //            @Override
@@ -219,11 +251,11 @@ public class MainActivity extends AppCompatActivity {
                             Toast.makeText(getApplicationContext(),first_name+" "+email+" , "+id,Toast.LENGTH_LONG).show();
 
                             nameTextView.setText(first_name +" "+last_name);
-                            emailTextView.setText(email);
+//                            emailTextView.setText(email);
 //                            txtUsername.setText("First Name: " + first_name + "\nLast Name: " + last_name);
 //                            txtEmail.setText(email);
                             Picasso.with(MainActivity.this).load(image_url).into(profilePic);
-
+//
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -235,6 +267,7 @@ public class MainActivity extends AppCompatActivity {
         parameters.putString("fields", "first_name,last_name,email,id");
         request.setParameters(parameters);
         request.executeAsync();
+
 
     }
 

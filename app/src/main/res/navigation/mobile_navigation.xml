@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/nav_home"
-        android:name="com.example.blog.ui.home.HomeFragment"
+        android:name="com.example.blog.controller.ui.home.HomeFragment"
         android:label="@string/menu_home"
         tools:layout="@layout/fragment_home" >
         <argument
@@ -25,7 +25,7 @@
 
     <fragment
         android:id="@+id/nav_all_blogs"
-        android:name="com.example.blog.ui.allBlogs.AllBlogsFragment"
+        android:name="com.example.blog.controller.ui.allBlogs.AllBlogsFragment"
         android:label="@string/menu_all_blogs"
         tools:layout="@layout/fragment_all_blogs" >
         <action
@@ -35,13 +35,13 @@
 
     <fragment
         android:id="@+id/nav_bloggers"
-        android:name="com.example.blog.ui.bloggers.BloggersFragment"
+        android:name="com.example.blog.controller.ui.bloggers.BloggersFragment"
         android:label="@string/menu_bloggers"
         tools:layout="@layout/fragment_bloggers" />
 
     <fragment
         android:id="@+id/nav_categories"
-        android:name="com.example.blog.ui.category.CategoriesFragment"
+        android:name="com.example.blog.controller.ui.category.CategoriesFragment"
         android:label="@string/menu_categories"
         tools:layout="@layout/fragment_categories" >
         <action
@@ -61,42 +61,48 @@
 
 <!--    <fragment-->
 <!--        android:id="@+id/nav_share"-->
-<!--        android:name="com.example.blog.ui.share.ProfileFragment"-->
+<!--        android:name="com.example.blog.controller.ui.share.ProfileFragment"-->
 <!--        android:label="@string/menu_share"-->
 <!--        tools:layout="@layout/activity_profile" />-->
 
     <activity
         android:id="@+id/nav_register"
-        android:name="com.example.blog.RegisterActivity"
+        android:name="com.example.blog.controller.RegisterActivity"
    />
 
     <activity
         android:id="@+id/nav_login"
-        android:name="com.example.blog.LoginActivity"
+        android:name="com.example.blog.controller.LoginActivity"
 
         />
 
     <action
         android:id="@+id/nav_logout"
-       app:destination="@+id/nav_home"
+        app:destination="@+id/nav_logoutAct"
 
         >
-        <argument android:defaultValue="true"
-            android:name="loggedOut" />
+        <argument
+            android:name="loggedOut"
+            android:defaultValue="true" />
 
     </action>
 
 
     <fragment
         android:id="@+id/nav_post"
-        android:name="com.example.blog.ui.home.ExpandedPostFragment"
+        android:name="com.example.blog.controller.ui.comments.ExpandedPostFragment"
         android:label=""
         tools:layout="@layout/expanded_post"/>
 
 
     <activity
         android:id="@+id/nav_profile"
-        android:name="com.example.blog.ProfileActivity"
+        android:name="com.example.blog.controller.ProfileActivity"
+        />
+
+    <activity
+        android:id="@+id/nav_logoutAct"
+        android:name="com.example.blog.controller.LogoutActivity"
         />
 
 
@@ -104,7 +110,7 @@
 
 <!--    <fragment-->
 <!--        android:id="@+id/nav_send"-->
-<!--        android:name="com.example.blog.ui.send.SendFragment"-->
+<!--        android:name="com.example.blog.controller.ui.send.SendFragment"-->
 <!--        android:label="@string/menu_send"/>-->
 <!--        tools:layout="@layout/activity_write_post" />-->
 </navigation>
