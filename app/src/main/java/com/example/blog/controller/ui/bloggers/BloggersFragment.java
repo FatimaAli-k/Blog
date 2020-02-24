@@ -53,9 +53,8 @@ public class BloggersFragment extends Fragment implements SwipeRefreshLayout.OnR
     private int TOTAL_PAGES = 3;
     private int currentPage = PAGE_START;
     URLs baseUrl=new URLs();
-    final String postRoute ="post";
-    final String viewsRoute="updateviews";
-    private String TAG = "commentsFragment";
+    final String route ="post";
+    private String TAG = "BloggerseFragment";
     IResult mResultCallback = null;
     FetchJson mVolleyService;
     TextView errortxt;
@@ -67,7 +66,7 @@ public class BloggersFragment extends Fragment implements SwipeRefreshLayout.OnR
                              ViewGroup container, Bundle savedInstanceState) {
        View root = inflater.inflate(R.layout.fragment_bloggers, container, false);
 
-        firstPageUrl=baseUrl.getUrl(postRoute);
+        firstPageUrl=baseUrl.getUrl(route);
 
         swipeRefresh=root.findViewById(R.id.swipeRefresh);
         swipeRefresh.setOnRefreshListener(this);
@@ -182,7 +181,7 @@ public class BloggersFragment extends Fragment implements SwipeRefreshLayout.OnR
     private void loadNextPage() {
         Log.d(TAG, "loadNextPage: " + currentPage);
 
-        String nextPageUrl=baseUrl.getNextPageUrl(postRoute,currentPage);
+        String nextPageUrl=baseUrl.getNextPageUrl(route,currentPage);
         initVolleyCallback();
         mVolleyService =new FetchJson(mResultCallback,getContext());
         mVolleyService.getDataVolley("GETCALL",nextPageUrl);
