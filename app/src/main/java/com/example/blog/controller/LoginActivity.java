@@ -11,8 +11,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.android.volley.VolleyError;
 import com.example.blog.MainActivity;
 import com.example.blog.R;
+import com.example.blog.URLs;
+import com.example.blog.controller.tools.volley.FetchJson;
+import com.example.blog.controller.tools.volley.IResult;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -20,14 +24,25 @@ import com.facebook.FacebookException;
 import com.facebook.Profile;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.squareup.picasso.Picasso;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 public class LoginActivity extends AppCompatActivity {
 
     CallbackManager callbackManager;
     LoginButton fbLogin;
     EditText username,password;
+    URLs baseUrl=new URLs();
+    String TAG="login";
+    IResult mResultCallback = null;
+    FetchJson mVolleyService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,14 +58,8 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 //make api call
-                SharedPreferences prefs = getSharedPreferences("profile", Activity.MODE_PRIVATE);
-                SharedPreferences.Editor editor = prefs.edit();
-                editor.putString("user_id",password.getText().toString());
-                editor.putString("user_name",username.getText().toString());
-                editor.putString("profile_pic","https://alkafeelblog.edu.turathalanbiaa.com/aqlam/image/000000.png");
-                editor.apply();
-                Intent intent=new Intent(getApplicationContext(), MainActivity.class);
-                startActivity(intent);
+                makeApiCall(username.getText().toString(), password.getText().toString());
+
             }
         });
 
@@ -110,6 +119,82 @@ public class LoginActivity extends AppCompatActivity {
         });
 
     }
+
+    private void makeApiCall(String email, String password) {
+        String url=baseUrl.getUrl(baseUrl.getLogin());
+        initVolleyCallback();
+        mVolleyService =new FetchJson(mResultCallback,getApplicationContext());
+        Map<String,String> params=new HashMap<>();
+        params.put("email",email);
+        params.put("password",password);
+        JSONObject sendJson=new JSONObject(params);
+        mVolleyService.postDataVolley("GETCALL",url,sendJson);
+//
+    }
+    void initVolleyCallback(){
+        mResultCallback = new IResult() {
+            @Override
+            public void notifySuccess(String requestType, JSONObject response) {
+                Log.d(TAG, "Volley requester " + requestType);
+                Log.d(TAG, "Volley JSON post" + response);
+//                Toast.makeText(getContext(),"//"+response,Toast.LENGTH_LONG).show();
+               if( parsJson(response)){
+                   Intent intent=new Intent(getApplicationContext(), MainActivity.class);
+                    startActivity(intent);
+               }
+
+
+            }
+            @Override
+            public void notifySuccessJsonArray(String requestType, JSONArray response) {
+                Log.d(TAG, "Volley requester " + requestType);
+                Log.d(TAG, "Volley JSON post" + response);
+
+
+//                Toast.makeText(getContext(),"//"+response,Toast.LENGTH_LONG).show();
+
+            }
+
+            @Override
+            public void notifyError(String requestType, VolleyError error) {
+                Log.d(TAG, "Volley requester " + requestType);
+                Log.d(TAG, "Volley JSON post" + error);
+            }
+        };
+    }
+
+
+    boolean parsJson(JSONObject response) {
+
+        boolean success = false;
+
+        try {
+
+
+            String name = response.getString("name");
+           String imgStr = response.getString("picture");
+           String id = response.getString("id");
+            if(imgStr == null || imgStr.equals("") || imgStr.equals("http://aqlam.turathalanbiaa.com/aqlam/image/000000.png")){
+                imgStr="https://alkafeelblog.edu.turathalanbiaa.com/aqlam/image/000000.png";
+            }
+
+            SharedPreferences prefs = getSharedPreferences("profile", Activity.MODE_PRIVATE);
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putString("user_id",id);
+            editor.putString("user_name",name);
+            editor.putString("profile_pic",imgStr);
+            editor.apply();
+           success=true;
+
+
+        } catch (JSONException e) {
+            success=false;
+
+        }
+        return success;
+    }
+
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

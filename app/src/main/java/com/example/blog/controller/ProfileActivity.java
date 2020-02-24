@@ -7,13 +7,27 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.android.volley.VolleyError;
 import com.example.blog.R;
+import com.example.blog.URLs;
+import com.example.blog.controller.tools.volley.FetchJson;
+import com.example.blog.controller.tools.volley.IResult;
+import com.example.blog.model.Categories;
 import com.facebook.AccessToken;
 import com.facebook.Profile;
 import com.squareup.picasso.Picasso;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -22,6 +36,11 @@ public class ProfileActivity extends AppCompatActivity {
     String userId,userName,imgStr,myUserId;
    String myFbId;
     String SHARD_PERFNAME="profile";
+    URLs baseUrl=new URLs();
+    String TAG="profile";
+    IResult mResultCallback = null;
+    FetchJson mVolleyService;
+    int points;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,33 +90,84 @@ public class ProfileActivity extends AppCompatActivity {
 //        Picasso.with(this).load(imgStr).fit().into(profilePic);
 
 
+        name=findViewById(R.id.ph_name);
+
 
         //load profile info from db
+        String url=baseUrl.getUrl(baseUrl.getProfileInfo());
+        initVolleyCallback();
+        mVolleyService =new FetchJson(mResultCallback,getApplicationContext());
+        Map<String,String> params=new HashMap<>();
+        params.put("id",userId);
+        JSONObject sendJson=new JSONObject(params);
+        mVolleyService.postDataVolley("GETCALL",url,sendJson);
+//
 
         //add my posts fragment
-
-
-        TextView username=findViewById(R.id.ph_name);
-        username.setText("id"+userId);
-
-
-        
-
-
 
 
 
 
     }
 
-    //false if logged in, true if logged out
-    public boolean isLoggedOut(){
+    void initVolleyCallback(){
+        mResultCallback = new IResult() {
+            @Override
+            public void notifySuccess(String requestType, JSONObject response) {
+                Log.d(TAG, "Volley requester " + requestType);
+                Log.d(TAG, "Volley JSON post" + response);
+//                Toast.makeText(getContext(),"//"+response,Toast.LENGTH_LONG).show();
+               if(parsJson(response)){
+                   name.setText(userName);
+                   if(imgStr == null || imgStr.equals("") || imgStr.equals("http://aqlam.turathalanbiaa.com/aqlam/image/000000.png")){
+                       imgStr="https://alkafeelblog.edu.turathalanbiaa.com/aqlam/image/000000.png";
+                   }
+                     Picasso.with(getApplicationContext()).load(imgStr).fit().into(profilePic);
 
-        SharedPreferences prefs = getSharedPreferences(SHARD_PERFNAME, Activity.MODE_PRIVATE);
-        if (prefs.getString("user_id",null)!=null){
-            return false;
+
+               }
+
+
+            }
+            @Override
+            public void notifySuccessJsonArray(String requestType, JSONArray response) {
+                Log.d(TAG, "Volley requester " + requestType);
+                Log.d(TAG, "Volley JSON post" + response);
+
+
+//                Toast.makeText(getContext(),"//"+response,Toast.LENGTH_LONG).show();
+
+            }
+
+            @Override
+            public void notifyError(String requestType, VolleyError error) {
+                Log.d(TAG, "Volley requester " + requestType);
+                Log.d(TAG, "Volley JSON post" + error);
+            }
+        };
+    }
+
+    boolean parsJson(JSONObject response){
+
+        boolean success=false;
+
+        try {
+
+
+
+
+           userName = response.getString("name");
+           imgStr = response.getString("picture");
+           points=response.getInt("points");
+           success=true;
+
+
+        }catch (JSONException e) {
+
+            success=false;
         }
-        return true;
+
+        return success;
     }
 
 }

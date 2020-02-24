@@ -7,6 +7,8 @@ public class URLs {
     private String sendPost="getpost";
     private String postsFeed ="posttpagination";
     private String commentsFeed="commentpagination";
+    private String profileInfo="profile";
+    private String login="user";
 
     private String incViews="updateviews";
 
@@ -78,6 +80,14 @@ public class URLs {
 
     public String getIncViews() {
         return incViews;
+    }
+
+    public String getLogin() {
+        return login;
+    }
+
+    public String getProfileInfo() {
+        return profileInfo;
     }
 
     public String getImagePath() {

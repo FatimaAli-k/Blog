@@ -52,7 +52,7 @@
             android:textColor="#fff"
             android:fontFamily="@font/myfont"
             android:background="@drawable/bg_text_overlay"
-            android:text="name mc nameson"
+            android:text="اسم المستخدم"
             android:textDirection="rtl"
             android:textSize="20dp" />
 

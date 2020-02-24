@@ -46,7 +46,8 @@ public class CategoriesFragment extends Fragment implements CategoriesRecyclerVi
                              ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_categories, container,false);
 
-        String url="http://192.168.9.108:8000/api/cat";
+
+        String url=baseUrl.getCategoriesUrl();
         initVolleyCallback();
         mVolleyService =new FetchJson(mResultCallback,getContext());
 
