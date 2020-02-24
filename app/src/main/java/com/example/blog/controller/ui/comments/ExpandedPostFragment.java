@@ -64,6 +64,7 @@ public class ExpandedPostFragment extends Fragment {
         getChildFragmentManager().beginTransaction().replace(R.id.commentBarFrame, commentBar, "commentBarFrame").commit();
 
 
+
         final ScrollView scrollView=root.findViewById(R.id.scrollView_post);
 //        scrollView.fullScroll(ScrollView.FOCUS_UP);
         Toolbar toolbar=getActivity().findViewById(R.id.toolbar);
