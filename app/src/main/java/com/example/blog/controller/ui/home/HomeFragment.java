@@ -32,13 +32,12 @@ import com.example.blog.controller.ProfileActivity;
 import com.example.blog.R;
 import com.example.blog.controller.tools.PaginationListener;
 import com.example.blog.controller.tools.PopUpClass;
-import com.example.blog.controller.tools.URLs;
+import com.example.blog.URLs;
 import com.example.blog.model.Posts;
 import com.example.blog.controller.ui.comments.CommentsDialogFragment;
 import com.example.blog.controller.tools.volley.AppController;
 import com.example.blog.controller.tools.volley.FetchJson;
 import com.example.blog.controller.tools.volley.IResult;
-import com.facebook.login.LoginManager;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.json.JSONArray;

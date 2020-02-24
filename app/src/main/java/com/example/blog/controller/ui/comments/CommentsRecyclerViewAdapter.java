@@ -86,7 +86,7 @@ public class CommentsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
                 postVH.time.setText(fTime);
 
                 //get name from user_id
-//                postVH.name.setText("");
+                postVH.name.setText(comments.getUsername());
 
 
                 break;

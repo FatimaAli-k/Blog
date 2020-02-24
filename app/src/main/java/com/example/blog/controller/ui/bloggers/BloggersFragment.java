@@ -21,7 +21,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.android.volley.VolleyError;
 import com.example.blog.R;
 import com.example.blog.model.Users;
-import com.example.blog.controller.tools.URLs;
+import com.example.blog.URLs;
 import com.example.blog.controller.tools.ClickListenerInterface;
 import com.example.blog.controller.tools.PaginationListener;
 import com.example.blog.controller.tools.volley.FetchJson;

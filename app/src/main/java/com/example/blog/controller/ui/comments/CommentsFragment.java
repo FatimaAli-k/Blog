@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.VolleyError;
 import com.example.blog.R;
-import com.example.blog.controller.tools.URLs;
+import com.example.blog.URLs;
 import com.example.blog.model.Comments;
 import com.example.blog.controller.tools.PaginationListener;
 import com.example.blog.controller.tools.volley.FetchJson;
@@ -238,7 +238,7 @@ public class CommentsFragment extends Fragment{
                 String user_id=obj.getString("user_id");
                 String created_at=obj.getString("created_at");
                 JSONObject user=obj.getJSONObject("user");
-                String username=user.getString("name");
+                String name=user.getString("name");
 
 
                 Comments comments=new Comments();
@@ -246,7 +246,7 @@ public class CommentsFragment extends Fragment{
                 comments.setId(id);
                 comments.setUser_id(user_id);
                 comments.setCreated_at(created_at);
-//                comments.setUsername(name);
+                comments.setUsername(name);
 
                 commentsList.add(comments);
             }

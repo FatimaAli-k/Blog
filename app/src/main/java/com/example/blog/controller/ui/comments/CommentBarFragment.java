@@ -16,9 +16,8 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.android.volley.VolleyError;
-import com.example.blog.MainActivity;
 import com.example.blog.R;
-import com.example.blog.controller.tools.URLs;
+import com.example.blog.URLs;
 import com.example.blog.controller.tools.volley.FetchJson;
 import com.example.blog.controller.tools.volley.IResult;
 import com.facebook.AccessToken;

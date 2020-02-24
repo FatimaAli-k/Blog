@@ -21,7 +21,7 @@ import com.example.blog.MainActivity;
 import com.example.blog.R;
 import com.example.blog.model.Categories;
 import com.example.blog.controller.tools.TextValidator;
-import com.example.blog.controller.tools.URLs;
+import com.example.blog.URLs;
 import com.example.blog.controller.tools.volley.FetchJson;
 import com.example.blog.controller.tools.volley.IResult;
 import com.facebook.AccessToken;
