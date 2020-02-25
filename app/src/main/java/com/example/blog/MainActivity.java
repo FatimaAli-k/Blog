@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
+import com.example.blog.controller.notification.ForegroundService;
 import com.example.blog.controller.ui.profile.ProfileActivity;
 import com.example.blog.controller.WritePostActivity;
 import com.facebook.AccessToken;
@@ -17,6 +18,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import android.util.Log;
 import android.view.View;
 
+import androidx.core.content.ContextCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -65,19 +67,22 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
+        startService();
        fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 //                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
 //                        .setAction("Action", null).show();
-                if(!loggedOut || actLoggedIn){
-                Intent intent =new Intent(getApplicationContext(), WritePostActivity.class);
-                startActivity(intent);
-            }
-                else {
-                    Toast.makeText(getApplicationContext(),R.string.must_login_to_post,Toast.LENGTH_SHORT).show();
-                }
+//                if(!loggedOut || actLoggedIn){
+//                Intent intent =new Intent(getApplicationContext(), WritePostActivity.class);
+//                startActivity(intent);
+//            }
+//                else {
+//                    Toast.makeText(getApplicationContext(),R.string.must_login_to_post,Toast.LENGTH_SHORT).show();
+//                }
+
+                stopService();
 
             }
         });
@@ -275,6 +280,15 @@ public class MainActivity extends AppCompatActivity {
         return fab;
     }
 
+    public void startService() {
+        Intent serviceIntent = new Intent(this, ForegroundService.class);
+        serviceIntent.putExtra("inputExtra", "Foreground Service Example in Android");
+        ContextCompat.startForegroundService(this, serviceIntent);
+    }
+    public void stopService() {
+        Intent serviceIntent = new Intent(this, ForegroundService.class);
+        stopService(serviceIntent);
+    }
 
 
 }

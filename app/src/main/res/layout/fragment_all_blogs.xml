@@ -5,8 +5,13 @@
     android:layout_height="match_parent"
 
     android:orientation="vertical">
-
-
+<Button
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:id="@+id/ch2Btn"
+    android:text="ch2"
+    android:layout_alignParentBottom="true"
+    />
     <androidx.recyclerview.widget.RecyclerView
 
         android:layout_width="match_parent"
