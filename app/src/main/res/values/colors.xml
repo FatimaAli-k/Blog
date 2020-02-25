@@ -8,4 +8,5 @@
 
     <color name="transparentGrey">#6AFFFDFD</color>
     <color name="edge">#818181</color>
+    <color name="grayBackground">#3E4141</color>
 </resources>

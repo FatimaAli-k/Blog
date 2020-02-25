@@ -109,7 +109,7 @@ public class CommentBarFragment extends Fragment {
                 }
                 comment.setText("");
                 comment.clearFocus();
-                Toast.makeText(getContext(),"comment sent",Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(),R.string.comment_sent,Toast.LENGTH_LONG).show();
 
 
             }

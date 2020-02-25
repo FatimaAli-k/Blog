@@ -73,7 +73,7 @@ public class CategoriesFragment extends Fragment implements CategoriesRecyclerVi
     }
     @Override
     public void onItemClick(View view, int position) {
-        Toast.makeText(getContext(), "pos: " + position+" id: "+ catList.get(position).getId(), Toast.LENGTH_SHORT).show();
+//        Toast.makeText(getContext(), "pos: " + position+" id: "+ catList.get(position).getId(), Toast.LENGTH_SHORT).show();
 
 
         Bundle bundle = new Bundle();

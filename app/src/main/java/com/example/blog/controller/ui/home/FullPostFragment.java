@@ -13,7 +13,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
-import com.example.blog.controller.ProfileActivity;
+import com.example.blog.controller.ui.profile.ProfileActivity;
 import com.example.blog.R;
 import com.example.blog.controller.tools.PopUpClass;
 import com.example.blog.controller.tools.TimeAgo;

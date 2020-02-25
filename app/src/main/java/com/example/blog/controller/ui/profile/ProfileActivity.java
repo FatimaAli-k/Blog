@@ -1,6 +1,9 @@
-package com.example.blog.controller;
+package com.example.blog.controller.ui.profile;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -17,6 +20,7 @@ import com.example.blog.R;
 import com.example.blog.URLs;
 import com.example.blog.controller.tools.volley.FetchJson;
 import com.example.blog.controller.tools.volley.IResult;
+import com.example.blog.controller.ui.home.HomeFragment;
 import com.example.blog.model.Categories;
 import com.facebook.AccessToken;
 import com.facebook.Profile;
@@ -41,6 +45,12 @@ public class ProfileActivity extends AppCompatActivity {
     IResult mResultCallback = null;
     FetchJson mVolleyService;
     int points;
+//
+//    LinearLayoutManager layoutManager;
+//   ProfilePostsRecyclerAdapter adapter;
+//   CoordinatorLayout coordinatorLayout;
+//
+//    RecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,15 +58,17 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-        background=findViewById(R.id.profile_background);
+//        background=findViewById(R.id.profile_background);
         profilePic=findViewById(R.id.ph_profilePic);
-        background.getLayoutParams().height=350;
+//        background.getLayoutParams().height=350;
 
 
-        Picasso.with(this).load(R.drawable.aqlamdefault).fit().into(background);
+//        Picasso.with(this).load(R.drawable.aqlamdefault).fit().into(background);
 
         Intent intent = getIntent();
         userId= intent.getStringExtra("user_id");
+
+
 
         final boolean fbLoggedOut = AccessToken.getCurrentAccessToken() == null;
 //
@@ -76,7 +88,8 @@ public class ProfileActivity extends AppCompatActivity {
         }
 
 
-
+        ProfilePostsFragment postsFragment=new ProfilePostsFragment();
+        getSupportFragmentManager().beginTransaction().replace(R.id.posts_frame, postsFragment, "postFragment").commit();
 
 //        Intent intent = getIntent();
 ////        userId= intent.getStringExtra("user_id");

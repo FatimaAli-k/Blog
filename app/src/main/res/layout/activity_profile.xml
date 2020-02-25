@@ -1,31 +1,130 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/profileCoordinatorLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appbar"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent">
+
+
+        <androidx.appcompat.widget.Toolbar
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            app:layout_scrollFlags="scroll|enterAlways"
+            android:background="@color/grayBackground"
+            >
+
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="5dp"
+                    app:cardCornerRadius="35dp"
+
+                    >
+
+                    <ImageView
+                        android:id="@+id/ph_profilePic"
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
+                        android:src="@drawable/default_profile_pic"
+                        />
+                </androidx.cardview.widget.CardView>
+
+
+
+
+        </androidx.appcompat.widget.Toolbar>
+        <androidx.appcompat.widget.Toolbar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/grayBackground"
+
+            >
+
+            <TextView
+                android:id="@+id/ph_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:padding="5dp"
+                android:layout_margin="10dp"
+                android:textColor="#fff"
+                android:fontFamily="@font/myfont"
+                android:background="@drawable/bg_text_overlay"
+                android:text="اسم المستخدم"
+                android:textDirection="rtl"
+                android:textSize="20dp" />
+        </androidx.appcompat.widget.Toolbar>
+
+<!--        <com.google.android.material.tabs.TabLayout-->
+<!--            android:id="@+id/tabs"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+
+<!--            app:tabMode="scrollable">-->
+
+<!--            <com.google.android.material.tabs.TabItem-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:text="Tab1" />-->
+
+<!--            <com.google.android.material.tabs.TabItem-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:text="Tab2" />-->
+
+<!--            <com.google.android.material.tabs.TabItem-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:text="Tab3" />-->
+<!--        </com.google.android.material.tabs.TabLayout>-->
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
 
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
 
-        <include layout="@layout/profile_header"/>
-<!--        <ImageView-->
-<!--            android:id="@+id/profile_background"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="150dp"-->
-<!--            android:background="@drawable/aqlamdefault"-->
-<!--            />-->
 
-        <FrameLayout
-            android:id="@+id/myPosts_frame"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-    </LinearLayout>
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+                <!--        <include layout="@layout/profile_header"/>-->
+
+                <!--        <ImageView-->
+                <!--            android:id="@+id/profile_background"-->
+                <!--            android:layout_width="match_parent"-->
+                <!--            android:layout_height="150dp"-->
+                <!--            android:background="@drawable/aqlamdefault"-->
+                <!--            />-->
+
+                <FrameLayout
+                    android:id="@+id/posts_frame"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                </FrameLayout>
+<!--                <androidx.recyclerview.widget.RecyclerView-->
+<!--                    android:id="@+id/posts_recycler_view"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="match_parent"-->
+
+
+<!--                    >-->
+
+<!--                </androidx.recyclerview.widget.RecyclerView>-->
+<!--                -->
+
+
+
+    </androidx.core.widget.NestedScrollView>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

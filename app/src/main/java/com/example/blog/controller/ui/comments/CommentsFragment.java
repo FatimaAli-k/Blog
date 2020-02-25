@@ -209,7 +209,7 @@ public class CommentsFragment extends Fragment{
                 if (currentPage <= TOTAL_PAGES) adapter.addLoadingFooter();
                 else isLastPage = true;
                 //
-                Toast.makeText(getContext(),"//"+currentPage,Toast.LENGTH_LONG).show();
+//                Toast.makeText(getContext(),"//"+currentPage,Toast.LENGTH_LONG).show();
 
 
             }
@@ -242,7 +242,10 @@ public class CommentsFragment extends Fragment{
 //
 
             TOTAL_PAGES=response.getInt("last_page");
-            Log.d(TAG, "parsJsonObj: "+TOTAL_PAGES);
+            Log.d(TAG, "parsJsonObj: total pages "+TOTAL_PAGES);
+            if(TOTAL_PAGES==0){
+                Toast.makeText(getContext(),R.string.no_comments,Toast.LENGTH_SHORT).show();
+            }
 
             JSONArray data=response.getJSONArray("data");
             for(int i=0;i<data.length();i++){

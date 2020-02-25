@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
-import com.example.blog.controller.ProfileActivity;
+import com.example.blog.controller.ui.profile.ProfileActivity;
 import com.example.blog.controller.WritePostActivity;
 import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
                 else {
-                    Toast.makeText(getApplicationContext(),"must log in to post",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(),R.string.must_login_to_post,Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -248,7 +248,7 @@ public class MainActivity extends AppCompatActivity {
                             String email = object.getString("email");
                             String id = object.getString("id");
                             String image_url = "https://graph.facebook.com/" + id + "/picture?type=normal";
-                            Toast.makeText(getApplicationContext(),first_name+" "+email+" , "+id,Toast.LENGTH_LONG).show();
+//                            Toast.makeText(getApplicationContext(),first_name+" "+email+" , "+id,Toast.LENGTH_LONG).show();
 
                             nameTextView.setText(first_name +" "+last_name);
 //                            emailTextView.setText(email);

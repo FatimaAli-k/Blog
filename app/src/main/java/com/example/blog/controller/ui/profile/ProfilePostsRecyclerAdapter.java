@@ -1,4 +1,4 @@
-package com.example.blog.controller.ui.home;
+package com.example.blog.controller.ui.profile;
 
 
 import android.content.Context;
@@ -13,8 +13,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.blog.controller.tools.ClickListenerInterface;
 import com.example.blog.R;
+import com.example.blog.controller.tools.ClickListenerInterface;
 import com.example.blog.controller.tools.TimeAgo;
 import com.example.blog.model.Posts;
 import com.squareup.picasso.Picasso;
@@ -22,7 +22,7 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PostRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  {
+public class ProfilePostsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  {
 
 
     private List<Posts> postsList;
@@ -41,7 +41,7 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     private boolean isLoadingAdded = false;
 
-    public PostRecyclerAdapter(Context context) {
+    public ProfilePostsRecyclerAdapter(Context context) {
         this.context = context;
         postsList = new ArrayList<>();
     }
@@ -74,7 +74,7 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     @NonNull
     private RecyclerView.ViewHolder getViewHolder(ViewGroup parent, LayoutInflater inflater) {
         RecyclerView.ViewHolder viewHolder;
-        View v1 = inflater.inflate(R.layout.post_single_item, parent, false);
+        View v1 = inflater.inflate(R.layout.profile_post_single_item, parent, false);
         viewHolder = new PostVH(v1);
         return viewHolder;
     }
@@ -88,18 +88,7 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             case ITEM:
                 PostVH postVH = (PostVH) holder;
 
-                //profile pic, get from user
-                String profilePic=posts.getProfilePic();
-                if (profilePic != null && !profilePic.equals("")) {
-                Picasso.with( postVH.profilePic.getContext()).
-                        load(profilePic).into( postVH.profilePic);}
 
-                //name
-                postVH.userName.setText(posts.getUsername());
-
-                //background pic
-//                Picasso.with( postVH.backgroundPic.getContext()).
-//                        load(R.drawable.aqlamdefault).fit().centerCrop().into( postVH.backgroundPic);
 
 
 
@@ -111,7 +100,7 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 String time= timeago.covertTimeToText(posts.getCreated_at());
                 postVH.timeStamp.setText(time);
 
-                postVH.catId.setText(""+posts.getCategory_id());
+//                postVH.catId.setText(""+posts.getCategory_id());
                 postVH.viewCount.setText(""+posts.getViews());
 
                 postVH.catBtn.setText(posts.getCategory_name());
@@ -215,11 +204,11 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
      * Main list's content ViewHolder
      */
     protected class PostVH extends RecyclerView.ViewHolder {
-        TextView postTitle,postDetails,seeMore,postId,viewCount,comments,timeStamp,catId;
-        ImageView postPic,profilePic,backgroundPic;
+        TextView postTitle,postDetails,seeMore,postId,viewCount,timeStamp,catId;
+        ImageView postPic;
         LinearLayout contentll,catLL;
         Button catBtn;
-        TextView userName;
+        TextView delete;
 
         public PostVH(View itemView) {
             super(itemView);
@@ -230,7 +219,7 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             seeMore = itemView.findViewById(R.id.seeMore);
             contentll = itemView.findViewById(R.id.contentLL);
             viewCount = itemView.findViewById(R.id.viewsCount);
-            comments = itemView.findViewById(R.id.commentsCount);
+            delete = itemView.findViewById(R.id.deletePost);
             timeStamp=itemView.findViewById(R.id.time);
 
             catLL=itemView.findViewById(R.id.post_catLL);
@@ -238,17 +227,12 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             catBtn=itemView.findViewById(R.id.catBtn);
             catId=itemView.findViewById(R.id.cat_Id);
 //
-            profilePic=itemView.findViewById(R.id.ph_profilePic);
-            userName=itemView.findViewById(R.id.ph_name);
-            backgroundPic=itemView.findViewById(R.id.profile_background);
 
 
             itemView.setOnClickListener(postClickListener);
-            comments.setOnClickListener(commnetListener);
             postPic.setOnClickListener(picListener);
+            delete.setOnClickListener(deleteClickListener);
 
-            profilePic.setOnClickListener(profileListener);
-            userName.setOnClickListener(profileListener);
 
             contentll.setOnClickListener(postListener);
 //                @Override
@@ -270,41 +254,37 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
         View.OnClickListener postClickListener = new View.OnClickListener() {
             @Override
-            public void onClick(android.view.View view) {
+            public void onClick(View view) {
                 if (mClickListener != null)mClickListener.onItemClick(view, getAdapterPosition());
 
             }
         };
 
-        View.OnClickListener commnetListener = new View.OnClickListener() {
+        View.OnClickListener deleteClickListener = new View.OnClickListener() {
             @Override
-            public void onClick(android.view.View view) {
-                if (mCommentClickListener != null)mCommentClickListener.onCommentClick(view, getAdapterPosition());
+            public void onClick(View view) {
+                if (mProfileClickListener != null)mProfileClickListener.onItemClick(view, getAdapterPosition());
 
             }
         };
 
+
+
         View.OnClickListener picListener = new View.OnClickListener() {
             @Override
-            public void onClick(android.view.View view) {
+            public void onClick(View view) {
                 if (mPicClickListener != null)mPicClickListener.onPicClick(view, getAdapterPosition());
 
             }
         };
         View.OnClickListener postListener = new View.OnClickListener() {
             @Override
-            public void onClick(android.view.View view) {
+            public void onClick(View view) {
                 if (mPostExpandClickListener != null)mPostExpandClickListener.onPostExpandClick(view, getAdapterPosition());
 
             }
         };
-        View.OnClickListener profileListener = new View.OnClickListener() {
-            @Override
-            public void onClick(android.view.View view) {
-                if (mProfileClickListener!= null)mProfileClickListener.onProfileClick(view, getAdapterPosition());
 
-            }
-        };
     }
 
 

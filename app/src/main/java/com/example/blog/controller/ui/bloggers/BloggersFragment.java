@@ -53,7 +53,7 @@ public class BloggersFragment extends Fragment implements SwipeRefreshLayout.OnR
     private int TOTAL_PAGES = 3;
     private int currentPage = PAGE_START;
     URLs baseUrl=new URLs();
-    final String route ="post";
+    final String route ="posttpagination";
     private String TAG = "BloggerseFragment";
     IResult mResultCallback = null;
     FetchJson mVolleyService;
@@ -259,7 +259,7 @@ public class BloggersFragment extends Fragment implements SwipeRefreshLayout.OnR
             TOTAL_PAGES=response.getInt("last_page");
 
             JSONArray data=response.getJSONArray("data");
-            Toast.makeText(getContext(),""+data.length(),Toast.LENGTH_LONG).show();
+//            Toast.makeText(getContext(),""+data.length(),Toast.LENGTH_LONG).show();
             for(int i=0;i<data.length();i++){
 
                 JSONObject obj=data.getJSONObject(i);

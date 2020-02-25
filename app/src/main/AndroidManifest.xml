@@ -17,7 +17,7 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
         <activity android:name=".controller.LogoutActivity"></activity>
-        <activity android:name=".controller.ProfileActivity" />
+        <activity android:name=".controller.ui.profile.ProfileActivity" />
         <activity android:name=".controller.LoginActivity" />
         <activity android:name=".controller.RegisterActivity" />
         <activity android:name=".controller.WritePostActivity" />

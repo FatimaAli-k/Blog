@@ -120,7 +120,7 @@ public class RegisterActivity extends AppCompatActivity {
                     startActivity(intent);
                 }
                 else
-                    Toast.makeText(getApplicationContext(),"please check fields for errors",Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(),R.string.check_fields_for_error,Toast.LENGTH_LONG).show();
 
             }
 

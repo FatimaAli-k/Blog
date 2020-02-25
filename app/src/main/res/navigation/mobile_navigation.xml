@@ -93,7 +93,7 @@
 
     <activity
         android:id="@+id/nav_profile"
-        android:name="com.example.blog.controller.ProfileActivity"
+        android:name="com.example.blog.controller.ui.profile.ProfileActivity"
         />
 
     <activity

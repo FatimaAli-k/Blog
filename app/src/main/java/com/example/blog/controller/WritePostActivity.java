@@ -79,7 +79,7 @@ public class WritePostActivity extends AppCompatActivity {
             userID=prefs.getString("user_id",null);
         }
         else{
-            Toast.makeText(getApplicationContext(),"need to log in first",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(),R.string.must_login_to_post,Toast.LENGTH_SHORT).show();
             finish();
         }
 
