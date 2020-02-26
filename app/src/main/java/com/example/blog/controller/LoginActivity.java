@@ -3,6 +3,7 @@ package com.example.blog.controller;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.example.blog.MainActivity;
@@ -43,11 +45,18 @@ public class LoginActivity extends AppCompatActivity {
     String TAG="login";
     IResult mResultCallback = null;
     FetchJson mVolleyService;
+    ProgressDialog progress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        progress = new ProgressDialog(this);
+        progress.setTitle("Loading");
+        progress.setMessage("Wait while loading...");
+        progress.setCancelable(false);
+
         username=findViewById(R.id.user_name);
         password=findViewById(R.id.password);
 
@@ -58,6 +67,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 //make api call
+                progress.show();
                 makeApiCall(username.getText().toString(), password.getText().toString());
 
             }
@@ -101,6 +111,7 @@ public class LoginActivity extends AppCompatActivity {
                 Log.d("facebook login", loggedIn + " ??");
 
 
+
                 Intent intent=new Intent(getApplicationContext(),MainActivity.class);
                 startActivity(intent);
 
@@ -138,10 +149,16 @@ public class LoginActivity extends AppCompatActivity {
                 Log.d(TAG, "Volley requester " + requestType);
                 Log.d(TAG, "Volley JSON post" + response);
 //                Toast.makeText(getContext(),"//"+response,Toast.LENGTH_LONG).show();
-               if( parsJson(response)){
+                progress.dismiss();
+
+                if( parsJson(response)){
                    Intent intent=new Intent(getApplicationContext(), MainActivity.class);
                     startActivity(intent);
                }
+                else {
+                    Toast.makeText(getApplicationContext(),R.string.login_credentials_wrong,Toast.LENGTH_LONG).show();
+
+                }
 
 
             }
@@ -159,6 +176,9 @@ public class LoginActivity extends AppCompatActivity {
             public void notifyError(String requestType, VolleyError error) {
                 Log.d(TAG, "Volley requester " + requestType);
                 Log.d(TAG, "Volley JSON post" + error);
+                Toast.makeText(getApplicationContext(),"noooooooo",Toast.LENGTH_SHORT).show();
+                progress.dismiss();
+
             }
         };
     }

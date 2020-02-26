@@ -3,10 +3,21 @@
     <color name="colorPrimary">#008577</color>
 <!--    <color name="colorPrimaryDark">#00574B</color>-->
     <color name="colorPrimaryDark">#2f763a</color>
-    <color name="colorAccent">#4E5A94</color>
+    <color name="colorAccent">#242D52</color>
 
 
     <color name="transparentGrey">#6AFFFDFD</color>
     <color name="edge">#818181</color>
     <color name="grayBackground">#3E4141</color>
+
+    <color name="tag_begin">#B0D3B2</color>
+    <color name="tag_end">#548B60</color>
+
+    <color name="gradiant_begin">#588B54</color>
+    <color name="gradiant_end">#415257</color>
+
+
+
+    <color name="side_nav_begin">#7C9974</color>
+    <color name="side_nav_end">#2A4E26</color>
 </resources>

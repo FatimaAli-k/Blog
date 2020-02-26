@@ -66,23 +66,25 @@ public class MainActivity extends AppCompatActivity {
             actLoggedIn=true;
         }
 
+//notification foreground service test
+//        startService();
 
-        startService();
        fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 //                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
 //                        .setAction("Action", null).show();
-//                if(!loggedOut || actLoggedIn){
-//                Intent intent =new Intent(getApplicationContext(), WritePostActivity.class);
-//                startActivity(intent);
-//            }
-//                else {
-//                    Toast.makeText(getApplicationContext(),R.string.must_login_to_post,Toast.LENGTH_SHORT).show();
-//                }
+                if(!loggedOut || actLoggedIn){
+                Intent intent =new Intent(getApplicationContext(), WritePostActivity.class);
+                startActivity(intent);
+            }
+                else {
+                    Toast.makeText(getApplicationContext(),R.string.must_login_to_post,Toast.LENGTH_SHORT).show();
+                }
 
-                stopService();
+                //notification foreground service test
+//                stopService();
 
             }
         });

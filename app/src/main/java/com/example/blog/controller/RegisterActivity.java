@@ -2,8 +2,11 @@ package com.example.blog.controller;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -14,10 +17,21 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.VolleyError;
 import com.example.blog.MainActivity;
 import com.example.blog.R;
+import com.example.blog.URLs;
 import com.example.blog.controller.tools.TextValidator;
+import com.example.blog.controller.tools.volley.FetchJson;
+import com.example.blog.controller.tools.volley.IResult;
+import com.facebook.login.LoginManager;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 public class RegisterActivity extends AppCompatActivity {
@@ -26,10 +40,23 @@ public class RegisterActivity extends AppCompatActivity {
     Button register;
     boolean checkUsername=false,checkFullname=false,checkPassword=false,passwordMatch=false;
     Pattern special;
+
+    URLs baseUrl=new URLs();
+    String TAG="login";
+    IResult mResultCallback = null;
+    FetchJson mVolleyService;
+
+    ProgressDialog progress;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+
+        progress = new ProgressDialog(this);
+        progress.setTitle("Loading");
+        progress.setMessage("Wait while loading...");
+        progress.setCancelable(false);
 
         termsAndConditions();
         username=findViewById(R.id.user_name);
@@ -116,8 +143,10 @@ public class RegisterActivity extends AppCompatActivity {
                 if (checkData()) {
                     //send reg request
                     //on success log in and go to main page
-                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                    startActivity(intent);
+                    progress.show();
+                    makeApiCall(fullname.getText().toString(),username.getText().toString(),password.getText().toString());
+//                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+//                    startActivity(intent);
                 }
                 else
                     Toast.makeText(getApplicationContext(),R.string.check_fields_for_error,Toast.LENGTH_LONG).show();
@@ -154,6 +183,88 @@ public class RegisterActivity extends AppCompatActivity {
                 dialog.cancel();
             }
         });
+    }
+
+    private void makeApiCall(String name,String email, String password) {
+        String url=baseUrl.getUrl(baseUrl.getRegister());
+        initVolleyCallback();
+        mVolleyService =new FetchJson(mResultCallback,getApplicationContext());
+        Map<String,String> params=new HashMap<>();
+        params.put("name",name);
+        params.put("email",email);
+        params.put("password",password);
+        JSONObject sendJson=new JSONObject(params);
+        mVolleyService.postDataVolley("GETCALL",url,sendJson);
+//
+    }
+    void initVolleyCallback(){
+        mResultCallback = new IResult() {
+            @Override
+            public void notifySuccess(String requestType, JSONObject response) {
+                Log.d(TAG, "Volley requester " + requestType);
+                Log.d(TAG, "Volley JSON post" + response);
+//                Toast.makeText(getApplicationContext(),"//"+response,Toast.LENGTH_LONG).show();
+                progress.dismiss();
+                if(parsJson(response)){
+                    LoginManager.getInstance().logOut();
+                    Intent intent=new Intent(getApplicationContext(), MainActivity.class);
+                    startActivity(intent);
+                }
+
+
+            }
+            @Override
+            public void notifySuccessJsonArray(String requestType, JSONArray response) {
+                Log.d(TAG, "Volley requester " + requestType);
+                Log.d(TAG, "Volley JSON post" + response);
+
+
+//                Toast.makeText(getContext(),"//"+response,Toast.LENGTH_LONG).show();
+
+            }
+
+            @Override
+            public void notifyError(String requestType, VolleyError error) {
+                Log.d(TAG, "Volley requester " + requestType);
+                Log.d(TAG, "Volley JSON post" + error);
+                progress.dismiss();
+
+            }
+        };
+    }
+
+
+    boolean parsJson(JSONObject response) {
+
+        boolean success = false;
+
+        try {
+
+
+            String name = response.getString("name");
+//            String imgStr = response.getString("picture");
+            String imgStr="";
+            String id = response.getString("id");
+            if(imgStr == null || imgStr.equals("") || imgStr.equals("http://aqlam.turathalanbiaa.com/aqlam/image/000000.png")){
+                imgStr="https://alkafeelblog.edu.turathalanbiaa.com/aqlam/image/000000.png";
+            }
+
+            Log.d(TAG, "parsJson: "+success);
+            SharedPreferences prefs = getSharedPreferences("profile", Activity.MODE_PRIVATE);
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putString("user_id",id);
+            editor.putString("user_name",name);
+            editor.putString("profile_pic",imgStr);
+            editor.apply();
+            success=true;
+
+
+        } catch (JSONException e) {
+            success=false;
+            Log.d(TAG, "parsJson: /e "+e);
+
+        }
+        return success;
     }
 
 

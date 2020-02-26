@@ -60,6 +60,8 @@
             android:enabled="true"
             android:exported="true"></service>
 
+        <receiver android:name = ".controller.notification.MyNotificationPublisher" />
+
     </application>
 
 </manifest>

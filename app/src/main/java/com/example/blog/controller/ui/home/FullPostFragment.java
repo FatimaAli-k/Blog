@@ -74,8 +74,8 @@ public class FullPostFragment extends Fragment {
         userName.setText(post.getUsername());
 
         //background pic
-        Picasso.with(getContext()).
-                load(R.drawable.aqlamdefault).fit().centerCrop().into( profileBackground);
+//        Picasso.with(getContext()).
+//                load(R.drawable.aqlamdefault).fit().centerCrop().into( profileBackground);
 
 
 

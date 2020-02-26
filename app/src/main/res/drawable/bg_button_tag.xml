@@ -17,8 +17,8 @@
                 android:angle="0"
 
 
-                android:endColor="#B8A9D1"
-                android:startColor="#65A8A8"
+                android:endColor="@color/tag_end"
+                android:startColor="@color/tag_begin"
                 android:type="linear" />
             <corners android:radius="20dp" />
         </shape>

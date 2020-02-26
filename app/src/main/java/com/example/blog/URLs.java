@@ -9,6 +9,7 @@ public class URLs {
     private String commentsFeed="commentpagination";
     private String profileInfo="profile";
     private String login="user";
+    private String register="users";
 
     private String incViews="updateviews";
 
@@ -88,6 +89,10 @@ public class URLs {
 
     public String getProfileInfo() {
         return profileInfo;
+    }
+
+    public String getRegister() {
+        return register;
     }
 
     public String getImagePath() {
