@@ -55,8 +55,8 @@ public class TimeAgo
                     else if(day/30>2 && day/30<11){convTime =prefix+ (day / 30) + " اشهر " + suffix;}
                     else convTime =prefix+ (day / 30) + " شهر " + suffix;
                 } else {
-                    if(day==7){ convTime =prefix + "اسبوع " + suffix;}
-                    else if(day==14){convTime =prefix+ "اسبوعين " + suffix;}
+                    if(day/7==1){ convTime =prefix + "اسبوع " + suffix;}
+                    else if(day/7==2){convTime =prefix+ "اسبوعين " + suffix;}
                     else{convTime =prefix+ (day / 7) + " اسابيع " + suffix;}
                 }
             } else if (day < 7) {
