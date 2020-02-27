@@ -53,7 +53,6 @@ public class BloggersFragment extends Fragment implements SwipeRefreshLayout.OnR
     private int TOTAL_PAGES = 3;
     private int currentPage = PAGE_START;
     URLs baseUrl=new URLs();
-    final String route ="posttpagination";
     private String TAG = "BloggerseFragment";
     IResult mResultCallback = null;
     FetchJson mVolleyService;
@@ -66,7 +65,7 @@ public class BloggersFragment extends Fragment implements SwipeRefreshLayout.OnR
                              ViewGroup container, Bundle savedInstanceState) {
        View root = inflater.inflate(R.layout.fragment_bloggers, container, false);
 
-        firstPageUrl=baseUrl.getUrl(route);
+        firstPageUrl=baseUrl.getUrl(baseUrl.getUsers());
 
         swipeRefresh=root.findViewById(R.id.swipeRefresh);
         swipeRefresh.setOnRefreshListener(this);
@@ -101,7 +100,9 @@ public class BloggersFragment extends Fragment implements SwipeRefreshLayout.OnR
          * add scroll listener while user reach in bottom load more will call
          */
         recyclerView.addOnScrollListener(new PaginationListener(layoutManager) {
+
             protected void loadMoreItems() {
+
                 isLoading = true;
 //                currentPage += 1;
 
@@ -181,7 +182,7 @@ public class BloggersFragment extends Fragment implements SwipeRefreshLayout.OnR
     private void loadNextPage() {
         Log.d(TAG, "loadNextPage: " + currentPage);
 
-        String nextPageUrl=baseUrl.getNextPageUrl(route,currentPage);
+        String nextPageUrl=baseUrl.getNextPageUrl(baseUrl.getUsers(),currentPage);
         initVolleyCallback();
         mVolleyService =new FetchJson(mResultCallback,getContext());
         mVolleyService.getDataVolley("GETCALL",nextPageUrl);
@@ -264,15 +265,22 @@ public class BloggersFragment extends Fragment implements SwipeRefreshLayout.OnR
 
                 JSONObject obj=data.getJSONObject(i);
 
-                String userId=obj.getString("user_id");
+                String userId=obj.getString("id");
+                String name=obj.getString("name");
+                String profilePic=obj.getString("picture");
+                int points=obj.getInt("points");
 
 
                 Users users=new Users();
 
                 //get username and profile pic
                 users.setId(userId);
-               users.setName("اسم المستخدم ");
-               users.setPicture("https://alkafeelblog.edu.turathalanbiaa.com/aqlam/image/000000.png");
+               users.setName(name);
+                if(profilePic == null || profilePic.equals("") ||profilePic.equals("http://aqlam.turathalanbiaa.com/aqlam/image/000000.png")){
+                    profilePic="https://alkafeelblog.edu.turathalanbiaa.com/aqlam/image/000000.png";
+                }
+               users.setPicture(profilePic);
+                users.setPoints(points);
                 //get cat name
                 list.add(users);
 
