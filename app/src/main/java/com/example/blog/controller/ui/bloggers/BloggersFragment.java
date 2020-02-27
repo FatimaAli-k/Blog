@@ -1,5 +1,6 @@
 package com.example.blog.controller.ui.bloggers;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
@@ -20,6 +21,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.android.volley.VolleyError;
 import com.example.blog.R;
+import com.example.blog.controller.ui.profile.ProfileActivity;
 import com.example.blog.model.Users;
 import com.example.blog.URLs;
 import com.example.blog.controller.tools.ClickListenerInterface;
@@ -32,12 +34,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class BloggersFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, ClickListenerInterface {
-
     LinearLayoutManager layoutManager;
     BloggersRecyclerAdapter adapter;
-    RelativeLayout postsRelativeLayout;
+    RelativeLayout relativeLayout;
 
     RecyclerView recyclerView;
     SwipeRefreshLayout swipeRefresh;
@@ -53,31 +56,42 @@ public class BloggersFragment extends Fragment implements SwipeRefreshLayout.OnR
     private int TOTAL_PAGES = 3;
     private int currentPage = PAGE_START;
     URLs baseUrl=new URLs();
-    private String TAG = "BloggerseFragment";
+    //    final String postRoute ="posttpagination";
+//    final String viewsRoute="updateviews";
+    private String TAG = "BloggersFragment";
     IResult mResultCallback = null;
     FetchJson mVolleyService;
     TextView errortxt;
 
-    String firstPageUrl;
-
+    String firstPageUrl,incViewUrl;
+    JSONObject sendJson;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-       View root = inflater.inflate(R.layout.fragment_bloggers, container, false);
-
+//
+        View root = inflater.inflate(R.layout.fragment_bloggers, container, false);
+//
         firstPageUrl=baseUrl.getUrl(baseUrl.getUsers());
+        incViewUrl=baseUrl.getIncViewsUrl();
+
+
+        Map<String,String> params=new HashMap<>();
+        params.put("sortby","1");
+//        params.put("cat","1");
+        sendJson=new JSONObject(params);
+
 
         swipeRefresh=root.findViewById(R.id.swipeRefresh);
         swipeRefresh.setOnRefreshListener(this);
+
         recyclerView = root.findViewById(R.id.bloggers_recycler_view);
-        postsRelativeLayout = root.findViewById(R.id.bloggersRelativeLayout);
+        relativeLayout = root.findViewById(R.id.bloggersRelativeLayout);
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
         adapter = new BloggersRecyclerAdapter(getContext());
 
         //click listeners
         adapter.setClickListener(this);
-        
 
         recyclerView.setAdapter(adapter);
 
@@ -93,16 +107,18 @@ public class BloggersFragment extends Fragment implements SwipeRefreshLayout.OnR
             }
         });
 
-        
+        //get posts from api
+
+//        Parcelable state = layoutManager.onSaveInstanceState();
+//        layoutManager.onRestoreInstanceState(state);
+
         loadFirstPage();
 
         /**
          * add scroll listener while user reach in bottom load more will call
          */
         recyclerView.addOnScrollListener(new PaginationListener(layoutManager) {
-
             protected void loadMoreItems() {
-
                 isLoading = true;
 //                currentPage += 1;
 
@@ -175,7 +191,7 @@ public class BloggersFragment extends Fragment implements SwipeRefreshLayout.OnR
         Log.d(TAG, "loadFirstPage: ");
         initVolleyCallback();
         mVolleyService =new FetchJson(mResultCallback,getContext());
-        mVolleyService.getDataVolley("GETCALL",firstPageUrl);
+        mVolleyService.postDataVolley("GETCALL",firstPageUrl,sendJson);
 //
     }
 
@@ -185,7 +201,7 @@ public class BloggersFragment extends Fragment implements SwipeRefreshLayout.OnR
         String nextPageUrl=baseUrl.getNextPageUrl(baseUrl.getUsers(),currentPage);
         initVolleyCallback();
         mVolleyService =new FetchJson(mResultCallback,getContext());
-        mVolleyService.getDataVolley("GETCALL",nextPageUrl);
+        mVolleyService.postDataVolley("GETCALL",nextPageUrl,sendJson);
     }
 
 
@@ -257,33 +273,32 @@ public class BloggersFragment extends Fragment implements SwipeRefreshLayout.OnR
         ArrayList<Users> list=new ArrayList<>();
         try {
 
+
             TOTAL_PAGES=response.getInt("last_page");
 
             JSONArray data=response.getJSONArray("data");
-//            Toast.makeText(getContext(),""+data.length(),Toast.LENGTH_LONG).show();
+//           Toast.makeText(getContext(),""+data.length(),Toast.LENGTH_LONG).show();
             for(int i=0;i<data.length();i++){
 
                 JSONObject obj=data.getJSONObject(i);
 
-                String userId=obj.getString("id");
                 String name=obj.getString("name");
+                String id= obj.getString("id");
                 String profilePic=obj.getString("picture");
                 int points=obj.getInt("points");
 
 
-                Users users=new Users();
-
-                //get username and profile pic
-                users.setId(userId);
-               users.setName(name);
+                Users user=new Users();
+                user.setId(id);
+                user.setName(name);
+                user.setPoints(points);
                 if(profilePic == null || profilePic.equals("") ||profilePic.equals("http://aqlam.turathalanbiaa.com/aqlam/image/000000.png")){
                     profilePic="https://alkafeelblog.edu.turathalanbiaa.com/aqlam/image/000000.png";
                 }
-               users.setPicture(profilePic);
-                users.setPoints(points);
-                //get cat name
-                list.add(users);
 
+                user.setPicture(profilePic);
+
+                list.add(user);
             }
 
 
@@ -304,24 +319,11 @@ public class BloggersFragment extends Fragment implements SwipeRefreshLayout.OnR
     @Override
     public void onItemClick(View view, int position) {
 
-//        updateViews(incViewUrl,adapter.getItem(position).getId());
-//        Bundle bundle = new Bundle();
+        Intent intent =new Intent(getContext(), ProfileActivity.class);
+        Log.d(TAG, "onProfileClick: "+adapter.getItem(position).getId());
 
-        Log.d(TAG, "onItemClick: ");
-////        bundle.putInt("post",adapter.getItem(position).getId());
-//        bundle.putParcelable("post",adapter.getItem(position));
-//
-//        Navigation.findNavController(view).navigate(R.id.action_nav_home_to_nav_post,bundle);
-////
-    }
-
-    @Override
-    public void onCommentClick(View view, int position) {
-        
-    }
-
-    @Override
-    public void onPicClick(View view, int position) {
+        intent.putExtra("user_id",adapter.getItem(position).getId());
+        startActivity(intent);
 
     }
 
@@ -331,8 +333,18 @@ public class BloggersFragment extends Fragment implements SwipeRefreshLayout.OnR
     }
 
     @Override
-    public void onProfileClick(View view, int position) {
+    public void onPicClick(View view, int position) {
 
     }
 
+    @Override
+    public void onCommentClick(View view, int position) {
+
+
+    }
+
+    @Override
+    public void onProfileClick(View view, int position) {
+
+    }
 }

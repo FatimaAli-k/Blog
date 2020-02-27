@@ -245,20 +245,20 @@ public class ProfilePostsFragment extends Fragment implements ClickListenerInter
                 post.setContent(content);
                 post.setUser_id(userId);
 
-//                JSONObject user=obj.getJSONObject("user");
-//                String userName=user.getString("name");
-//                String profilePic=user.getString("picture");
-//
-//                if(profilePic == null || profilePic.equals("") ||profilePic.equals("http://aqlam.turathalanbiaa.com/aqlam/image/000000.png")){
-//                    profilePic="https://alkafeelblog.edu.turathalanbiaa.com/aqlam/image/000000.png";
-//                }
+                JSONObject user=obj.getJSONObject("user");
+                String userName=user.getString("name");
+                String profilePic=user.getString("picture");
+
+                if(profilePic == null || profilePic.equals("") ||profilePic.equals("http://aqlam.turathalanbiaa.com/aqlam/image/000000.png")){
+                    profilePic="https://alkafeelblog.edu.turathalanbiaa.com/aqlam/image/000000.png";
+                }
 
 
-//                JSONObject cat=obj.getJSONObject("cat");
-//                String catName=cat.getString("name");
-//
-//
-//                post.setCategory_name(catName);
+                JSONObject cat=obj.getJSONObject("cat");
+                String catName=cat.getString("name");
+
+
+                post.setCategory_name(catName);
 
                 postsList.add(post);
             }

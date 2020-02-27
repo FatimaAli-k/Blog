@@ -82,6 +82,9 @@ public class HomeFragment extends Fragment implements  SwipeRefreshLayout.OnRefr
     final String SORT_BY_OLDEST="0";
     final String SORT_BY_LATEST="2";
     final String SORT_BY_VIEWS="1";
+
+    String sortByCat="0";
+    int catId=0;
     
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -91,9 +94,20 @@ public class HomeFragment extends Fragment implements  SwipeRefreshLayout.OnRefr
 //        Toast.makeText(getActivity(),"id"+getArguments().getInt("catId"),Toast.LENGTH_LONG).show();
 
 
+            catId=getArguments().getInt("catId");
+            if(catId !=0){
+            sortByCat="1";
+        }
+        else {sortByCat="0";}
+
+        Toast.makeText(getActivity(),"id"+catId+"// "+sortByCat,Toast.LENGTH_LONG).show();
+
+
         //send parameters
         Map<String,String> params=new HashMap<>();
         params.put("sortby",SORT_BY_LATEST);
+        params.put("cat",sortByCat);
+        params.put("category_id",""+catId);
         sendJson=new JSONObject(params);
 
        firstPageUrl=baseUrl.getPostsFeedUrl();

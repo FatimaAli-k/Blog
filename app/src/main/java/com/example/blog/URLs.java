@@ -11,6 +11,7 @@ public class URLs {
     private String profileInfo="profile";
     private String login="loginuser";
     private String register="registerusers";
+    private String users="userpagination";
     private String postByUserId="PosttPaginationByUserId";
 
     private String incViews="updateviews";
@@ -104,6 +105,9 @@ public class URLs {
         return postByUserId;
     }
 
+    public String getUsers() {
+        return users;
+    }
 
     public String getImagePath() {
         return imagePath;
