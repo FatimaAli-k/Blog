@@ -91,6 +91,9 @@ public class BloggersRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
                 //name
                 postVH.userName.setText(users.getName());
 
+
+                postVH.points.setText("النقاط: "+users.getPoints());
+
 //                //background pic
 //                Picasso.with( postVH.backgroundPic.getContext()).
 //                        load(R.drawable.aqlamdefault).fit().centerCrop().into( postVH.backgroundPic);
@@ -189,15 +192,17 @@ public class BloggersRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
      */
     protected class PostVH extends RecyclerView.ViewHolder {
         ImageView profilePic,backgroundPic;
-        TextView userName,userId;
+        TextView userName,userId,points;
 
         public PostVH(View itemView) {
             super(itemView);
 
 //
+            points=itemView.findViewById(R.id.points);
             profilePic=itemView.findViewById(R.id.ph_profilePic);
             userName=itemView.findViewById(R.id.ph_name);
-            backgroundPic=itemView.findViewById(R.id.profile_background);
+//            backgroundPic=itemView.findViewById(R.id.profile_background);
+
 
 
             itemView.setOnClickListener(postClickListener);
