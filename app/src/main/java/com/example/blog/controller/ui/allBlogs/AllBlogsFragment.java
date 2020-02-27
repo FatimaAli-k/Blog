@@ -20,7 +20,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.blog.MainActivity;
 import com.example.blog.R;
-import com.example.blog.controller.notification.MyNotificationPublisher;
+//import com.example.blog.controller.notification.MyNotificationPublisher;
 import com.example.blog.controller.notification.NotificationUtils;
 
 public class AllBlogsFragment extends Fragment {
@@ -34,42 +34,39 @@ public class AllBlogsFragment extends Fragment {
 
 //
 //
-        Button ch2=root.findViewById(R.id.ch2Btn);
-        ch2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                int delay=1000;
-                //
-                Intent goToIntent = new Intent(getContext(), MainActivity.class);
-                PendingIntent goToPendingIntent = PendingIntent.getActivity(getContext(),
-                        0, goToIntent, 0);
-                //
 
-                NotificationCompat.Builder builder = new NotificationCompat.Builder(getActivity(), NotificationUtils.CHANNEL2_ID)
-                        .setSmallIcon(R.drawable.ic_launcher_background)
-                        .setContentTitle("title")
-                        .setDefaults(Notification.DEFAULT_SOUND)
-                        .setContentText("notification details with delay="+delay)
-                        .setPriority(NotificationCompat.PRIORITY_HIGH)
-                        .setCategory(NotificationCompat.CATEGORY_MESSAGE)
-                        .setContentIntent(goToPendingIntent)
-                        .setAutoCancel(true);
-                Notification notification=builder.build();
-
-
-
-                Intent notificationIntent = new Intent( getContext(), MyNotificationPublisher. class ) ;
-                notificationIntent.putExtra(MyNotificationPublisher. NOTIFICATION_ID , 1 ) ;
-                notificationIntent.putExtra(MyNotificationPublisher. NOTIFICATION , notification) ;
-                PendingIntent pendingIntent = PendingIntent.getBroadcast ( getContext(), 0 , notificationIntent , PendingIntent. FLAG_UPDATE_CURRENT ) ;
-                long futureInMillis = SystemClock. elapsedRealtime () + delay ;
-                AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(Context. ALARM_SERVICE ) ;
-                assert alarmManager != null;
-                alarmManager.set(AlarmManager. ELAPSED_REALTIME_WAKEUP , futureInMillis , pendingIntent) ;
-
-
-            }
-        });
+////        notification publisher test
+//                int delay=1000;
+//                //
+//                Intent goToIntent = new Intent(getContext(), MainActivity.class);
+//                PendingIntent goToPendingIntent = PendingIntent.getActivity(getContext(),
+//                        0, goToIntent, 0);
+//                //
+//
+//                NotificationCompat.Builder builder = new NotificationCompat.Builder(getActivity(), NotificationUtils.CHANNEL1_ID)
+//                        .setSmallIcon(R.drawable.ic_launcher_background)
+//                        .setContentTitle("title")
+//                        .setDefaults(Notification.DEFAULT_SOUND)
+//                        .setContentText("notification details with delay="+delay)
+//                        .setPriority(NotificationCompat.PRIORITY_HIGH)
+//                        .setCategory(NotificationCompat.CATEGORY_MESSAGE)
+//                        .setContentIntent(goToPendingIntent)
+//                        .setAutoCancel(true);
+//                Notification notification=builder.build();
+//
+//
+//
+//                Intent notificationIntent = new Intent( getContext(), MyNotificationPublisher. class ) ;
+//                notificationIntent.putExtra(MyNotificationPublisher. NOTIFICATION_ID , 1 ) ;
+//                notificationIntent.putExtra(MyNotificationPublisher. NOTIFICATION , notification) ;
+//                PendingIntent pendingIntent = PendingIntent.getBroadcast ( getContext(), 0 , notificationIntent , PendingIntent. FLAG_UPDATE_CURRENT ) ;
+//                long futureInMillis = SystemClock. elapsedRealtime () + delay ;
+//                AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(Context. ALARM_SERVICE ) ;
+//                assert alarmManager != null;
+//                alarmManager.set(AlarmManager. ELAPSED_REALTIME_WAKEUP , futureInMillis , pendingIntent) ;
+//
+//
+//
 
 
 

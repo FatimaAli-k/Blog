@@ -4,12 +4,14 @@ public class URLs {
     private String baseUrl="http://192.168.9.108:8000/api/";
     private String route;
     private String categories="cat";
-    private String sendPost="getpost";
+    private String sendPost="addposts";
+    private String sendComment="addcomment";
     private String postsFeed ="posttpagination";
     private String commentsFeed="commentpagination";
     private String profileInfo="profile";
-    private String login="user";
-    private String register="users";
+    private String login="loginuser";
+    private String register="registerusers";
+    private String postByUserId="PosttPaginationByUserId";
 
     private String incViews="updateviews";
 
@@ -94,6 +96,14 @@ public class URLs {
     public String getRegister() {
         return register;
     }
+
+    public String getSendComment() {
+        return sendComment;
+    }
+    public String getPostByUserId() {
+        return postByUserId;
+    }
+
 
     public String getImagePath() {
         return imagePath;

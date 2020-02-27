@@ -6,18 +6,23 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
-import com.example.blog.controller.notification.ForegroundService;
+import com.example.blog.controller.notification.FireBaseService;
+//import com.example.blog.controller.notification.ForegroundService;
+import com.example.blog.controller.notification.NotificationUtils;
 import com.example.blog.controller.ui.profile.ProfileActivity;
 import com.example.blog.controller.WritePostActivity;
 import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.Profile;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import android.util.Log;
 import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -25,6 +30,8 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 import com.squareup.picasso.Picasso;
 
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -56,6 +63,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
+
+
+        Intent serviceIntent = new Intent(this, FireBaseService.class);
+      startService(serviceIntent);
+
+
 //        TextView mTitle = (TextView) toolbar.findViewById(R.id.toolbar_title);
 //        mTitle.setText(getTitle());
         setSupportActionBar(toolbar);
@@ -65,6 +78,8 @@ public class MainActivity extends AppCompatActivity {
         if(prefs.getString("user_id",null)!=null){
             actLoggedIn=true;
         }
+
+
 
 //notification foreground service test
 //        startService();
@@ -283,14 +298,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void startService() {
-        Intent serviceIntent = new Intent(this, ForegroundService.class);
-        serviceIntent.putExtra("inputExtra", "Foreground Service Example in Android");
-        ContextCompat.startForegroundService(this, serviceIntent);
+
+        Intent serviceIntent = new Intent(this, FireBaseService.class);
+//        serviceIntent.putExtra("inputExtra", "Foreground Service Example in Android");
+//        ContextCompat.startForegroundService(this, serviceIntent);
+        startService(serviceIntent);
     }
-    public void stopService() {
-        Intent serviceIntent = new Intent(this, ForegroundService.class);
-        stopService(serviceIntent);
-    }
+//    public void stopService() {
+//        Intent serviceIntent = new Intent(this, ForegroundService.class);
+//        stopService(serviceIntent);
+//    }
+
+
 
 
 }

@@ -77,8 +77,11 @@ public class HomeFragment extends Fragment implements  SwipeRefreshLayout.OnRefr
     TextView errortxt;
 
     String firstPageUrl,incViewUrl;
+    JSONObject sendJson;
 
-
+    final String SORT_BY_OLDEST="0";
+    final String SORT_BY_LATEST="2";
+    final String SORT_BY_VIEWS="1";
     
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -88,6 +91,10 @@ public class HomeFragment extends Fragment implements  SwipeRefreshLayout.OnRefr
 //        Toast.makeText(getActivity(),"id"+getArguments().getInt("catId"),Toast.LENGTH_LONG).show();
 
 
+        //send parameters
+        Map<String,String> params=new HashMap<>();
+        params.put("sortby",SORT_BY_LATEST);
+        sendJson=new JSONObject(params);
 
        firstPageUrl=baseUrl.getPostsFeedUrl();
        incViewUrl=baseUrl.getIncViewsUrl();
@@ -232,7 +239,7 @@ public class HomeFragment extends Fragment implements  SwipeRefreshLayout.OnRefr
 //        String url="https://api.themoviedb.org/3/tv/popular?api_key=ee462a4199c4e7ec8d93252494ba661b&language=en-US&page=1";
         initVolleyCallback();
         mVolleyService =new FetchJson(mResultCallback,getContext());
-        mVolleyService.getDataVolley("GETCALL",firstPageUrl);
+        mVolleyService.postDataVolley("GETCALL",firstPageUrl,sendJson);
 //
     }
 
@@ -243,7 +250,7 @@ public class HomeFragment extends Fragment implements  SwipeRefreshLayout.OnRefr
 //        String url="https://api.themoviedb.org/3/tv/popular?api_key=ee462a4199c4e7ec8d93252494ba661b&language=en-US&page="+currentPage;
         initVolleyCallback();
         mVolleyService =new FetchJson(mResultCallback,getContext());
-        mVolleyService.getDataVolley("GETCALL",nextPageUrl);
+        mVolleyService.postDataVolley("GETCALL",nextPageUrl,sendJson);
     }
 
 

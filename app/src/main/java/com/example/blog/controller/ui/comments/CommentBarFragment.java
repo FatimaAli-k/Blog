@@ -40,7 +40,7 @@ public class CommentBarFragment extends Fragment {
 
     String sendPostUrl;
     URLs baseUrl=new URLs();
-    final String route ="getcomment";
+
     EditText comment;
     String userID="0";
     int postId;
@@ -63,7 +63,7 @@ public class CommentBarFragment extends Fragment {
             userID=prefs.getString("user_id",null);
         }
 
-        sendPostUrl=baseUrl.getUrl(route);
+        sendPostUrl=baseUrl.getUrl(baseUrl.getSendComment());
         postId=getArguments().getInt("postId");
         final Button sendComment=root.findViewById(R.id.sendComment);
 

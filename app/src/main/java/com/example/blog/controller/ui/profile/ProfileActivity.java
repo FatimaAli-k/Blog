@@ -103,6 +103,9 @@ public class ProfileActivity extends AppCompatActivity {
 
 
         ProfilePostsFragment postsFragment=new ProfilePostsFragment();
+        Bundle bundle=new Bundle();
+        bundle.putString("user_id",userId);
+        postsFragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction().replace(R.id.posts_frame, postsFragment, "postFragment").commit();
 
 //        Intent intent = getIntent();

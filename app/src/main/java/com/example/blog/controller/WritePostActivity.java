@@ -285,7 +285,7 @@ public class WritePostActivity extends AppCompatActivity {
                 Log.d(TAG, "Volley requester " + requestType);
                 Log.d(TAG, "Volley JSON post" + error);
 
-                Toast.makeText(getApplicationContext(),""+error,Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(),"hm"+error,Toast.LENGTH_LONG).show();
 
 
 

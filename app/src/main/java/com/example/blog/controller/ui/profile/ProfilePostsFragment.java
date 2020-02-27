@@ -32,6 +32,8 @@ import com.example.blog.controller.tools.volley.AppController;
 import com.example.blog.controller.tools.volley.FetchJson;
 import com.example.blog.controller.tools.volley.IResult;
 import com.example.blog.controller.ui.comments.CommentsDialogFragment;
+import com.example.blog.controller.ui.comments.ExpandedPostFragment;
+import com.example.blog.controller.ui.home.FullPostFragment;
 import com.example.blog.model.Posts;
 
 import org.json.JSONArray;
@@ -60,6 +62,7 @@ public class ProfilePostsFragment extends Fragment implements ClickListenerInter
     IResult mResultCallback = null;
     FetchJson mVolleyService;
     TextView delete;
+    JSONObject sendJson;
 
     String firstPageUrl,incViewUrl;
 
@@ -67,10 +70,14 @@ public class ProfilePostsFragment extends Fragment implements ClickListenerInter
                              ViewGroup container, Bundle savedInstanceState) {
          View root = inflater.inflate(R.layout.fragment_profile_posts, container, false);
 //
-        firstPageUrl=baseUrl.getPostsFeedUrl();
+        firstPageUrl=baseUrl.getUrl(baseUrl.getPostByUserId());
         incViewUrl=baseUrl.getIncViewsUrl();
 
+        String userId=getArguments().getString("user_id");
 
+        Map<String,String> params=new HashMap<>();
+        params.put("user_id",userId);
+        sendJson=new JSONObject(params);
 
         recyclerView = root.findViewById(R.id.posts_recycler_view);
         relativeLayout = root.findViewById(R.id.profileRelativeLayout);
@@ -129,41 +136,20 @@ public class ProfilePostsFragment extends Fragment implements ClickListenerInter
     }
     private void loadFirstPage() {
         Log.d(TAG, "loadFirstPage: ");
-////        List<Posts> movies = Movie.createMovies(adapter.getItemCount());
-////        progressBar.setVisibility(View.GONE);
-//        Posts post;
-////
-//        ArrayList<Posts> postsList=new ArrayList<>();
-//
-//        for(int i=0;i<10;i++){
-//
-//            post=new Posts();
-////                    post.setImage("https://square.github.io/picasso/static/sample.png");
-//            post.setTitle(""+i);
-//
-//            postsList.add(post);
-//        }
-//        adapter.addAll(postsList);
-//
-//        if (currentPage <= TOTAL_PAGES) adapter.addLoadingFooter();
-//        else isLastPage = true;
-
-
-//        String url="https://api.themoviedb.org/3/tv/popular?api_key=ee462a4199c4e7ec8d93252494ba661b&language=en-US&page=1";
         initVolleyCallback();
         mVolleyService =new FetchJson(mResultCallback,getContext());
-        mVolleyService.getDataVolley("GETCALL",firstPageUrl);
+        mVolleyService.postDataVolley("GETCALL",firstPageUrl,sendJson);
 //
     }
 
     private void loadNextPage() {
         Log.d(TAG, "loadNextPage: " + currentPage);
 
-        String nextPageUrl=baseUrl.getNextPageUrl(baseUrl.getPostsFeed(),currentPage);
+        String nextPageUrl=baseUrl.getNextPageUrl(baseUrl.getPostByUserId(),currentPage);
 //        String url="https://api.themoviedb.org/3/tv/popular?api_key=ee462a4199c4e7ec8d93252494ba661b&language=en-US&page="+currentPage;
         initVolleyCallback();
         mVolleyService =new FetchJson(mResultCallback,getContext());
-        mVolleyService.getDataVolley("GETCALL",nextPageUrl);
+        mVolleyService.postDataVolley("GETCALL",nextPageUrl,sendJson);
     }
 
 
@@ -268,11 +254,11 @@ public class ProfilePostsFragment extends Fragment implements ClickListenerInter
 //                }
 
 
-                JSONObject cat=obj.getJSONObject("cat");
-                String catName=cat.getString("name");
-
-
-                post.setCategory_name(catName);
+//                JSONObject cat=obj.getJSONObject("cat");
+//                String catName=cat.getString("name");
+//
+//
+//                post.setCategory_name(catName);
 
                 postsList.add(post);
             }
@@ -294,14 +280,24 @@ public class ProfilePostsFragment extends Fragment implements ClickListenerInter
     @Override
     public void onItemClick(View view, int position) {
 
-        updateViews(incViewUrl,adapter.getItem(position).getId());
+        final int postid= adapter.getItem(position).getId();
+
         Bundle bundle = new Bundle();
+        bundle.putInt("postId",postid);
 
-//        bundle.putInt("post",adapter.getItem(position).getId());
-        bundle.putParcelable("post",adapter.getItem(position));
 
-        Navigation.findNavController(view).navigate(R.id.action_nav_home_to_nav_post,bundle);
-//
+        CommentsDialogFragment cf=new CommentsDialogFragment();
+        cf.setArguments(bundle);
+        FragmentTransaction ft =  getChildFragmentManager().beginTransaction();
+        Fragment prev =  getChildFragmentManager().findFragmentByTag("dialog");
+        if (prev != null) {
+            ft.remove(prev);
+        }
+        ft.addToBackStack(null);
+
+
+        cf.show(ft, "dialog");
+
     }
 
     @Override
