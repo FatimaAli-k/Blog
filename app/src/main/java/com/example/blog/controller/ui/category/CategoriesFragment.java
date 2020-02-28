@@ -76,10 +76,10 @@ public class CategoriesFragment extends Fragment implements CategoriesRecyclerVi
 //        Toast.makeText(getContext(), "pos: " + position+" id: "+ catList.get(position).getId(), Toast.LENGTH_SHORT).show();
 
 
-        Bundle bundle = new Bundle();
-        bundle.putInt("catId",catList.get(position).getId());
-        Navigation.findNavController(view).navigate(R.id.action_nav_categories_to_nav_home,bundle);
-//
+//        Bundle bundle = new Bundle();
+//        bundle.putInt("catId",catList.get(position).getId());
+//        Navigation.findNavController(view).navigate(R.id.action_nav_categories_to_nav_home,bundle);
+////
 
     }
 

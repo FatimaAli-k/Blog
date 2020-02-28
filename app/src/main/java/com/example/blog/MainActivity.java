@@ -9,6 +9,7 @@ import android.os.Bundle;
 import com.example.blog.controller.notification.FireBaseService;
 //import com.example.blog.controller.notification.ForegroundService;
 import com.example.blog.controller.notification.NotificationUtils;
+import com.example.blog.controller.ui.category.CatDropDownFragment;
 import com.example.blog.controller.ui.profile.ProfileActivity;
 import com.example.blog.controller.WritePostActivity;
 import com.facebook.AccessToken;
@@ -47,7 +48,7 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements CatDropDownFragment.OnDataPass {
 
     private AppBarConfiguration mAppBarConfiguration;
     ImageView profilePic;
@@ -57,6 +58,8 @@ public class MainActivity extends AppCompatActivity {
     Boolean actLoggedIn=false;
     SharedPreferences prefs;
 
+    private FragmentInterface fragmentInterfaceListener;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,8 +68,9 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
 
 
+        //firebase service
         Intent serviceIntent = new Intent(this, FireBaseService.class);
-      startService(serviceIntent);
+        startService(serviceIntent);
 
 
 //        TextView mTitle = (TextView) toolbar.findViewById(R.id.toolbar_title);
@@ -81,9 +85,6 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-//notification foreground service test
-//        startService();
-
        fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -97,9 +98,6 @@ public class MainActivity extends AppCompatActivity {
                 else {
                     Toast.makeText(getApplicationContext(),R.string.must_login_to_post,Toast.LENGTH_SHORT).show();
                 }
-
-                //notification foreground service test
-//                stopService();
 
             }
         });
@@ -200,7 +198,6 @@ public class MainActivity extends AppCompatActivity {
             nameTextView.setText("guest");
         }
 
-//
 
 
 //        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
@@ -297,19 +294,18 @@ public class MainActivity extends AppCompatActivity {
         return fab;
     }
 
-    public void startService() {
 
-        Intent serviceIntent = new Intent(this, FireBaseService.class);
-//        serviceIntent.putExtra("inputExtra", "Foreground Service Example in Android");
-//        ContextCompat.startForegroundService(this, serviceIntent);
-        startService(serviceIntent);
+    @Override
+    public void onDataPass(int data) {
+
+        fragmentInterfaceListener.sendData(data);
     }
-//    public void stopService() {
-//        Intent serviceIntent = new Intent(this, ForegroundService.class);
-//        stopService(serviceIntent);
-//    }
 
-
-
+    public interface FragmentInterface{
+        void sendData(int data);
+    }
+    public void setOnDataListener(FragmentInterface fragmentInterface){
+        fragmentInterfaceListener=fragmentInterface;
+    }
 
 }

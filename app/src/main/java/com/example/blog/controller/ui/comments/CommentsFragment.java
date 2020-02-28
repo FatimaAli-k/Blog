@@ -241,11 +241,21 @@ public class CommentsFragment extends Fragment{
 
 //
 
-            TOTAL_PAGES=response.getInt("last_page");
-            Log.d(TAG, "parsJsonObj: total pages "+TOTAL_PAGES);
+
+
+            //pages wont load if total page count is more than 11
+            //increasing its value as the current page increases seems to work
+            if(response.getInt("last_page")>11) {
+                if (TOTAL_PAGES != response.getInt("last_page")) {
+                    TOTAL_PAGES++;
+                }
+            }
+            else {TOTAL_PAGES=response.getInt("last_page");}
+
             if(TOTAL_PAGES==0){
                 Toast.makeText(getContext(),R.string.no_comments,Toast.LENGTH_SHORT).show();
             }
+
 
             JSONArray data=response.getJSONArray("data");
             for(int i=0;i<data.length();i++){

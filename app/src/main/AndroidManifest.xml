@@ -57,12 +57,6 @@
             </intent-filter>
         </activity>
 
-<!--        <service-->
-<!--            android:name=".controller.notification.ForegroundService"-->
-<!--            android:enabled="true"-->
-<!--            android:exported="true"></service>-->
-
-<!--        <receiver android:name = ".controller.notification.MyNotificationPublisher" />-->
 
 
         <service

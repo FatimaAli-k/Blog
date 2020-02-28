@@ -273,8 +273,17 @@ public class BloggersFragment extends Fragment implements SwipeRefreshLayout.OnR
         ArrayList<Users> list=new ArrayList<>();
         try {
 
+//
+            //pages wont load if total page count is more than 11
+            //increasing its value as the current page increases seems to work
+            if(response.getInt("last_page")>11) {
+                if (TOTAL_PAGES != response.getInt("last_page")) {
+                    TOTAL_PAGES++;
+                }
+            }
+            else {TOTAL_PAGES=response.getInt("last_page");}
 
-            TOTAL_PAGES=response.getInt("last_page");
+            Log.d(TAG, "parsJsonObj: "+currentPage+"//tt "+TOTAL_PAGES);
 
             JSONArray data=response.getJSONArray("data");
 //           Toast.makeText(getContext(),""+data.length(),Toast.LENGTH_LONG).show();

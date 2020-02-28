@@ -32,22 +32,30 @@
 <!--                android:padding="10dp"-->
 <!--               android:drawableLeft="@drawable/ic_arrow_back_black_24dp"-->
 <!--                />-->
-            <Button
-                android:id="@+id/addCatBtn"
+<!--            <Button-->
+<!--                android:id="@+id/addCatBtn"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginBottom="10dp"-->
+<!--                android:background="@drawable/bg_button2"-->
+<!--                android:paddingLeft="20dp"-->
+<!--                android:paddingRight="20dp"-->
+<!--                android:text="الاصناف"-->
+<!--                android:textAlignment="center"-->
+<!--                android:fontFamily="@font/myfont"-->
+<!--                android:gravity="right|center"-->
+<!--                android:textSize="16dp"-->
+<!--                android:layout_weight="1"-->
+<!--                android:drawableLeft="@drawable/ic_expand_more_black_24dp"-->
+<!--                />-->
+
+            <fragment
+                android:id="@+id/dropdownFragment"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:background="@drawable/bg_button2"
-                android:paddingLeft="20dp"
-                android:paddingRight="20dp"
-                android:text="الاصناف"
-                android:textAlignment="center"
-                android:fontFamily="@font/myfont"
-                android:gravity="right|center"
-                android:textSize="16dp"
-                android:layout_weight="1"
-                android:drawableLeft="@drawable/ic_expand_more_black_24dp"
-                />
+                android:name="com.example.blog.controller.ui.category.CatDropDownFragment"
+                tools:layout="@layout/cat_dropdown_menu"
+                android:layout_weight="1"/>
         <Button
             android:id="@+id/sendPostBtn"
             android:layout_width="wrap_content"

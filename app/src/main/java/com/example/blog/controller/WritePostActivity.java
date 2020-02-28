@@ -5,21 +5,18 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.volley.VolleyError;
+import com.example.blog.controller.ui.category.CatDropDownFragment;
 import com.example.blog.MainActivity;
 import com.example.blog.R;
-import com.example.blog.model.Categories;
 import com.example.blog.controller.tools.TextValidator;
 import com.example.blog.URLs;
 import com.example.blog.controller.tools.volley.FetchJson;
@@ -28,20 +25,15 @@ import com.facebook.AccessToken;
 import com.facebook.Profile;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class WritePostActivity extends AppCompatActivity {
+public class WritePostActivity extends AppCompatActivity implements CatDropDownFragment.OnDataPass {
 
     private static String TAG = WritePostActivity.class.getSimpleName();
-    LinearLayout mLayout;
-    ArrayList<Categories> catList=new ArrayList<>();
-    Button addCat;
-    TextView catIdTextView;
+
     EditText title,content;
     int cat_Id=1;
 
@@ -51,7 +43,7 @@ public class WritePostActivity extends AppCompatActivity {
     String sendPostUrl;
     String getCatUrl;
     URLs baseUrl=new URLs();
-//    final String route ="getpost";
+
     String userID="0";
 
     Boolean checkTitle=false, checkContent=false;
@@ -89,9 +81,6 @@ public class WritePostActivity extends AppCompatActivity {
         getCatUrl=baseUrl.getCategoriesUrl();
 
 
-//        TextView textView = new TextView(this);
-//        textView.setText("New text");
-
        sendPost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -106,12 +95,8 @@ public class WritePostActivity extends AppCompatActivity {
                 }
             }
         });
-//       goBack.setOnClickListener(new View.OnClickListener() {
-//           @Override
-//           public void onClick(View view) {
-//               finish();
-//           }
-//       });
+//
+
 
         title.addTextChangedListener(new TextValidator(title) {
             @Override public void validate(TextView textView, String text) {
@@ -136,110 +121,8 @@ public class WritePostActivity extends AppCompatActivity {
             }
         });
 
-        addCat=findViewById(R.id.addCatBtn);
-//        catIdTextView =findViewById(R.id.writePost_catId);
-
-
-        initVolleyCallback();
-        mVolleyService =new FetchJson(mResultCallback,getApplicationContext());
-        mVolleyService.getArrayDataVolley("getArray",getCatUrl);
-//        Categories categories=new Categories(0,"others");
-//        catList.add(categories);
-//        categories=new Categories(2,"smthin");
-//        catList.add(categories);
-//        categories=new Categories(46,"hmmm");
-//        catList.add(categories);
-
-
-
-
-            addCat.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-//                getCat();
-                PopupMenu menu = new PopupMenu(getApplicationContext(), view);
-
-                for(int i=0;i<catList.size();i++) {
-
-                    menu.getMenu().add(catList.get(i).getName());
-
-                }
-
-
-                menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-
-
-                    @Override
-                    public boolean onMenuItemClick(MenuItem popupItem) {
-
-                        int index=0;
-                        String name=popupItem.getTitle().toString();
-                        addCat.setText(name);
-
-                        for(int i=0;i<catList.size();i++) {
-
-                           if(name.equals(catList.get(i).getName())) {
-                                index = catList.get(i).getId();
-                                break;
-
-                            }
-
-                        }
-                        cat_Id=index;
-                        Toast.makeText(getApplicationContext(),"//"+index,Toast.LENGTH_LONG).show();
-
-
-                        //more than one tag
-//                        final LinearLayout layout=(LinearLayout)getLayoutInflater().inflate(R.layout.tag,null);
-//
-//                        Button tagName= layout.findViewById(R.id.tag);
-//                        tagName.setText(name);
-//                        tagName.setOnClickListener(new View.OnClickListener() {
-//                            @Override
-//                            public void onClick(View view) {
-//                                mLayout.removeView(layout);
-//
-//                            }
-//                        });
-//
-//                        mLayout.addView(layout);
-
-                        return true;
-                    }
-                });
-
-                menu.show();
-            }
-        });
-
-
     }
 
-    private ArrayList<Categories> getCatListFromDb(JSONArray response) {
-        ArrayList<Categories> list=new ArrayList<>();
-
-        try {
-
-            for (int i = 0; i < response.length(); i++) {
-
-                JSONObject obj = (JSONObject) response
-                        .get(i);
-
-                int id= obj.getInt("id");
-                String name = obj.getString("name");
-                name=name.replaceAll("\n","");
-//
-                Categories cat=new Categories(id,name);
-               list.add(cat);
-
-            }
-
-
-        }catch (JSONException e) {
-
-        }
-        return list;
-    }
 
     public void sendPostToDb(String userId, String title,String content,int cat_Id){
         Log.d(TAG, "sendPostToDb: "+userId+"/"+title+"/"+content+"/"+cat_Id);
@@ -275,8 +158,6 @@ public class WritePostActivity extends AppCompatActivity {
             public void notifySuccessJsonArray(String requestType, JSONArray response) {
                 Log.d(TAG, "Volley requester " + requestType);
                 Log.d(TAG, "Volley JSON post" + response);
-               catList=getCatListFromDb(response);
-//                Toast.makeText(getContext(),"//"+response,Toast.LENGTH_LONG).show();
 
             }
 
@@ -299,6 +180,12 @@ public class WritePostActivity extends AppCompatActivity {
             return true;
         else  return false;
 
+    }
+    //from cat dropdown fragment
+    @Override
+    public void onDataPass(int data) {
+        Log.d("LOG","cat id " + data);
+        cat_Id=data;
     }
 
 

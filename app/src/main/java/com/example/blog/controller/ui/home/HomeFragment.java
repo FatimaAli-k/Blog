@@ -6,8 +6,11 @@ import android.os.Handler;
 import android.os.Parcelable;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -49,7 +52,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-public class HomeFragment extends Fragment implements  SwipeRefreshLayout.OnRefreshListener, ClickListenerInterface {
+public class HomeFragment extends Fragment implements  SwipeRefreshLayout.OnRefreshListener, ClickListenerInterface, MainActivity.FragmentInterface {
 
     LinearLayoutManager layoutManager;
     PostRecyclerAdapter adapter;
@@ -77,38 +80,64 @@ public class HomeFragment extends Fragment implements  SwipeRefreshLayout.OnRefr
     TextView errortxt;
 
     String firstPageUrl,incViewUrl;
-    JSONObject sendJson;
+//    JSONObject sendJson;
 
     final String SORT_BY_OLDEST="0";
     final String SORT_BY_LATEST="2";
     final String SORT_BY_VIEWS="1";
 
-    String sortByCat="0";
-    int catId=0;
-    
+    int sortByCat=0;
+    int catId=0,sortby=2;
+
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 //
         View root = inflater.inflate(R.layout.fragment_home, container, false);
 //
 //        Toast.makeText(getActivity(),"id"+getArguments().getInt("catId"),Toast.LENGTH_LONG).show();
+//        catId=getArguments().getInt("catId");
+
+        ((MainActivity) getActivity()).setOnDataListener(this);
+        final Button sortBtn=root.findViewById(R.id.sortBtn);
+        sortBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+//                getCat();
+                PopupMenu menu = new PopupMenu(getContext(), view);
+                menu.getMenu().add(R.string.oldest);
+                menu.getMenu().add(R.string.latest);
+                menu.getMenu().add(R.string.most_viewed);
 
 
-            catId=getArguments().getInt("catId");
+                menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+
+
+                    @Override
+                    public boolean onMenuItemClick(MenuItem popupItem) {
+                        String title=popupItem.getTitle().toString();
+                        if(title.equals(getResources().getString(R.string.oldest)))
+                            sortby=0;
+                        else if(title.equals(getResources().getString(R.string.most_viewed)))
+                            sortby=1;
+                        else sortby=2;
+                        sortBtn.setText(title);
+                        onRefresh();
+                        return true;
+                    }
+                });
+
+                menu.show();
+            }
+        });
+
+
+
             if(catId !=0){
-            sortByCat="1";
+            sortByCat=1;
         }
-        else {sortByCat="0";}
+        else {sortByCat=0;}
 
-        Toast.makeText(getActivity(),"id"+catId+"// "+sortByCat,Toast.LENGTH_LONG).show();
-
-
-        //send parameters
-        Map<String,String> params=new HashMap<>();
-        params.put("sortby",SORT_BY_LATEST);
-        params.put("cat",sortByCat);
-        params.put("category_id",""+catId);
-        sendJson=new JSONObject(params);
 
        firstPageUrl=baseUrl.getPostsFeedUrl();
        incViewUrl=baseUrl.getIncViewsUrl();
@@ -253,7 +282,7 @@ public class HomeFragment extends Fragment implements  SwipeRefreshLayout.OnRefr
 //        String url="https://api.themoviedb.org/3/tv/popular?api_key=ee462a4199c4e7ec8d93252494ba661b&language=en-US&page=1";
         initVolleyCallback();
         mVolleyService =new FetchJson(mResultCallback,getContext());
-        mVolleyService.postDataVolley("GETCALL",firstPageUrl,sendJson);
+        mVolleyService.postDataVolley("GETCALL",firstPageUrl,getParams(sortby,sortByCat,catId));
 //
     }
 
@@ -264,7 +293,7 @@ public class HomeFragment extends Fragment implements  SwipeRefreshLayout.OnRefr
 //        String url="https://api.themoviedb.org/3/tv/popular?api_key=ee462a4199c4e7ec8d93252494ba661b&language=en-US&page="+currentPage;
         initVolleyCallback();
         mVolleyService =new FetchJson(mResultCallback,getContext());
-        mVolleyService.postDataVolley("GETCALL",nextPageUrl,sendJson);
+        mVolleyService.postDataVolley("GETCALL",nextPageUrl,getParams(sortby,sortByCat,catId));
     }
 
 
@@ -275,6 +304,17 @@ public class HomeFragment extends Fragment implements  SwipeRefreshLayout.OnRefr
         isLastPage = false;
         adapter.clear();
         loadFirstPage();
+    }
+
+
+    JSONObject getParams(int sort, int sortWithCat, int cat){
+        //send parameters
+        Map<String,String> params=new HashMap<>();
+        params.put("sortby",""+sort);
+        params.put("cat",""+sortWithCat);
+        params.put("category_id",""+cat);
+        JSONObject jsonObject=new JSONObject(params);
+        return jsonObject;
     }
 
     void initVolleyCallback(){
@@ -354,7 +394,19 @@ public class HomeFragment extends Fragment implements  SwipeRefreshLayout.OnRefr
 //
 
 
-            TOTAL_PAGES=response.getInt("last_page");
+//            TOTAL_PAGES=response.getInt("last_page");
+
+            //pages wont load if total page count is more than 11
+            //increasing its value as the current page increases seems to work
+            if(response.getInt("last_page")>11) {
+                if (TOTAL_PAGES != response.getInt("last_page")) {
+                    TOTAL_PAGES++;
+                }
+            }
+            else {TOTAL_PAGES=response.getInt("last_page");}
+            if(TOTAL_PAGES==0){
+                Toast.makeText(getContext(),R.string.no_posts,Toast.LENGTH_SHORT).show();
+            }
 
            JSONArray data=response.getJSONArray("data");
 //           Toast.makeText(getContext(),""+data.length(),Toast.LENGTH_LONG).show();
@@ -545,5 +597,16 @@ public class HomeFragment extends Fragment implements  SwipeRefreshLayout.OnRefr
 
         intent.putExtra("user_id",adapter.getItem(position).getUser_id());
         startActivity(intent);
+    }
+
+    @Override
+    public void sendData(int data) {
+        Log.d(TAG, "sendData: "+data);
+        catId=data;
+        if(catId !=0){
+            sortByCat=1;
+        }
+        else {sortByCat=0;}
+        onRefresh();
     }
 }

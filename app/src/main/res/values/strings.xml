@@ -21,14 +21,20 @@
     <string name="email_format_error">must enter valid email</string>
     <string name="password_mismatch_error">password does not match</string>
 
+    //sort menu
+    <string name="latest">احدث التدوينات</string>
+    <string name="oldest">جميع التدوينات</string>
+    <string name="most_viewed">يتصدر الان</string>
+
 
     //toast messages
-    <string name="no_comments">لاتوجد اي تعليقات</string>
+    <string name="no_comments">لايوجد اي تعليقات</string>
     <string name="must_login_to_post">يجب تسجيل الدخول</string>
     <string name="check_fields_for_error">check fields for error</string>
     <string name="comment_sent">تم ارسال التعليق</string>
     <string name="login_credentials_wrong">wrong password or email</string>
     <string name="server_error">something went wrong, try again</string>
+    <string name="no_posts">لايوجد اي تدوينات</string>
 
 
     <string name="facebook_app_id">245801286410441</string>
