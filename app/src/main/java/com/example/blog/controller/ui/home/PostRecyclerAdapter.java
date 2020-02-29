@@ -2,6 +2,7 @@ package com.example.blog.controller.ui.home;
 
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,7 +30,7 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private LayoutInflater mInflater;
 
     private ClickListenerInterface mClickListener,mCommentClickListener,
-            mPicClickListener,mPostExpandClickListener,mProfileClickListener;
+            mPicClickListener,mPostExpandClickListener,mProfileClickListener,mCatClickListener;
 
 
 
@@ -104,8 +105,11 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
 
 
+
                 postVH.postTitle.setText(posts.getTitle());
                 postVH.postDetails.setText(posts.getContent());
+
+
                 TimeAgo timeago=new TimeAgo();
 
                 String time= timeago.covertTimeToText(posts.getCreated_at());
@@ -251,21 +255,8 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             userName.setOnClickListener(profileListener);
 
             contentll.setOnClickListener(postListener);
-//                @Override
-//                public void onClick(View view) {
-//                    Log.d("line count", ""+postDetails.getLineCount());
-//                    if (postDetails.getMaxLines() == 3) {
-//                        postDetails.setMaxLines(40);
-//                        seeMore.setVisibility(View.GONE);
-//                        //incViews
-//                    } else {
-//                        postDetails.setMaxLines(3);
-//                        seeMore.setVisibility(View.VISIBLE);
-//
-//                    }
-//                }
-//            });
 
+            catBtn.setOnClickListener(catListener);
 
         }
         View.OnClickListener postClickListener = new View.OnClickListener() {
@@ -305,6 +296,13 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
             }
         };
+        View.OnClickListener catListener = new View.OnClickListener() {
+            @Override
+            public void onClick(android.view.View view) {
+                if (mCatClickListener!= null)mCatClickListener.onCatClick(view, getAdapterPosition());
+
+            }
+        };
     }
 
 
@@ -337,6 +335,11 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     //on profile click
     void setProfileClickListener(ClickListenerInterface profileClickListener) {
         this.mProfileClickListener = profileClickListener;
+    }
+
+    //on category click
+    void setCatClickListener(ClickListenerInterface catClickListener) {
+        this.mCatClickListener = catClickListener;
     }
 
 

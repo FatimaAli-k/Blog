@@ -356,4 +356,9 @@ public class BloggersFragment extends Fragment implements SwipeRefreshLayout.OnR
     public void onProfileClick(View view, int position) {
 
     }
+
+    @Override
+    public void onCatClick(View view, int position) {
+
+    }
 }

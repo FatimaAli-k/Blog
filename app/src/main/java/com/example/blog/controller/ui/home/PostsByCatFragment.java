@@ -29,18 +29,19 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.example.blog.controller.tools.ClickListenerInterface;
 import com.example.blog.MainActivity;
-import com.example.blog.controller.ui.profile.ProfileActivity;
 import com.example.blog.R;
+import com.example.blog.URLs;
+import com.example.blog.controller.tools.ClickListenerInterface;
 import com.example.blog.controller.tools.PaginationListener;
 import com.example.blog.controller.tools.PopUpClass;
-import com.example.blog.URLs;
-import com.example.blog.model.Posts;
-import com.example.blog.controller.ui.comments.CommentsDialogFragment;
 import com.example.blog.controller.tools.volley.AppController;
 import com.example.blog.controller.tools.volley.FetchJson;
 import com.example.blog.controller.tools.volley.IResult;
+import com.example.blog.controller.ui.comments.CommentsDialogFragment;
+import com.example.blog.controller.ui.home.PostRecyclerAdapter;
+import com.example.blog.controller.ui.profile.ProfileActivity;
+import com.example.blog.model.Posts;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.json.JSONArray;
@@ -52,7 +53,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-public class HomeFragment extends Fragment implements  SwipeRefreshLayout.OnRefreshListener, ClickListenerInterface, MainActivity.FragmentInterface {
+public class PostsByCatFragment extends Fragment implements  SwipeRefreshLayout.OnRefreshListener, ClickListenerInterface, MainActivity.FragmentInterface {
 
     LinearLayoutManager layoutManager;
     PostRecyclerAdapter adapter;
@@ -61,9 +62,6 @@ public class HomeFragment extends Fragment implements  SwipeRefreshLayout.OnRefr
     RecyclerView recyclerView;
     SwipeRefreshLayout swipeRefresh;
 //
-    private final String KEY_RECYCLER_STATE = "recycler_state";
-    private static Bundle mBundleRecyclerViewState;
-
 
 
     private static final int PAGE_START = 1;
@@ -96,7 +94,7 @@ public class HomeFragment extends Fragment implements  SwipeRefreshLayout.OnRefr
         View root = inflater.inflate(R.layout.fragment_home, container, false);
 //
 //        Toast.makeText(getActivity(),"id"+getArguments().getInt("catId"),Toast.LENGTH_LONG).show();
-//        catId=getArguments().getInt("catId");
+        catId=getArguments().getInt("catId");
 
         ((MainActivity) getActivity()).setOnDataListener(this);
         final Button sortBtn=root.findViewById(R.id.sortBtn);
@@ -131,6 +129,8 @@ public class HomeFragment extends Fragment implements  SwipeRefreshLayout.OnRefr
             }
         });
 
+        View fragment=root.findViewById(R.id.dropdownFragment_home);
+        fragment.setVisibility(View.GONE);
 
 
             if(catId !=0){
@@ -162,7 +162,7 @@ public class HomeFragment extends Fragment implements  SwipeRefreshLayout.OnRefr
         adapter.setPicClickListener(this);
         adapter.setPostExpandClickListener(this);
         adapter.setProfileClickListener(this);
-        adapter.setCatClickListener(this);
+//        adapter.setCatClickListener(this);
 
         recyclerView.setAdapter(adapter);
 
@@ -229,58 +229,11 @@ public class HomeFragment extends Fragment implements  SwipeRefreshLayout.OnRefr
 
 
 
-    @Override
-    public void onPause()
-    {
-        super.onPause();
-        Log.d(TAG, "save: ");
-        // save RecyclerView state
-        mBundleRecyclerViewState = new Bundle();
-        Parcelable listState = layoutManager.onSaveInstanceState();
-        mBundleRecyclerViewState.putParcelable(KEY_RECYCLER_STATE, listState);
-    }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        Log.d(TAG, "restore: ");
-
-        new Handler().postDelayed(new Runnable() {
-
-            @Override
-            public void run() {
-                if (mBundleRecyclerViewState != null){
-                Parcelable listState = mBundleRecyclerViewState.getParcelable(KEY_RECYCLER_STATE);
-               layoutManager.onRestoreInstanceState(listState);}
-
-            }
-        }, 500);
-    }
 
     private void loadFirstPage() {
         Log.d(TAG, "loadFirstPage: ");
-////        List<Posts> movies = Movie.createMovies(adapter.getItemCount());
-////        progressBar.setVisibility(View.GONE);
-//        Posts post;
-////
-//        ArrayList<Posts> postsList=new ArrayList<>();
-//
-//        for(int i=0;i<10;i++){
-//
-//            post=new Posts();
-////                    post.setImage("https://square.github.io/picasso/static/sample.png");
-//            post.setTitle(""+i);
-//
-//            postsList.add(post);
-//        }
-//        adapter.addAll(postsList);
-//
-//        if (currentPage <= TOTAL_PAGES) adapter.addLoadingFooter();
-//        else isLastPage = true;
-
-
-//        String url="https://api.themoviedb.org/3/tv/popular?api_key=ee462a4199c4e7ec8d93252494ba661b&language=en-US&page=1";
+////     String url="https://api.themoviedb.org/3/tv/popular?api_key=ee462a4199c4e7ec8d93252494ba661b&language=en-US&page=1";
         initVolleyCallback();
         mVolleyService =new FetchJson(mResultCallback,getContext());
         mVolleyService.postDataVolley("GETCALL",firstPageUrl,getParams(sortby,sortByCat,catId));
@@ -378,27 +331,7 @@ public class HomeFragment extends Fragment implements  SwipeRefreshLayout.OnRefr
         ArrayList<Posts> postsList=new ArrayList<>();
         try {
 
-//  //movieDB api test
-//            TOTAL_PAGES=response.getInt("total_pages");
-//
-//            JSONArray data=response.getJSONArray("results");
-//            Toast.makeText(getContext(),""+data.length(),Toast.LENGTH_LONG).show();
-//            for(int i=0;i<data.length();i++){
-////                itemCount++;
-//                JSONObject obj=data.getJSONObject(i);
-//                int id=obj.getInt("id");
-//                String title=obj.getString("name");
-//                String content=obj.getString("overview");
-//                String img=obj.getString("poster_path");
-//
-//                img=img.replace("\\","");
-//              String image= "https://image.tmdb.org/t/p/w185/"+img;
-//
-
-
-//            TOTAL_PAGES=response.getInt("last_page");
-
-            //pages wont load if total page count is more than 11
+//       //pages wont load if total page count is more than 11
             //increasing its value as the current page increases seems to work
             if(response.getInt("last_page")>11) {
                 if (TOTAL_PAGES != response.getInt("last_page")) {
@@ -600,13 +533,9 @@ public class HomeFragment extends Fragment implements  SwipeRefreshLayout.OnRefr
         intent.putExtra("user_id",adapter.getItem(position).getUser_id());
         startActivity(intent);
     }
-
     @Override
     public void onCatClick(View view, int position) {
-        Bundle bundle = new Bundle();
-        bundle.putInt("catId",adapter.getItem(position).getCategory_id());
-        Navigation.findNavController(view).navigate(R.id.action_nav_home_to_nav_cat_posts,bundle);
-//
+
     }
 
     @Override

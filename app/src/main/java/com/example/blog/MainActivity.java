@@ -107,7 +107,7 @@ public class MainActivity extends AppCompatActivity implements CatDropDownFragme
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_all_blogs, R.id.nav_bloggers,
+                R.id.nav_home, R.id.nav_bloggers,
                 R.id.nav_categories, R.id.nav_register, R.id.nav_login, R.id.nav_logout)
                 .setDrawerLayout(drawer)
                 .build();

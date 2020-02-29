@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import com.example.blog.controller.ui.profile.ProfileActivity;
 import com.example.blog.R;
@@ -99,6 +100,17 @@ public class FullPostFragment extends Fragment {
 
         userName.setOnClickListener(profileListener);
         profilePic.setOnClickListener(profileListener);
+
+        catBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Bundle bundle = new Bundle();
+                bundle.putInt("catId",post.getCategory_id());
+                Navigation.findNavController(view).navigate(R.id.action_nav_post_to_nav_cat_posts,bundle);
+//
+            }
+        });
 
 
         return root;

@@ -11,6 +11,7 @@ public interface ClickListenerInterface {
     void onPicClick(View view, int position);
     void onPostExpandClick(View view, int position);
     void onProfileClick(View view, int position);
+    void onCatClick(View view, int position);
 }
 
 

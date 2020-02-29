@@ -380,4 +380,9 @@ public class ProfilePostsFragment extends Fragment implements ClickListenerInter
 
 
     }
+
+    @Override
+    public void onCatClick(View view, int position) {
+
+    }
 }

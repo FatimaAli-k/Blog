@@ -17,16 +17,9 @@
         <action
             android:id="@+id/action_nav_home_to_nav_post"
             app:destination="@id/nav_post" />
-    </fragment>
-
-    <fragment
-        android:id="@+id/nav_all_blogs"
-        android:name="com.example.blog.controller.ui.allBlogs.AllBlogsFragment"
-        android:label="@string/menu_all_blogs"
-        tools:layout="@layout/fragment_all_blogs" >
         <action
-            android:id="@+id/action_nav_all_blogs_to_nav_home"
-            app:destination="@id/nav_home" />
+            android:id="@+id/action_nav_home_to_nav_cat_posts"
+            app:destination="@id/nav_cat_posts" />
     </fragment>
 
     <fragment
@@ -41,18 +34,10 @@
         android:label="@string/menu_categories"
         tools:layout="@layout/fragment_categories" >
         <action
-            android:id="@+id/action_nav_categories_to_nav_home"
-            app:destination="@id/nav_home"
+            android:id="@+id/action_nav_categories_to_nav_cat_posts"
+            app:destination="@id/nav_cat_posts"
             app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim"
-            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-            app:popExitAnim="@anim/nav_default_pop_exit_anim">
-        <argument
-            android:name="catId"
-            app:argType="integer"
-            android:defaultValue="-1" />
-
-            </action>
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim" />
     </fragment>
 
 <!--    <fragment-->
@@ -88,7 +73,23 @@
         android:id="@+id/nav_post"
         android:name="com.example.blog.controller.ui.comments.ExpandedPostFragment"
         android:label=""
-        tools:layout="@layout/expanded_post"/>
+        tools:layout="@layout/expanded_post">
+        <action
+            android:id="@+id/action_nav_post_to_nav_cat_posts"
+            app:destination="@id/nav_cat_posts" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_cat_posts"
+        android:name="com.example.blog.controller.ui.home.PostsByCatFragment"
+        android:label=""
+        tools:layout="@layout/fragment_home">
+        <argument
+            android:name="catId"
+            app:argType="integer"
+            android:defaultValue="0" />
+    </fragment>
+
 
 
     <activity
