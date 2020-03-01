@@ -1,7 +1,9 @@
 package com.example.blog.controller.ui.profile;
 
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +19,8 @@ import com.example.blog.R;
 import com.example.blog.controller.tools.ClickListenerInterface;
 import com.example.blog.controller.tools.TimeAgo;
 import com.example.blog.model.Posts;
+import com.facebook.AccessToken;
+import com.facebook.Profile;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -25,11 +29,12 @@ import java.util.List;
 public class ProfilePostsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  {
 
 
+    private boolean myProfile=false;
     private List<Posts> postsList;
     private LayoutInflater mInflater;
 
     private ClickListenerInterface mClickListener,mCommentClickListener,
-            mPicClickListener,mPostExpandClickListener,mProfileClickListener;
+            mPicClickListener,mPostExpandClickListener, mDeleteClickListener;
 
 
 
@@ -41,9 +46,10 @@ public class ProfilePostsRecyclerAdapter extends RecyclerView.Adapter<RecyclerVi
 
     private boolean isLoadingAdded = false;
 
-    public ProfilePostsRecyclerAdapter(Context context) {
+    public ProfilePostsRecyclerAdapter(Context context, boolean myProfile) {
         this.context = context;
         postsList = new ArrayList<>();
+        this.myProfile=myProfile;
     }
 
     public List<Posts> getPosts() {
@@ -87,8 +93,6 @@ public class ProfilePostsRecyclerAdapter extends RecyclerView.Adapter<RecyclerVi
         switch (getItemViewType(position)) {
             case ITEM:
                 PostVH postVH = (PostVH) holder;
-
-
 
 
 
@@ -231,6 +235,8 @@ public class ProfilePostsRecyclerAdapter extends RecyclerView.Adapter<RecyclerVi
 
             itemView.setOnClickListener(postClickListener);
             postPic.setOnClickListener(picListener);
+
+
             delete.setOnClickListener(deleteClickListener);
 
 
@@ -251,6 +257,29 @@ public class ProfilePostsRecyclerAdapter extends RecyclerView.Adapter<RecyclerVi
 //            });
 
 
+            if(myProfile)
+            delete.setVisibility(View.VISIBLE);
+
+//            String userID=null;
+//            boolean actLoggedIn=false;
+//            final boolean loggedOut = AccessToken.getCurrentAccessToken() == null;
+//
+//            SharedPreferences prefs = context.getSharedPreferences("profile", Activity.MODE_PRIVATE);
+//            if(prefs.getString("user_id",null)!=null){
+//                actLoggedIn=true;
+//            }
+//
+//            if(actLoggedIn){
+//                userID=prefs.getString("user_id",null);
+//            }
+//            else if(!loggedOut){
+//                userID= Profile.getCurrentProfile().getId();
+//            }
+
+
+
+
+
         }
         View.OnClickListener postClickListener = new View.OnClickListener() {
             @Override
@@ -263,7 +292,7 @@ public class ProfilePostsRecyclerAdapter extends RecyclerView.Adapter<RecyclerVi
         View.OnClickListener deleteClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (mProfileClickListener != null)mProfileClickListener.onItemClick(view, getAdapterPosition());
+                if (mDeleteClickListener != null) mDeleteClickListener.onProfileClick(view, getAdapterPosition());
 
             }
         };
@@ -315,8 +344,9 @@ public class ProfilePostsRecyclerAdapter extends RecyclerView.Adapter<RecyclerVi
     }
 
     //on profile click
+    //delete
     void setProfileClickListener(ClickListenerInterface profileClickListener) {
-        this.mProfileClickListener = profileClickListener;
+        this.mDeleteClickListener = profileClickListener;
     }
 
 

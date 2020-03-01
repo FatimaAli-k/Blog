@@ -49,6 +49,7 @@ public class ProfileActivity extends AppCompatActivity {
     IResult mResultCallback = null;
     FetchJson mVolleyService;
     int points;
+    boolean myProfile=false;
 //
 //    LinearLayoutManager layoutManager;
 //   ProfilePostsRecyclerAdapter adapter;
@@ -98,12 +99,15 @@ public class ProfileActivity extends AppCompatActivity {
         if(userId.equals(myUserId)|| userId.equals(myFbId)){
             //my profile
             //show additional options
+            myProfile=true;
+
 
         }
 
 
         ProfilePostsFragment postsFragment=new ProfilePostsFragment();
         Bundle bundle=new Bundle();
+        bundle.putBoolean("my_profile",myProfile);
         bundle.putString("user_id",userId);
         postsFragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction().replace(R.id.posts_frame, postsFragment, "postFragment").commit();

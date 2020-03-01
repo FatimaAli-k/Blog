@@ -139,12 +139,33 @@
 <!--            android:src="@drawable/aqlamdefault"-->
 <!--            />-->
         <Button
+            android:id="@+id/getImgFromGallary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:background="@drawable/bg_button2"
             android:text="upload image from galary"
             />
+        <FrameLayout
+            android:id="@+id/imgFrame"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone">
+            <ImageButton
+                android:id="@+id/cancelPic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_button"
+                android:src="@drawable/ic_close_black_24dp"/>
+        <ImageView
+            android:id="@+id/uploadImg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            />
+
+        </FrameLayout>
 
     </LinearLayout>
 

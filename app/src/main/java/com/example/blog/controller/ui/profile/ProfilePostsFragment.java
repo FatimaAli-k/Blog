@@ -1,5 +1,6 @@
 package com.example.blog.controller.ui.profile;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -61,10 +63,10 @@ public class ProfilePostsFragment extends Fragment implements ClickListenerInter
     private String TAG = "profilePostsFragment";
     IResult mResultCallback = null;
     FetchJson mVolleyService;
-    TextView delete;
     JSONObject sendJson;
-
-    String firstPageUrl,incViewUrl;
+    boolean myProfile=false;
+    String firstPageUrl,incViewUrl,deletePostUrl;
+    int deletedItemPosition;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -72,8 +74,10 @@ public class ProfilePostsFragment extends Fragment implements ClickListenerInter
 //
         firstPageUrl=baseUrl.getUrl(baseUrl.getPostByUserId());
         incViewUrl=baseUrl.getIncViewsUrl();
+        deletePostUrl=baseUrl.getUrl(baseUrl.getDeletePost());
 
         String userId=getArguments().getString("user_id");
+        myProfile=getArguments().getBoolean("my_profile");
 
         Map<String,String> params=new HashMap<>();
         params.put("user_id",userId);
@@ -83,13 +87,16 @@ public class ProfilePostsFragment extends Fragment implements ClickListenerInter
         relativeLayout = root.findViewById(R.id.profileRelativeLayout);
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
-        adapter = new ProfilePostsRecyclerAdapter(getContext());
+        adapter = new ProfilePostsRecyclerAdapter(getContext(),myProfile);
+
+
 
         //click listeners
         adapter.setClickListener(this);
 //        adapter.setCommentClickListener(this);
         adapter.setPicClickListener(this);
         adapter.setPostExpandClickListener(this);
+        //delete
         adapter.setProfileClickListener(this);
 
         recyclerView.setAdapter(adapter);
@@ -162,23 +169,27 @@ public class ProfilePostsFragment extends Fragment implements ClickListenerInter
                 Log.d(TAG, "Volley requester " + requestType);
                 Log.d(TAG, "Volley JSON post" + response);
 
-//                Toast.makeText(getContext(),"//"+response,Toast.LENGTH_LONG).show();
-                currentPage += 1;
-                adapter.removeLoadingFooter();
-                isLoading = false;
+                if(requestType.equals("delete")){
+                    adapter.remove(adapter.getItem(deletedItemPosition));
+                    Toast.makeText(getContext(),R.string.delete_complete,Toast.LENGTH_LONG).show();
+                }
+                else {
+                    currentPage += 1;
+                    adapter.removeLoadingFooter();
+                    isLoading = false;
 
 
-                ArrayList<Posts> postsList;
+                    ArrayList<Posts> postsList;
 
-                postsList= parsJsonObj(response);
-                adapter.addAll(postsList);
+                    postsList = parsJsonObj(response);
+                    adapter.addAll(postsList);
 
 
-                if (currentPage <= TOTAL_PAGES) adapter.addLoadingFooter();
-                else isLastPage = true;
-                //
+                    if (currentPage <= TOTAL_PAGES) adapter.addLoadingFooter();
+                    else isLastPage = true;
+                    //
 //                Toast.makeText(getContext(),"//"+currentPage,Toast.LENGTH_LONG).show();
-
+                }
 
             }
             @Override
@@ -197,10 +208,13 @@ public class ProfilePostsFragment extends Fragment implements ClickListenerInter
                 Log.d(TAG, "Volley JSON post" + error);
 
                 Toast.makeText(getContext(),""+error,Toast.LENGTH_LONG).show();
-
-                adapter.removeLoadingFooter();
-                isLoading = false;
-
+                if(requestType.equals("delete")){
+                    Toast.makeText(getContext(),R.string.delete_failed,Toast.LENGTH_LONG).show();
+                }
+                else {
+                    adapter.removeLoadingFooter();
+                    isLoading = false;
+                }
 
             }
         };
@@ -231,7 +245,7 @@ public class ProfilePostsFragment extends Fragment implements ClickListenerInter
                 String userId=obj.getString("user_id");
 
                 if(image != null && !image.equals(""))
-                    image="https://alkafeelblog.edu.turathalanbiaa.com/aqlam/image/"+image;
+                    image=baseUrl.getImagePath()+image;
 
                 Posts post=new Posts();
                 post.setId(id);
@@ -244,15 +258,6 @@ public class ProfilePostsFragment extends Fragment implements ClickListenerInter
                 post.setStatus(status);
                 post.setContent(content);
                 post.setUser_id(userId);
-
-                JSONObject user=obj.getJSONObject("user");
-                String userName=user.getString("name");
-                String profilePic=user.getString("picture");
-
-                if(profilePic == null || profilePic.equals("") ||profilePic.equals("http://aqlam.turathalanbiaa.com/aqlam/image/000000.png")){
-                    profilePic="https://alkafeelblog.edu.turathalanbiaa.com/aqlam/image/000000.png";
-                }
-
 
                 JSONObject cat=obj.getJSONObject("cat");
                 String catName=cat.getString("name");
@@ -376,13 +381,52 @@ public class ProfilePostsFragment extends Fragment implements ClickListenerInter
     }
 
     @Override
-    public void onProfileClick(View view, int position) {
+    public void onProfileClick(View view, final int position) {
+
+        //delete listener
+        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which){
+                    case DialogInterface.BUTTON_POSITIVE:
+                        //Yes button clicked
+                        deletedItemPosition=deletePost(adapter.getItem(position).getId(),position);
+                        break;
+
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        //No button clicked
+                        dialog.dismiss();
+                        break;
+                }
+            }
+        };
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setMessage(R.string.delete).setPositiveButton(R.string.yes, dialogClickListener)
+                .setNegativeButton(R.string.no, dialogClickListener).show();
 
 
+    }
+
+    public int deletePost(int id,int position) {
+        Log.d(TAG, "deletePost: ");
+
+        Map<String,String> params=new HashMap<>();
+        params.put("id",""+id);
+       JSONObject deleteJson=new JSONObject(params);
+
+        initVolleyCallback();
+        mVolleyService =new FetchJson(mResultCallback,getContext());
+        mVolleyService.postDataVolley("delete",deletePostUrl,deleteJson);
+
+        return position;
     }
 
     @Override
     public void onCatClick(View view, int position) {
 
+//        Bundle bundle = new Bundle();
+//        bundle.putInt("catId",adapter.getItem(position).getCategory_id());
+//
     }
 }

@@ -13,11 +13,15 @@ public class URLs {
     private String register="registerusers";
     private String users="userpagination";
     private String postByUserId="PosttPaginationByUserId";
+    private String deletePost="deletepost";
+    private String deleteComment="";
+
+
 
     private String incViews="updateviews";
 
 
-    private String imagePath="https://alkafeelblog.edu.turathalanbiaa.com/aqlam/image/";
+    private String imagePath="http://192.168.9.108/blog/public/images/";
 
 
 
@@ -107,6 +111,13 @@ public class URLs {
 
     public String getUsers() {
         return users;
+    }
+    public String getDeletePost() {
+        return deletePost;
+    }
+
+    public String getDeleteComment() {
+        return deleteComment;
     }
 
     public String getImagePath() {

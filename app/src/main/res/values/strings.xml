@@ -26,6 +26,10 @@
     <string name="oldest">جميع التدوينات</string>
     <string name="most_viewed">يتصدر الان</string>
 
+    //dialog
+    <string name="delete">are you sure you want to delete this post</string>
+    <string name="yes">yes</string>
+    <string name="no">no</string>
 
     //toast messages
     <string name="no_comments">لايوجد اي تعليقات</string>
@@ -35,6 +39,10 @@
     <string name="login_credentials_wrong">wrong password or email</string>
     <string name="server_error">something went wrong, try again</string>
     <string name="no_posts">لايوجد اي تدوينات</string>
+    <string name="upload_complete">File upload complete</string>
+    <string name="upload_failed">Error uploading file</string>
+    <string name="delete_complete">تم الحذف</string>
+    <string name="delete_failed">delete failed</string>
 
 
     <string name="facebook_app_id">245801286410441</string>

@@ -427,7 +427,7 @@ public class HomeFragment extends Fragment implements  SwipeRefreshLayout.OnRefr
                String userId=obj.getString("user_id");
 
                if(image != null && !image.equals(""))
-                   image="https://alkafeelblog.edu.turathalanbiaa.com/aqlam/image/"+image;
+                   image=baseUrl.getImagePath()+image;
 
                Posts post=new Posts();
                 post.setId(id);
