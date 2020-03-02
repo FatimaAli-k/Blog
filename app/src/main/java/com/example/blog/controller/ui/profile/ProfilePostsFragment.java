@@ -319,7 +319,7 @@ public class ProfilePostsFragment extends Fragment implements ClickListenerInter
         TextView seeMore = view.findViewById(R.id.seeMore);
         Log.d("line count", ""+postDetails.getLineCount());
         if (postDetails.getMaxLines() == 3) {
-            postDetails.setMaxLines(40);
+            postDetails.setMaxLines(1000);
             seeMore.setVisibility(View.GONE);
             //incViews
             updateViews(incViewUrl,adapter.getItem(position).getId());

@@ -74,7 +74,7 @@ public class HomeFragment extends Fragment implements  SwipeRefreshLayout.OnRefr
     URLs baseUrl=new URLs();
 //    final String postRoute ="posttpagination";
 //    final String viewsRoute="updateviews";
-    private String TAG = "commentsFragment";
+    private String TAG = "homeFragment";
     IResult mResultCallback = null;
     FetchJson mVolleyService;
     TextView errortxt;
@@ -361,7 +361,7 @@ public class HomeFragment extends Fragment implements  SwipeRefreshLayout.OnRefr
                 Log.d(TAG, "Volley requester " + requestType);
                 Log.d(TAG, "Volley JSON post" + error);
                 errortxt.setText("no connection... ");
-                Toast.makeText(getContext(),""+error,Toast.LENGTH_LONG).show();
+//                Toast.makeText(getContext(),""+error,Toast.LENGTH_LONG).show();
                 errortxt.setVisibility(View.VISIBLE);
                 swipeRefresh.setRefreshing(false);
 
@@ -472,9 +472,7 @@ public class HomeFragment extends Fragment implements  SwipeRefreshLayout.OnRefr
 
         }catch (JSONException e) {
             e.printStackTrace();
-            Toast.makeText(getContext(),
-                    "Error: " + e.getMessage(),
-                    Toast.LENGTH_LONG).show();
+            Log.d(TAG, "parsJsonObj: "+e.getMessage());
         }
 
         return postsList;
@@ -499,7 +497,7 @@ public class HomeFragment extends Fragment implements  SwipeRefreshLayout.OnRefr
         TextView seeMore = view.findViewById(R.id.seeMore);
         Log.d("line count", ""+postDetails.getLineCount());
                     if (postDetails.getMaxLines() == 3) {
-                        postDetails.setMaxLines(40);
+                        postDetails.setMaxLines(1000);
                         seeMore.setVisibility(View.GONE);
                         //incViews
                         updateViews(incViewUrl,adapter.getItem(position).getId());
