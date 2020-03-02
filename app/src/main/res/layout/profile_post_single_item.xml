@@ -26,28 +26,36 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:orientation="vertical"
             >
 
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="horizontal"
+                android:layout_marginTop="5dp">
                 <TextView
                     android:id="@+id/time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Time"
-                    android:padding="10dp"
+                    android:paddingRight="10dp"
+                    android:paddingLeft="5dp"
                     android:drawablePadding="5dp"
                     android:drawableLeft="@drawable/ic_date_range_black_24dp"
                     />
+                <View
+                    android:id="@+id/divider4"
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:layout_margin="5dp"
+                    android:background="?android:attr/listDivider" />
                 <TextView
                     android:id="@+id/viewsCount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:padding="10dp"
+
                     android:text="views"
                     android:drawablePadding="5dp"
                     android:drawableLeft="@drawable/ic_remove_red_eye_black_24dp"
@@ -126,7 +134,6 @@
                 android:layout_height="match_parent"
                 android:orientation="horizontal"
                 android:layoutDirection="rtl"
-                android:layout_marginTop="10dp"
                 >
 
 
@@ -137,13 +144,18 @@
                     android:background="@drawable/bg_button_tag"
                     android:text="@string/menu_categories"
                     android:textSize="14sp"
-                    android:layout_marginTop="10dp"
                     android:paddingRight="10dp"
                     android:paddingLeft="10dp"
                     android:textStyle="italic"
-                    android:layout_gravity="right"
-                    android:layout_margin="5dp"
+                    android:layout_gravity="center"
+                    android:layout_margin="10dp"
 
+                    />
+
+                <Space
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="5"
                     />
 
 
@@ -152,11 +164,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="delete"
+                    android:text="حذف"
                     android:paddingLeft="10dp"
                     android:drawablePadding="5dp"
                     android:drawableLeft="@drawable/ic_delete_black_24dp"
                     android:textDirection="ltr"
+                    android:layout_gravity="center"
                     android:visibility="gone"
                     />
 

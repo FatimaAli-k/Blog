@@ -219,14 +219,14 @@ public class ProfilePostsRecyclerAdapter extends RecyclerView.Adapter<RecyclerVi
             postPic = itemView.findViewById(R.id.post_pic);
             postTitle = itemView.findViewById(R.id.postTitle);
             postDetails = itemView.findViewById(R.id.postDetails);
-            postId = itemView.findViewById(R.id.psi_postId);
+//            postId = itemView.findViewById(R.id.psi_postId);
             seeMore = itemView.findViewById(R.id.seeMore);
             contentll = itemView.findViewById(R.id.contentLL);
             viewCount = itemView.findViewById(R.id.viewsCount);
             delete = itemView.findViewById(R.id.deletePost);
             timeStamp=itemView.findViewById(R.id.time);
 
-            catLL=itemView.findViewById(R.id.post_catLL);
+//            catLL=itemView.findViewById(R.id.post_catLL);
 
             catBtn=itemView.findViewById(R.id.catBtn);
             catId=itemView.findViewById(R.id.cat_Id);

@@ -226,7 +226,15 @@ public class ProfilePostsFragment extends Fragment implements ClickListenerInter
         try {
 
 
-            TOTAL_PAGES=response.getInt("last_page");
+            if(response.getInt("last_page")>11) {
+                if (TOTAL_PAGES != response.getInt("last_page")) {
+                    TOTAL_PAGES++;
+                }
+            }
+            else {TOTAL_PAGES=response.getInt("last_page");}
+            if(TOTAL_PAGES==0){
+                Toast.makeText(getContext(),R.string.no_posts,Toast.LENGTH_SHORT).show();
+            }
 
             JSONArray data=response.getJSONArray("data");
 //           Toast.makeText(getContext(),""+data.length(),Toast.LENGTH_LONG).show();
