@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.PopupMenu;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -87,6 +88,8 @@ public class PostsByCatFragment extends Fragment implements  SwipeRefreshLayout.
     int sortByCat=0;
     int catId=0,sortby=2;
 
+    ProgressBar loading;
+
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -146,6 +149,8 @@ public class PostsByCatFragment extends Fragment implements  SwipeRefreshLayout.
         FloatingActionButton fab = ((MainActivity) getActivity()).getFloatingActionButton();
         fab.show();
 
+        loading=root.findViewById(R.id.progressBar2);
+
 
         swipeRefresh=root.findViewById(R.id.swipeRefresh);
         swipeRefresh.setOnRefreshListener(this);
@@ -183,6 +188,7 @@ public class PostsByCatFragment extends Fragment implements  SwipeRefreshLayout.
 //        Parcelable state = layoutManager.onSaveInstanceState();
 //        layoutManager.onRestoreInstanceState(state);
 
+        loading.setVisibility(View.VISIBLE);
         loadFirstPage();
 
         /**
@@ -278,6 +284,8 @@ public class PostsByCatFragment extends Fragment implements  SwipeRefreshLayout.
                 Log.d(TAG, "Volley requester " + requestType);
                 Log.d(TAG, "Volley JSON post" + response);
                 errortxt.setVisibility(View.GONE);
+                loading.setVisibility(View.GONE);
+
 //                Toast.makeText(getContext(),"//"+response,Toast.LENGTH_LONG).show();
                 currentPage += 1;
                 adapter.removeLoadingFooter();
@@ -313,8 +321,10 @@ public class PostsByCatFragment extends Fragment implements  SwipeRefreshLayout.
             public void notifyError(String requestType, VolleyError error) {
                 Log.d(TAG, "Volley requester " + requestType);
                 Log.d(TAG, "Volley JSON post" + error);
-                errortxt.setText("no connection... ");
-                Toast.makeText(getContext(),""+error,Toast.LENGTH_LONG).show();
+                errortxt.setText(R.string.no_connection);
+                loading.setVisibility(View.GONE);
+
+//                Toast.makeText(getContext(),""+error,Toast.LENGTH_LONG).show();
                 errortxt.setVisibility(View.VISIBLE);
                 swipeRefresh.setRefreshing(false);
 
@@ -360,7 +370,7 @@ public class PostsByCatFragment extends Fragment implements  SwipeRefreshLayout.
                String userId=obj.getString("user_id");
 
                if(image != null && !image.equals(""))
-                   image="https://alkafeelblog.edu.turathalanbiaa.com/aqlam/image/"+image;
+                   image=baseUrl.getImagePath()+image;
 
                Posts post=new Posts();
                 post.setId(id);

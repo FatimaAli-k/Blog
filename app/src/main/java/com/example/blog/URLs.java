@@ -1,7 +1,9 @@
 package com.example.blog;
 
 public class URLs {
-    private String baseUrl="http://192.168.9.108:8000/api/";
+//    private String baseUrl="http://192.168.9.108:8000/api/";
+
+    private String baseUrl="http://blog-api.turathalanbiaa.com/api/";
     private String route;
     private String categories="cat";
     private String sendPost="addposts";
@@ -15,13 +17,11 @@ public class URLs {
     private String postByUserId="PosttPaginationByUserId";
     private String deletePost="deletepost";
     private String deleteComment="";
-
-
-
     private String incViews="updateviews";
 
-
-    private String imagePath="http://192.168.9.108/blog/public/images/";
+    private String imagePath="https://alkafeelblog.edu.turathalanbiaa.com/aqlam/image/";
+//    private String imagePath="http://blog-api.turathalanbiaa.com/";
+//    private String imagePath="http://192.168.9.108/blog/public/images/";
 
 
 

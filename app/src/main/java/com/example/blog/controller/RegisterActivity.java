@@ -209,6 +209,7 @@ public class RegisterActivity extends AppCompatActivity {
                     LoginManager.getInstance().logOut();
                     Intent intent=new Intent(getApplicationContext(), MainActivity.class);
                     startActivity(intent);
+                    finish();
                 }
 
 

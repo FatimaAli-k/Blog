@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -66,6 +67,8 @@ public class BloggersFragment extends Fragment implements SwipeRefreshLayout.OnR
     String firstPageUrl,incViewUrl;
     JSONObject sendJson;
 
+    ProgressBar loading;
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 //
@@ -80,6 +83,7 @@ public class BloggersFragment extends Fragment implements SwipeRefreshLayout.OnR
 //        params.put("cat","1");
         sendJson=new JSONObject(params);
 
+        loading=root.findViewById(R.id.progressBar4);
 
         swipeRefresh=root.findViewById(R.id.swipeRefresh);
         swipeRefresh.setOnRefreshListener(this);
@@ -112,6 +116,7 @@ public class BloggersFragment extends Fragment implements SwipeRefreshLayout.OnR
 //        Parcelable state = layoutManager.onSaveInstanceState();
 //        layoutManager.onRestoreInstanceState(state);
 
+        loading.setVisibility(View.VISIBLE);
         loadFirstPage();
 
         /**
@@ -221,6 +226,7 @@ public class BloggersFragment extends Fragment implements SwipeRefreshLayout.OnR
                 Log.d(TAG, "Volley requester " + requestType);
                 Log.d(TAG, "Volley JSON post" + response);
                 errortxt.setVisibility(View.GONE);
+                loading.setVisibility(View.GONE);
 //                Toast.makeText(getContext(),"//"+response,Toast.LENGTH_LONG).show();
                 currentPage += 1;
                 adapter.removeLoadingFooter();
@@ -255,8 +261,9 @@ public class BloggersFragment extends Fragment implements SwipeRefreshLayout.OnR
             public void notifyError(String requestType, VolleyError error) {
                 Log.d(TAG, "Volley requester " + requestType);
                 Log.d(TAG, "Volley JSON post" + error);
-                errortxt.setText("no connection... ");
-                Toast.makeText(getContext(),""+error,Toast.LENGTH_LONG).show();
+                errortxt.setText(R.string.no_connection);
+                loading.setVisibility(View.GONE);
+//                Toast.makeText(getContext(),""+error,Toast.LENGTH_LONG).show();
                 errortxt.setVisibility(View.VISIBLE);
                 swipeRefresh.setRefreshing(false);
 

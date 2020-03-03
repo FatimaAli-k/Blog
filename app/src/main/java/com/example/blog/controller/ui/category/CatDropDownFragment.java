@@ -110,7 +110,7 @@ public class CatDropDownFragment extends Fragment {
 
                         }
 //                        cat_Id=index;
-                        Toast.makeText(getContext(),"//"+index,Toast.LENGTH_LONG).show();
+//                        Toast.makeText(getContext(),"//"+index,Toast.LENGTH_LONG).show();
                         passData(index);
                         return true;
                     }
@@ -178,7 +178,7 @@ public class CatDropDownFragment extends Fragment {
                 Log.d(TAG, "Volley requester " + requestType);
                 Log.d(TAG, "Volley JSON post" + error);
 
-                Toast.makeText(getContext(),"hm"+error,Toast.LENGTH_LONG).show();
+//                Toast.makeText(getContext(),"hm"+error,Toast.LENGTH_LONG).show();
 
 
 

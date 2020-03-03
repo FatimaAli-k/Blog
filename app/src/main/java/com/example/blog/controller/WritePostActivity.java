@@ -11,20 +11,28 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -77,6 +85,8 @@ public class WritePostActivity extends AppCompatActivity implements CatDropDownF
     FrameLayout imgFrame;
     ImageButton cancelPic;
 
+    ProgressDialog mProgressDialog;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +99,10 @@ public class WritePostActivity extends AppCompatActivity implements CatDropDownF
         content=findViewById(R.id.detailsEditTxt);
         imgFrame=findViewById(R.id.imgFrame);
         cancelPic=findViewById(R.id.cancelPic);
+
+
+
+
 
         final boolean loggedOut = AccessToken.getCurrentAccessToken() == null;
         SharedPreferences prefs = getSharedPreferences("profile", Activity.MODE_PRIVATE);
@@ -204,6 +218,7 @@ public class WritePostActivity extends AppCompatActivity implements CatDropDownF
 
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(intent);
+                finish();
 
 
 //                Toast.makeText(getApplicationContext(),"//"+response,Toast.LENGTH_LONG).show();
@@ -282,41 +297,86 @@ public class WritePostActivity extends AppCompatActivity implements CatDropDownF
         return filePath;
     }
 
-    void uploadPostWithImg(String userId, String title,String content,int cat_Id){
+    void uploadPostWithImg(String userId, final String title, String content, int cat_Id){
 
-        final ProgressDialog mProgressDialog = new ProgressDialog(WritePostActivity.this);
-        mProgressDialog.setMessage("uploading...");
-        mProgressDialog.setIndeterminate(true);
-        mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-        mProgressDialog.setCancelable(true);
-        mProgressDialog.show();
 
-        mProgressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-            @Override
-            public void onCancel(DialogInterface dialog) {
-                // downloadTask.cancel(true);
-            }
-        });
+//        mProgressDialog = new ProgressDialog(WritePostActivity.this);
+//        mProgressDialog.setMessage("uploading...");
+//        mProgressDialog.setIndeterminate(true);
+//
+//        mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+////        mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+//        mProgressDialog.setCancelable(false);
+//        mProgressDialog.show();
+//
+//        mProgressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+//            @Override
+//            public void onCancel(DialogInterface dialog) {
+//                // uploadTask.cancel(true);
+//            }
+//        });
+        int llPadding = 30;
+        LinearLayout ll = new LinearLayout(this);
+        ll.setOrientation(LinearLayout.HORIZONTAL);
+        ll.setPadding(llPadding, llPadding, llPadding, llPadding);
+        ll.setGravity(Gravity.CENTER);
+        LinearLayout.LayoutParams llParam = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT);
+        llParam.gravity = Gravity.CENTER;
+        ll.setLayoutParams(llParam);
+
+        ProgressBar progressBar = new ProgressBar(this);
+        progressBar.setIndeterminate(true);
+        progressBar.setPadding(0, 0, llPadding, 0);
+        progressBar.setLayoutParams(llParam);
+
+        llParam = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+        llParam.gravity = Gravity.CENTER;
+        final TextView tvText = new TextView(this);
+
+        tvText.setTextColor(Color.parseColor("#000000"));
+        tvText.setTextSize(20);
+        tvText.setLayoutParams(llParam);
+
+        ll.addView(progressBar);
+        ll.addView(tvText);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setCancelable(false);
+        builder.setView(ll);
+
+        final AlertDialog dialog = builder.create();
+        dialog.show();
+        Window window = dialog.getWindow();
+        if (window != null) {
+            WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
+            layoutParams.copyFrom(dialog.getWindow().getAttributes());
+            layoutParams.width = LinearLayout.LayoutParams.WRAP_CONTENT;
+            layoutParams.height = LinearLayout.LayoutParams.WRAP_CONTENT;
+            dialog.getWindow().setAttributes(layoutParams);
+        }
+
+
 
         //"https://api.imgur.com/3/upload"
         Ion.with(getApplicationContext())
                 .load(sendPostUrl)
-//                .uploadProgressHandler(new ProgressCallback() {
-//                    @Override
-//                    public void onProgress(long uploaded, long total) {
-//                        // Displays the progress bar for the first time.
-////                        mNotifyManager.notify(notificationId, mBuilder.build());
-////                        mBuilder.setProgress((int) total, (int) uploaded, false);
-//                    }
-//                })
-                .uploadProgressDialog(mProgressDialog)
+//
+//                 .uploadProgressDialog(mProgressDialog)
                 .uploadProgressHandler(new ProgressCallback() {
                     @Override
                     public void onProgress(long uploaded, long total) {
 
-                        mProgressDialog.setIndeterminate(true);
-                        mProgressDialog.setMax((int)total);
-                        mProgressDialog.setProgress((int)uploaded);
+//                        mProgressDialog.setIndeterminate(true);
+//                        mProgressDialog.setMax((int)total);
+//                        mProgressDialog.setProgress((int)uploaded);
+                        tvText.setText((getResources().getString(R.string.uploading)+" "+uploaded*100/total+"%"));
+
+//                        Toast.makeText(getApplicationContext(), uploaded+"/"+total,Toast.LENGTH_SHORT).show();
+
+                        Log.d(TAG, "onProgress: "+uploaded+"/"+total);
 
 
                     }
@@ -333,7 +393,9 @@ public class WritePostActivity extends AppCompatActivity implements CatDropDownF
                 .setCallback(new FutureCallback<JsonObject>() {
                     @Override
                     public void onCompleted(Exception e, JsonObject result) {
-                        mProgressDialog.dismiss();
+//                        mProgressDialog.dismiss();
+                        dialog.dismiss();
+
                         // When the loop is finished, updates the notification
 //                        mBuilder.setContentText("Upload complete")
 //                                // Removes the progress bar
@@ -348,6 +410,7 @@ public class WritePostActivity extends AppCompatActivity implements CatDropDownF
                         Toast.makeText(getApplicationContext(), R.string.upload_complete, Toast.LENGTH_LONG).show();
                         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                         startActivity(intent);
+                        finish();
                     }
                 });
 
@@ -382,6 +445,7 @@ public class WritePostActivity extends AppCompatActivity implements CatDropDownF
             break;
         }
     }
+
 
 
 

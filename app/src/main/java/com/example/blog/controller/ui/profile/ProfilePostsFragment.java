@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -68,6 +69,9 @@ public class ProfilePostsFragment extends Fragment implements ClickListenerInter
     String firstPageUrl,incViewUrl,deletePostUrl;
     int deletedItemPosition;
 
+    ProgressBar loading;
+    TextView retry;
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
          View root = inflater.inflate(R.layout.fragment_profile_posts, container, false);
@@ -83,12 +87,21 @@ public class ProfilePostsFragment extends Fragment implements ClickListenerInter
         params.put("user_id",userId);
         sendJson=new JSONObject(params);
 
+        loading=root.findViewById(R.id.progressBar3);
+
         recyclerView = root.findViewById(R.id.posts_recycler_view);
         relativeLayout = root.findViewById(R.id.profileRelativeLayout);
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
         adapter = new ProfilePostsRecyclerAdapter(getContext(),myProfile);
 
+       retry=root.findViewById(R.id.refesh);
+        retry.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                refresh();
+            }
+        });
 
 
         //click listeners
@@ -101,6 +114,7 @@ public class ProfilePostsFragment extends Fragment implements ClickListenerInter
 
         recyclerView.setAdapter(adapter);
 
+        loading.setVisibility(View.VISIBLE);
         loadFirstPage();
 
         /**
@@ -141,6 +155,14 @@ public class ProfilePostsFragment extends Fragment implements ClickListenerInter
 
         return root;
     }
+    private void refresh() {
+        loading.setVisibility(View.VISIBLE);
+        retry.setVisibility(View.GONE);
+        currentPage = PAGE_START;
+        isLastPage = false;
+        adapter.clear();
+        loadFirstPage();
+    }
     private void loadFirstPage() {
         Log.d(TAG, "loadFirstPage: ");
         initVolleyCallback();
@@ -174,6 +196,9 @@ public class ProfilePostsFragment extends Fragment implements ClickListenerInter
                     Toast.makeText(getContext(),R.string.delete_complete,Toast.LENGTH_LONG).show();
                 }
                 else {
+
+                    loading.setVisibility(View.GONE);
+                    retry.setVisibility(View.GONE);
                     currentPage += 1;
                     adapter.removeLoadingFooter();
                     isLoading = false;
@@ -207,11 +232,15 @@ public class ProfilePostsFragment extends Fragment implements ClickListenerInter
                 Log.d(TAG, "Volley requester " + requestType);
                 Log.d(TAG, "Volley JSON post" + error);
 
-                Toast.makeText(getContext(),""+error,Toast.LENGTH_LONG).show();
+                Log.d(TAG, "notifyError: "+error);
+//                Toast.makeText(getContext(),""+error,Toast.LENGTH_LONG).show();
                 if(requestType.equals("delete")){
                     Toast.makeText(getContext(),R.string.delete_failed,Toast.LENGTH_LONG).show();
                 }
                 else {
+
+                    loading.setVisibility(View.GONE);
+                    retry.setVisibility(View.VISIBLE);
                     adapter.removeLoadingFooter();
                     isLoading = false;
                 }
@@ -283,9 +312,7 @@ public class ProfilePostsFragment extends Fragment implements ClickListenerInter
 
         }catch (JSONException e) {
             e.printStackTrace();
-            Toast.makeText(getContext(),
-                    "Error: " + e.getMessage(),
-                    Toast.LENGTH_LONG).show();
+            Log.d(TAG, "parsJsonObj: "+e.getMessage());
         }
 
         return postsList;

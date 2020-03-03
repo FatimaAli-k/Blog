@@ -114,6 +114,7 @@ public class LoginActivity extends AppCompatActivity {
 
                 Intent intent=new Intent(getApplicationContext(),MainActivity.class);
                 startActivity(intent);
+                finish();
 
 
             }
@@ -154,6 +155,7 @@ public class LoginActivity extends AppCompatActivity {
                 if( parsJson(response)){
                    Intent intent=new Intent(getApplicationContext(), MainActivity.class);
                     startActivity(intent);
+                    finish();
                }
                 else {
                     Toast.makeText(getApplicationContext(),R.string.login_credentials_wrong,Toast.LENGTH_LONG).show();

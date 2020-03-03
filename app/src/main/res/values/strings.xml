@@ -30,6 +30,7 @@
     <string name="delete">are you sure you want to delete this post</string>
     <string name="yes">yes</string>
     <string name="no">no</string>
+    <string name="uploading">uploading..</string>
 
     //toast messages
     <string name="no_comments">لايوجد اي تعليقات</string>
@@ -43,6 +44,11 @@
     <string name="upload_failed">Error uploading file</string>
     <string name="delete_complete">تم الحذف</string>
     <string name="delete_failed">delete failed</string>
+
+    //loading errors
+    <string name="no_connection">no connection...</string>
+    <string name="error">error</string>
+    <string name="retry">retry</string>
 
 
     <string name="facebook_app_id">245801286410441</string>

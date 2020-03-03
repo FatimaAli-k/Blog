@@ -125,7 +125,10 @@ public class MainActivity extends AppCompatActivity implements CatDropDownFragme
             navigationView.getMenu().findItem(R.id.nav_login).setVisible(false);
             navigationView.getMenu().findItem(R.id.nav_logout).setVisible(true);
             //Using Graph API
-            getUserProfile(AccessToken.getCurrentAccessToken());
+            try {
+
+                getUserProfile(AccessToken.getCurrentAccessToken());
+            }catch (Exception e){}
 
 
         }
@@ -260,7 +263,8 @@ public class MainActivity extends AppCompatActivity implements CatDropDownFragme
                 currentAccessToken, new GraphRequest.GraphJSONObjectCallback() {
                     @Override
                     public void onCompleted(JSONObject object, GraphResponse response) {
-                        Log.d("TAG", object.toString());
+                        Log.d("TAG", ""+response);
+                        if(response.getError() == null)
                         try {
                             String first_name = object.getString("first_name");
                             String last_name = object.getString("last_name");
