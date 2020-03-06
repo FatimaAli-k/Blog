@@ -42,7 +42,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ProfileActivity extends AppCompatActivity {
+public class ProfileActivity extends AppCompatActivity implements EditProfileDialogFragment.OnProfileDataPass {
 
     ImageView profilePic,background;
     TextView name;
@@ -122,7 +122,7 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Bundle bundle = new Bundle();
-                bundle.putString("userId",userId);
+                bundle.putString("user_id",userId);
                 bundle.putString("name",userName);
                 bundle.putString("pic",imgStr);
 
@@ -145,13 +145,7 @@ public class ProfileActivity extends AppCompatActivity {
 
 
         //load profile info from db
-        String url=baseUrl.getUrl(baseUrl.getProfileInfo());
-        initVolleyCallback();
-        mVolleyService =new FetchJson(mResultCallback,getApplicationContext());
-        Map<String,String> params=new HashMap<>();
-        params.put("id",userId);
-        JSONObject sendJson=new JSONObject(params);
-        mVolleyService.postDataVolley("GETCALL",url,sendJson);
+       loadProfile();
 //
 
         //add my posts fragment
@@ -159,6 +153,16 @@ public class ProfileActivity extends AppCompatActivity {
 
 
 
+    }
+    void loadProfile(){
+
+        String url=baseUrl.getUrl(baseUrl.getProfileInfo());
+        initVolleyCallback();
+        mVolleyService =new FetchJson(mResultCallback,getApplicationContext());
+        Map<String,String> params=new HashMap<>();
+        params.put("id",userId);
+        JSONObject sendJson=new JSONObject(params);
+        mVolleyService.postDataVolley("GETCALL",url,sendJson);
     }
 
     void initVolleyCallback(){
@@ -220,5 +224,12 @@ public class ProfileActivity extends AppCompatActivity {
 
         return success;
     }
+
+    @Override
+    public void onDataPass(int data) {
+       loadProfile();
+    }
+
+
 
 }

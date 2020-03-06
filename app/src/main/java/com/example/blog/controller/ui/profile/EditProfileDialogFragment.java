@@ -1,6 +1,7 @@
 package com.example.blog.controller.ui.profile;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -75,6 +76,17 @@ public class EditProfileDialogFragment extends DialogFragment  {
     IResult mResultCallback = null;
     FetchJson mVolleyService;
 
+    OnProfileDataPass dataPasser;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try {
+            dataPasser = (OnProfileDataPass) context;}
+        catch (Exception e) {
+            Log.e(TAG, "onAttach: "+e);
+        }
+    }
 
     public EditProfileDialogFragment(){}
 
@@ -84,7 +96,7 @@ public class EditProfileDialogFragment extends DialogFragment  {
        View view = inflater.inflate(R.layout.profile_edit, container,false);
 
 
-       updateProfileUrl=baseUrl.getUrl(baseUrl.getProfileInfo());
+       updateProfileUrl=baseUrl.getUrl(baseUrl.getUpdateProfile());
 
        userId= getArguments().getString("user_id");
        pic= getArguments().getString("pic");
@@ -119,20 +131,20 @@ public class EditProfileDialogFragment extends DialogFragment  {
             @Override
             public void onClick(View view) {
                 if(nameCheck){
-                    name=userName.getText().toString();
-                    if(picUpdate){
-                        if (checkPermission())
-                        {
-
-                        }
-
-                         else
-                            requestPermission();
-
-                    }
-                    else{
+//                    name=userName.getText().toString();
+//                    if(picUpdate){
+//                        if (checkPermission())
+//                        {
+//
+//                        }
+//
+//                         else
+//                            requestPermission();
+//
+//                    }
+//                    else{
                         updateNoImg(userId,name,pic);
-                    }
+//                    }
 
 
 
@@ -148,7 +160,9 @@ public class EditProfileDialogFragment extends DialogFragment  {
                     userName.setError(getString(R.string.empty_field_error));
                     nameCheck=false;
                 }
-                else nameCheck=true;
+                else {
+                    name=userName.getText().toString();
+                    nameCheck=true;}
 
             }
         });
@@ -307,6 +321,7 @@ public class EditProfileDialogFragment extends DialogFragment  {
 
     public void updateNoImg(String userId, String name, String pic){
 
+        Log.d(TAG, "updateNoImg: "+userId);
         Map<String,String> params=new HashMap<String, String>();
         params.put("id",userId);
         params.put("name",name);
@@ -324,8 +339,7 @@ public class EditProfileDialogFragment extends DialogFragment  {
             public void notifySuccess(String requestType,final JSONObject response) {
                 Log.d(TAG, "Volley requester " + requestType);
                 Log.d(TAG, "Volley JSON post" + response);
-
-
+                passData(1);
                 dismiss();
 
 
@@ -382,5 +396,13 @@ public class EditProfileDialogFragment extends DialogFragment  {
                 break;
         }
     }
+
+    public interface OnProfileDataPass {
+        public void onDataPass(int data);
+    }
+    public void passData(int data) {
+        dataPasser.onDataPass(data);
+    }
+
 
 }

@@ -12,6 +12,7 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -90,12 +91,13 @@ public class WritePostActivity extends AppCompatActivity implements CatDropDownF
 
     ProgressDialog mProgressDialog;
 
+    Button sendPost;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.create_post);
-        Button sendPost=findViewById(R.id.sendPostBtn);
+        sendPost=findViewById(R.id.sendPostBtn);
 
 
         title=findViewById(R.id.titleEditTxt);
@@ -156,6 +158,7 @@ public class WritePostActivity extends AppCompatActivity implements CatDropDownF
             public void onClick(View view) {
 
                 if(checkPostData()) {
+                    buttonInactive();
                    if(imageFile != null) {
                         if (checkPermission())
                             uploadPostWithImg(userID, title.getText().toString(), content.getText().toString(), cat_Id);
@@ -214,6 +217,15 @@ public class WritePostActivity extends AppCompatActivity implements CatDropDownF
 
     }
 
+    private void buttonInactive() {
+
+        sendPost.setClickable(false);
+    }
+    private void buttonActive() {
+
+        sendPost.setClickable(true);
+    }
+
     private void sendUpdatedPost(int postId, String title, String content, int cat_id) {
         Map<String,String> params=new HashMap<String, String>();
         params.put("id",""+postId);
@@ -251,6 +263,7 @@ public class WritePostActivity extends AppCompatActivity implements CatDropDownF
                 Log.d(TAG, "Volley requester " + requestType);
                 Log.d(TAG, "Volley JSON post" + response);
 
+                buttonActive();
                 if(requestType.equals("updatePost")){
                     finish();
                 }
@@ -275,6 +288,8 @@ public class WritePostActivity extends AppCompatActivity implements CatDropDownF
                 Log.d(TAG, "Volley requester " + requestType);
                 Log.d(TAG, "Volley JSON post" + error);
 
+
+                buttonActive();
 //                Toast.makeText(getApplicationContext(),"hm"+error,Toast.LENGTH_LONG).show();
 
 
