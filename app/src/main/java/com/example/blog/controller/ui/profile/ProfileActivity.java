@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.widget.NestedScrollView;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -14,6 +16,8 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -28,6 +32,7 @@ import com.example.blog.controller.ui.home.HomeFragment;
 import com.example.blog.model.Categories;
 import com.facebook.AccessToken;
 import com.facebook.Profile;
+import com.google.android.material.tabs.TabLayout;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -50,12 +55,7 @@ public class ProfileActivity extends AppCompatActivity {
     FetchJson mVolleyService;
     int points;
     boolean myProfile=false;
-//
-//    LinearLayoutManager layoutManager;
-//   ProfilePostsRecyclerAdapter adapter;
-//   CoordinatorLayout coordinatorLayout;
-//
-//    RecyclerView recyclerView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,6 +104,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         }
 
+//
 
         ProfilePostsFragment postsFragment=new ProfilePostsFragment();
         Bundle bundle=new Bundle();
@@ -112,18 +113,34 @@ public class ProfileActivity extends AppCompatActivity {
         postsFragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction().replace(R.id.posts_frame, postsFragment, "postFragment").commit();
 
-//        Intent intent = getIntent();
-////        userId= intent.getStringExtra("user_id");
-//        Bundle bundle=new Bundle();
-//        bundle=intent.getBundleExtra("user");
-//        userId=bundle.getString("user_id");
-//        userName=bundle.getString("user_name");
-//       imgStr=bundle.getString("profile_pic");
+
+        ImageButton edit=findViewById(R.id.editProfile);
+        if(myProfile)
+            edit.setVisibility(View.VISIBLE);
+
+        edit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Bundle bundle = new Bundle();
+                bundle.putString("userId",userId);
+                bundle.putString("name",userName);
+                bundle.putString("pic",imgStr);
+
+                EditProfileDialogFragment cf=new EditProfileDialogFragment();
+                cf.setArguments(bundle);
+                FragmentTransaction ft =  getSupportFragmentManager().beginTransaction();
+                Fragment prev =  getSupportFragmentManager().findFragmentByTag("dialog");
+                if (prev != null) {
+                    ft.remove(prev);
+                }
+                ft.addToBackStack(null);
+
+
+                cf.show(ft, "dialog");
+            }
+        });
+
 //
-//       if(imgStr != null && !imgStr.equals(""))
-//        Picasso.with(this).load(imgStr).fit().into(profilePic);
-
-
         name=findViewById(R.id.ph_name);
 
 

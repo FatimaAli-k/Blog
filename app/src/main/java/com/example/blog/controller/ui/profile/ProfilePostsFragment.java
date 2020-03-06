@@ -28,6 +28,7 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.blog.R;
 import com.example.blog.URLs;
+import com.example.blog.controller.WritePostActivity;
 import com.example.blog.controller.tools.ClickListenerInterface;
 import com.example.blog.controller.tools.PaginationListener;
 import com.example.blog.controller.tools.PopUpClass;
@@ -106,7 +107,8 @@ public class ProfilePostsFragment extends Fragment implements ClickListenerInter
 
         //click listeners
         adapter.setClickListener(this);
-//        adapter.setCommentClickListener(this);
+        //edit
+        adapter.setCommentClickListener(this);
         adapter.setPicClickListener(this);
         adapter.setPostExpandClickListener(this);
         //delete
@@ -410,9 +412,18 @@ public class ProfilePostsFragment extends Fragment implements ClickListenerInter
 
     }
 
+//edit
     @Override
     public void onCommentClick(View view, int position) {
-
+        Intent intent =new Intent(getContext(), WritePostActivity.class);
+        Bundle bundle=new Bundle();
+        bundle.putInt("post_id",adapter.getItem(position).getId());
+        bundle.putString("title",adapter.getItem(position).getTitle());
+        bundle.putString("content",adapter.getItem(position).getContent());
+        bundle.putInt("cat_id",adapter.getItem(position).getCategory_id());
+        intent.putExtra("post",bundle);
+        startActivity(intent);
+//        Toast.makeText(getContext(),"edit"+position,Toast.LENGTH_SHORT).show();
     }
 
     @Override

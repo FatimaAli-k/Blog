@@ -22,34 +22,6 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-<!--            <Button-->
-<!--                android:id="@+id/goBack"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:background="@drawable/bg_button2"-->
-<!--                android:fontFamily="@font/myfont"-->
-<!--                android:text="رجوع"-->
-<!--                android:textSize="24dp"-->
-<!--                android:padding="10dp"-->
-<!--               android:drawableLeft="@drawable/ic_arrow_back_black_24dp"-->
-<!--                />-->
-<!--            <Button-->
-<!--                android:id="@+id/addCatBtn"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginBottom="10dp"-->
-<!--                android:background="@drawable/bg_button2"-->
-<!--                android:paddingLeft="20dp"-->
-<!--                android:paddingRight="20dp"-->
-<!--                android:text="الاصناف"-->
-<!--                android:textAlignment="center"-->
-<!--                android:fontFamily="@font/myfont"-->
-<!--                android:gravity="right|center"-->
-<!--                android:textSize="16dp"-->
-<!--                android:layout_weight="1"-->
-<!--                android:drawableLeft="@drawable/ic_expand_more_black_24dp"-->
-<!--                />-->
-
             <fragment
                 android:id="@+id/dropdownFragment"
                 android:layout_width="wrap_content"
@@ -136,11 +108,6 @@
         </com.google.android.material.textfield.TextInputLayout>
 
 
-<!--        <ImageView-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="80dp"-->
-<!--            android:src="@drawable/aqlamdefault"-->
-<!--            />-->
         <Button
             android:id="@+id/getImgFromGallary"
             android:layout_width="wrap_content"

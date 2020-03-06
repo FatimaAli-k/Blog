@@ -602,12 +602,6 @@ public class HomeFragment extends Fragment implements  SwipeRefreshLayout.OnRefr
         Intent intent =new Intent(getContext(), ProfileActivity.class);
         Log.d(TAG, "onProfileClick: "+adapter.getItem(position).getUser_id());
 
-        //it should only send user id and from there make a network call
-//        Bundle bundle=new Bundle();
-//        bundle.putString("user_name",adapter.getItem(position).getUsername());
-//        bundle.putString("user_id",adapter.getItem(position).getUser_id());
-//        bundle.putString("profile_pic",adapter.getItem(position).getProfilePic());
-//        intent.putExtra("user",bundle);
 
         intent.putExtra("user_id",adapter.getItem(position).getUser_id());
         startActivity(intent);

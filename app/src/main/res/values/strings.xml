@@ -15,6 +15,10 @@
     <string name="menu_login">تسجيل الدخول</string>
     <string name="menu_logout">تسجيل الخروج</string>
 
+    //edit text hints
+    <string name="search_users">بحث عن مستخدم</string>
+
+
     //edit text errors
     <string name="empty_field_error">field required</string>
     <string name="min_char_error">min 6 char</string>
@@ -37,6 +41,7 @@
     <string name="must_login_to_post">يجب تسجيل الدخول</string>
     <string name="check_fields_for_error">check fields for error</string>
     <string name="comment_sent">تم ارسال التعليق</string>
+    <string name="comment_not_sent">error try again</string>
     <string name="login_credentials_wrong">wrong password or email</string>
     <string name="server_error">something went wrong, try again</string>
     <string name="no_posts">لايوجد اي تدوينات</string>

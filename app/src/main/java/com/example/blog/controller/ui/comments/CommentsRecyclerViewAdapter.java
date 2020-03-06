@@ -30,6 +30,7 @@ public class CommentsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
 
 
     private boolean isLoadingAdded = false;
+    private ClickListenerInterface mClickListener,mNameClickListener;
 
     public CommentsRecyclerViewAdapter(Context context) {
         this.context = context;
@@ -190,8 +191,25 @@ public class CommentsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
             userId=itemView.findViewById(R.id.userId);
             postId=itemView.findViewById(R.id.postId);
 
+            itemView.setOnClickListener(clickListener);
+            name.setOnClickListener(nameClickListener);
 
         }
+        View.OnClickListener clickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(android.view.View view) {
+                if (mClickListener != null)mClickListener.onItemClick(view, getAdapterPosition());
+
+            }
+        };
+
+        View.OnClickListener nameClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(android.view.View view) {
+                if (mNameClickListener != null)mNameClickListener.onNameClick(view, getAdapterPosition());
+
+            }
+        };
 
     }
 
@@ -204,6 +222,19 @@ public class CommentsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
     }
 
 
+    public interface ClickListenerInterface {
+        void onItemClick(View view, int position);
+        void onNameClick(View view, int position);
+    }
+
+    void setClickListener(ClickListenerInterface itemClickListener) {
+        this.mClickListener = itemClickListener;
+    }
+
+
+    void setNameClickListener(ClickListenerInterface nameClickListener) {
+        this.mNameClickListener = nameClickListener;
+    }
 
 
 }

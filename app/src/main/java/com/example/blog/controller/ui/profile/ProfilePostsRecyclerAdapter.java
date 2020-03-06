@@ -33,7 +33,7 @@ public class ProfilePostsRecyclerAdapter extends RecyclerView.Adapter<RecyclerVi
     private List<Posts> postsList;
     private LayoutInflater mInflater;
 
-    private ClickListenerInterface mClickListener,mCommentClickListener,
+    private ClickListenerInterface mClickListener,meditClickListener,
             mPicClickListener,mPostExpandClickListener, mDeleteClickListener;
 
 
@@ -119,6 +119,11 @@ public class ProfilePostsRecyclerAdapter extends RecyclerView.Adapter<RecyclerVi
                     Picasso.with( postVH.postPic.getContext()).load(img).fit().centerCrop().into( postVH.postPic);
 
                 }
+
+                if(myProfile)
+                    if (posts.getStatus() ==0)
+                        postVH.edit.setVisibility(View.VISIBLE);
+
                 break;
             case LOADING:
 //                Do nothing
@@ -212,7 +217,7 @@ public class ProfilePostsRecyclerAdapter extends RecyclerView.Adapter<RecyclerVi
         ImageView postPic;
         LinearLayout contentll,catLL;
         Button catBtn;
-        TextView delete;
+        TextView delete,edit;
 
         public PostVH(View itemView) {
             super(itemView);
@@ -224,6 +229,7 @@ public class ProfilePostsRecyclerAdapter extends RecyclerView.Adapter<RecyclerVi
             contentll = itemView.findViewById(R.id.contentLL);
             viewCount = itemView.findViewById(R.id.viewsCount);
             delete = itemView.findViewById(R.id.deletePost);
+            edit=itemView.findViewById(R.id.editPost);
             timeStamp=itemView.findViewById(R.id.time);
 
 //            catLL=itemView.findViewById(R.id.post_catLL);
@@ -235,49 +241,18 @@ public class ProfilePostsRecyclerAdapter extends RecyclerView.Adapter<RecyclerVi
 
             itemView.setOnClickListener(postClickListener);
             postPic.setOnClickListener(picListener);
-
-
+            edit.setOnClickListener(editClickListener);
             delete.setOnClickListener(deleteClickListener);
-
-
             contentll.setOnClickListener(postListener);
-//                @Override
-//                public void onClick(View view) {
-//                    Log.d("line count", ""+postDetails.getLineCount());
-//                    if (postDetails.getMaxLines() == 3) {
-//                        postDetails.setMaxLines(40);
-//                        seeMore.setVisibility(View.GONE);
-//                        //incViews
-//                    } else {
-//                        postDetails.setMaxLines(3);
-//                        seeMore.setVisibility(View.VISIBLE);
 //
-//                    }
-//                }
-//            });
 
 
-            if(myProfile)
-            delete.setVisibility(View.VISIBLE);
+            if(myProfile) {
+                delete.setVisibility(View.VISIBLE);
 
-//            String userID=null;
-//            boolean actLoggedIn=false;
-//            final boolean loggedOut = AccessToken.getCurrentAccessToken() == null;
+            }
+
 //
-//            SharedPreferences prefs = context.getSharedPreferences("profile", Activity.MODE_PRIVATE);
-//            if(prefs.getString("user_id",null)!=null){
-//                actLoggedIn=true;
-//            }
-//
-//            if(actLoggedIn){
-//                userID=prefs.getString("user_id",null);
-//            }
-//            else if(!loggedOut){
-//                userID= Profile.getCurrentProfile().getId();
-//            }
-
-
-
 
 
         }
@@ -297,6 +272,13 @@ public class ProfilePostsRecyclerAdapter extends RecyclerView.Adapter<RecyclerVi
             }
         };
 
+        View.OnClickListener editClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (meditClickListener != null) meditClickListener.onCommentClick(view, getAdapterPosition());
+
+            }
+        };
 
 
         View.OnClickListener picListener = new View.OnClickListener() {
@@ -328,9 +310,9 @@ public class ProfilePostsRecyclerAdapter extends RecyclerView.Adapter<RecyclerVi
     void setClickListener(ClickListenerInterface itemClickListener) {
         this.mClickListener = itemClickListener;
     }
-    //on comment click
-    void setCommentClickListener(ClickListenerInterface commentClickListener) {
-        this.mCommentClickListener = commentClickListener;
+    //edit
+    void setCommentClickListener(ClickListenerInterface editClickListener) {
+        this.meditClickListener = editClickListener;
     }
 
     //on pic click

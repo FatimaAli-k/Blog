@@ -1,7 +1,11 @@
 package com.example.blog.controller.ui.comments;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,6 +17,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.fragment.app.Fragment;
 
 import com.android.volley.VolleyError;
@@ -45,7 +50,19 @@ public class CommentBarFragment extends Fragment {
     String userID="0";
     int postId;
     boolean actLoggedIn=false;
+    OnCommentSent dataPasser;
+    Button sendComment;
 
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try {
+        dataPasser = (OnCommentSent) context;}
+        catch (Exception e) {
+            Log.e(TAG, "onAttach: "+e);
+        }
+    }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -65,7 +82,7 @@ public class CommentBarFragment extends Fragment {
 
         sendPostUrl=baseUrl.getUrl(baseUrl.getSendComment());
         postId=getArguments().getInt("postId");
-        final Button sendComment=root.findViewById(R.id.sendComment);
+        sendComment=root.findViewById(R.id.sendComment);
 
         comment=root.findViewById(R.id.commentEditText);
 
@@ -93,7 +110,21 @@ public class CommentBarFragment extends Fragment {
         initVolleyCallback();
         mVolleyService =new FetchJson(mResultCallback,getContext());
         mVolleyService.postDataVolley("GETCALL",sendPostUrl,sendObj);
+        buttonInactive();
+
     }
+
+    private void buttonInactive() {
+        Drawable drawable = getResources().getDrawable(R.drawable.ic_menu_send_gray);
+        sendComment.setBackground(drawable);
+        sendComment.setClickable(false);
+    }
+    private void buttonActive() {
+        Drawable drawable = getResources().getDrawable(R.drawable.ic_menu_send);
+        sendComment.setBackground(drawable);
+        sendComment.setClickable(true);
+    }
+
 
     void initVolleyCallback(){
         mResultCallback = new IResult() {
@@ -107,9 +138,11 @@ public class CommentBarFragment extends Fragment {
                 } catch (Exception e) {
 
                 }
+                buttonActive();
                 comment.setText("");
                 comment.clearFocus();
                 Toast.makeText(getContext(),R.string.comment_sent,Toast.LENGTH_LONG).show();
+                passData(1);
 
 
             }
@@ -134,11 +167,19 @@ public class CommentBarFragment extends Fragment {
 
                 }
 
-                Toast.makeText(getContext(),""+error,Toast.LENGTH_LONG).show();
+                buttonActive();
+                Toast.makeText(getContext(),R.string.comment_not_sent,Toast.LENGTH_LONG).show();
 
 
 
             }
         };
+    }
+
+    public interface OnCommentSent {
+        public void onCommentSent(int data);
+    }
+    public void passData(int data) {
+        dataPasser.onCommentSent(data);
     }
 }

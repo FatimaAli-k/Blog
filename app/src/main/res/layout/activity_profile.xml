@@ -47,9 +47,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/gradiant_end"
-
             >
 
+            <ImageButton
+                android:id="@+id/editProfile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_button"
+                android:src="@drawable/ic_settings_black_24dp"
+                android:visibility="gone"
+
+                />
             <TextView
                 android:id="@+id/ph_name"
                 android:layout_width="wrap_content"
@@ -64,7 +72,31 @@
                 android:text="اسم المستخدم"
                 android:textDirection="rtl"
                 android:textSize="20dp" />
+
+
         </androidx.appcompat.widget.Toolbar>
+
+<!--        <com.google.android.material.tabs.TabLayout-->
+<!--            android:id="@+id/tabLayout"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:background="@color/gradiant_end"-->
+<!--            >-->
+
+<!--            <com.google.android.material.tabs.TabItem-->
+<!--                android:id="@+id/tab1"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="tab1" />-->
+
+<!--            <com.google.android.material.tabs.TabItem-->
+<!--                android:id="@+id/tab2"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="tab2" />-->
+
+
+<!--        </com.google.android.material.tabs.TabLayout>-->
 
     </com.google.android.material.appbar.AppBarLayout>
 

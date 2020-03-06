@@ -23,12 +23,7 @@ import java.util.ArrayList;
 
 public class CommentsDialogFragment extends DialogFragment  {
 
-//    private CategoriesViewModel categoriesViewModel;
 
-    SwipeRefreshLayout swipeRefresh;
-  CommentsRecyclerViewAdapter adapter;
-    LinearLayout commentsLinearLayout;
-    ArrayList<Comments> commentsList =new ArrayList<>();
 
     public CommentsDialogFragment(){}
 
@@ -55,39 +50,6 @@ public class CommentsDialogFragment extends DialogFragment  {
 
         getDialog().setTitle("CommentsDialogFragment");
         getDialog().getWindow().setBackgroundDrawableResource(R.drawable.bg_round_corner);
-
-//        int width = LinearLayout.LayoutParams.MATCH_PARENT;
-//        int height = LinearLayout.LayoutParams.MATCH_PARENT;
-//        boolean focusable = true;
-////
-//final PopupWindow popupWindow = new PopupWindow(view, width, height, focusable);
-//        popupWindow.setOutsideTouchable(true);
-//        //Set the location of the window on the screen
-//        popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
-
-//        int postId=0;
-//
-//
-//
-//        if(getArguments()!=null) {
-//            postId = getArguments().getInt("postId");
-//
-//        }
-//
-//        Comments com=new Comments();
-//        com.setContent("comments"+postId);
-//        commentsList.add(com);
-//
-//        RecyclerView recyclerView = view.findViewById(R.id.comments_recycler_view);
-//        commentsLinearLayout = view.findViewById(R.id.commentsLinearLayout);
-//        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-//        adapter= new CommentsRecyclerViewAdapter( getContext(), commentsList);
-//        adapter.setClickListener(this);
-//        recyclerView.setAdapter(adapter);
-//
-//       CommentBarFragment commentBar=new CommentBarFragment();
-//        FragmentManager fm = getChildFragmentManager();
-//        fm.beginTransaction().replace(R.id.commentBarFrame, commentBar, "commentBarFrame").commit();
 
         return view;
     }

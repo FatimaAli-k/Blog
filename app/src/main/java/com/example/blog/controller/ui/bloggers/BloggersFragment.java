@@ -8,6 +8,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -22,6 +24,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.android.volley.VolleyError;
 import com.example.blog.R;
+import com.example.blog.controller.tools.TextValidator;
 import com.example.blog.controller.ui.profile.ProfileActivity;
 import com.example.blog.model.Users;
 import com.example.blog.URLs;
@@ -68,6 +71,8 @@ public class BloggersFragment extends Fragment implements SwipeRefreshLayout.OnR
     JSONObject sendJson;
 
     ProgressBar loading;
+    EditText search;
+    ImageButton clear;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -98,7 +103,24 @@ public class BloggersFragment extends Fragment implements SwipeRefreshLayout.OnR
         adapter.setClickListener(this);
 
         recyclerView.setAdapter(adapter);
+        search=root.findViewById(R.id.search);
+        clear =root.findViewById(R.id.clearBtn);
+        clear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onRefresh();
+            }
+        });
 
+        search.addTextChangedListener(new TextValidator(search) {
+            @Override public void validate(TextView textView, String text) {
+
+                if(! text.isEmpty()){
+                    searchForUsers(search.getText().toString());
+                }
+//
+            }
+        });
 
 
 
@@ -111,10 +133,6 @@ public class BloggersFragment extends Fragment implements SwipeRefreshLayout.OnR
             }
         });
 
-        //get posts from api
-
-//        Parcelable state = layoutManager.onSaveInstanceState();
-//        layoutManager.onRestoreInstanceState(state);
 
         loading.setVisibility(View.VISIBLE);
         loadFirstPage();
@@ -125,16 +143,9 @@ public class BloggersFragment extends Fragment implements SwipeRefreshLayout.OnR
         recyclerView.addOnScrollListener(new PaginationListener(layoutManager) {
             protected void loadMoreItems() {
                 isLoading = true;
-//                currentPage += 1;
-
-//                // mocking network delay for API call
-//                new Handler().postDelayed(new Runnable() {
-//                    @Override
-//                    public void run() {
+//
                 loadNextPage();
 
-//                    }
-//                }, 1000);
             }
 
             @Override
@@ -161,6 +172,15 @@ public class BloggersFragment extends Fragment implements SwipeRefreshLayout.OnR
         return root;
     }
 
+    private void searchForUsers(String searchData) {
+        String url=baseUrl.getUrl(baseUrl.getSearchForUsers());
+        Map<String,String> params=new HashMap<String, String>();
+        params.put("data",searchData);
+        JSONObject sendObj =new JSONObject(params);
+        initVolleyCallback();
+        mVolleyService =new FetchJson(mResultCallback,getContext());
+        mVolleyService.postDataVolley("search",url,sendObj);
+    }
 
 
     @Override
@@ -213,6 +233,7 @@ public class BloggersFragment extends Fragment implements SwipeRefreshLayout.OnR
     @Override
     public void onRefresh() {
         // itemCount = 0;
+        search.setText("");
         currentPage = PAGE_START;
         isLastPage = false;
         adapter.clear();
@@ -227,24 +248,38 @@ public class BloggersFragment extends Fragment implements SwipeRefreshLayout.OnR
                 Log.d(TAG, "Volley JSON post" + response);
                 errortxt.setVisibility(View.GONE);
                 loading.setVisibility(View.GONE);
+
+                if(requestType.equals("search")){
+                    currentPage = PAGE_START;
+                    isLastPage = false;
+                    adapter.clear();
+                    ArrayList<Users> postsList;
+                    postsList = parsJsonObj(response,requestType);
+                    adapter.addAll(postsList);
+
+                }
+                else {
+
+
+
 //                Toast.makeText(getContext(),"//"+response,Toast.LENGTH_LONG).show();
-                currentPage += 1;
-                adapter.removeLoadingFooter();
-                isLoading = false;
+                    currentPage += 1;
+                    adapter.removeLoadingFooter();
+                    isLoading = false;
 
 
-                ArrayList<Users> postsList;
+                    ArrayList<Users> postsList;
 
-                postsList= parsJsonObj(response);
-                swipeRefresh.setRefreshing(false);
-                adapter.addAll(postsList);
+                    postsList = parsJsonObj(response,requestType);
+                    swipeRefresh.setRefreshing(false);
+                    adapter.addAll(postsList);
 
 
-                if (currentPage <= TOTAL_PAGES) adapter.addLoadingFooter();
-                else isLastPage = true;
-                //
+                    if (currentPage <= TOTAL_PAGES) adapter.addLoadingFooter();
+                    else isLastPage = true;
+                    //
 //                Toast.makeText(getContext(),"//"+currentPage,Toast.LENGTH_LONG).show();
-
+                }
 
             }
             @Override
@@ -275,7 +310,7 @@ public class BloggersFragment extends Fragment implements SwipeRefreshLayout.OnR
         };
     }
     //
-    ArrayList<Users> parsJsonObj(JSONObject response){
+    ArrayList<Users> parsJsonObj(JSONObject response, String requestType){
 
         ArrayList<Users> list=new ArrayList<>();
         try {
@@ -283,14 +318,18 @@ public class BloggersFragment extends Fragment implements SwipeRefreshLayout.OnR
 //
             //pages wont load if total page count is more than 11
             //increasing its value as the current page increases seems to work
-            if(response.getInt("last_page")>11) {
-                if (TOTAL_PAGES != response.getInt("last_page")) {
-                    TOTAL_PAGES++;
+            if(!requestType.equals("search")) {
+                if (response.getInt("last_page") > 11) {
+                    if (TOTAL_PAGES != response.getInt("last_page")) {
+                        TOTAL_PAGES++;
+                    }
+                } else {
+                    TOTAL_PAGES = response.getInt("last_page");
                 }
-            }
-            else {TOTAL_PAGES=response.getInt("last_page");}
 
-            Log.d(TAG, "parsJsonObj: "+currentPage+"//tt "+TOTAL_PAGES);
+                Log.d(TAG, "parsJsonObj: " + currentPage + "//tt " + TOTAL_PAGES);
+
+            }
 
             JSONArray data=response.getJSONArray("data");
 //           Toast.makeText(getContext(),""+data.length(),Toast.LENGTH_LONG).show();

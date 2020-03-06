@@ -1,5 +1,9 @@
 package com.example.blog.controller.ui.comments;
 
+import android.app.Activity;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -11,17 +15,22 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.VolleyError;
+import com.example.blog.MainActivity;
 import com.example.blog.R;
 import com.example.blog.URLs;
+import com.example.blog.controller.ui.profile.ProfileActivity;
 import com.example.blog.model.Comments;
 import com.example.blog.controller.tools.PaginationListener;
 import com.example.blog.controller.tools.volley.FetchJson;
 import com.example.blog.controller.tools.volley.IResult;
+import com.facebook.AccessToken;
+import com.facebook.Profile;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -32,7 +41,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-public class CommentsFragment extends Fragment{
+public class CommentsFragment extends Fragment implements CommentsRecyclerViewAdapter.ClickListenerInterface,MainActivity.CommentFragmentInterface {
 
 
     RecyclerView recyclerView;
@@ -57,6 +66,8 @@ public class CommentsFragment extends Fragment{
 
     Map<String,String> params=new HashMap<>();
     JSONObject sendJson;
+    String deleteCommentUrl;
+    int deletedItemPosition;
 
 
     public CommentsFragment(){}
@@ -65,9 +76,7 @@ public class CommentsFragment extends Fragment{
                              ViewGroup container, Bundle savedInstanceState) {
        View root = inflater.inflate(R.layout.fragment_comments, container,false);
 
-
-//
-
+        ((MainActivity) getActivity()).setOnCommentListener(this);
         int postId;
 
 
@@ -80,6 +89,7 @@ public class CommentsFragment extends Fragment{
 
 
         firstPageUrl=baseUrl.getUrl(route);
+        deleteCommentUrl=baseUrl.getUrl(baseUrl.getDeleteComment());
 
 
 //
@@ -90,6 +100,9 @@ public class CommentsFragment extends Fragment{
         layoutManager=new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
         adapter= new CommentsRecyclerViewAdapter(getContext());
+
+        adapter.setClickListener(this);
+        adapter.setNameClickListener(this);
         recyclerView.setAdapter(adapter);
 
         recyclerView.addOnScrollListener(new PaginationListener(layoutManager) {
@@ -171,22 +184,14 @@ public class CommentsFragment extends Fragment{
 
       String nextPageUrl=baseUrl.getNextPageUrl(route,currentPage);
 
-//        String url="https://api.themoviedb.org/3/tv/popular?api_key=ee462a4199c4e7ec8d93252494ba661b&language=en-US&page="+currentPage;
-        initVolleyCallback();
+//      initVolleyCallback();
         mVolleyService =new FetchJson(mResultCallback,getContext());
         mVolleyService.postDataVolley("GETCALL",nextPageUrl,sendJson);
 //
     }
 
 
-//    @Override
-//    public void onRefresh() {
-//        // itemCount = 0;
-//        currentPage = PAGE_START;
-//        isLastPage = false;
-//        adapter.clear();
-//        loadFirstPage();
-//    }
+
 
     void initVolleyCallback(){
         mResultCallback = new IResult() {
@@ -195,22 +200,20 @@ public class CommentsFragment extends Fragment{
                 Log.d(TAG, "Volley requester " + requestType);
                 Log.d(TAG, "Volley JSON post" + response);
 //                Toast.makeText(getContext(),"//"+response,Toast.LENGTH_LONG).show();
+                if(requestType.equals("delete")){
+                    adapter.remove(adapter.getItem(deletedItemPosition));
+                    Toast.makeText(getContext(),R.string.delete_complete,Toast.LENGTH_LONG).show();
+                }
+                else {
+                    adapter.removeLoadingFooter();
+                    isLoading = false;
+                    ArrayList<Comments> commentsList;
+                    commentsList = parsJsonObj(response);
+                    adapter.addAll(commentsList);
+                    if (currentPage <= TOTAL_PAGES) adapter.addLoadingFooter();
+                    else isLastPage = true;
 
-                adapter.removeLoadingFooter();
-                isLoading = false;
-
-                ArrayList<Comments> commentsList;
-
-                commentsList= parsJsonObj(response);
-//                swipeRefresh.setRefreshing(false);
-                adapter.addAll(commentsList);
-
-
-                if (currentPage <= TOTAL_PAGES) adapter.addLoadingFooter();
-                else isLastPage = true;
-                //
-//                Toast.makeText(getContext(),"//"+currentPage,Toast.LENGTH_LONG).show();
-
+                }
 
             }
             @Override
@@ -227,8 +230,15 @@ public class CommentsFragment extends Fragment{
             public void notifyError(String requestType, VolleyError error) {
                 Log.d(TAG, "Volley requester " + requestType);
                 Log.d(TAG, "Volley JSON post" + error);
-//                swipeRefresh.setRefreshing(false);
 
+               if(requestType.equals("delete")){
+                    Toast.makeText(getContext(),R.string.delete_failed,Toast.LENGTH_LONG).show();
+                }
+                else {
+                   adapter.removeLoadingFooter();
+                   isLoading = false;
+
+               }
 
             }
         };
@@ -238,10 +248,6 @@ public class CommentsFragment extends Fragment{
 
         ArrayList<Comments> commentsList=new ArrayList<>();
         try {
-
-//
-
-
 
             //pages wont load if total page count is more than 11
             //increasing its value as the current page increases seems to work
@@ -281,9 +287,6 @@ public class CommentsFragment extends Fragment{
 
 
 
-
-//            adapter.notifyDataSetChanged();
-
         }catch (JSONException e) {
             e.printStackTrace();
             Log.d(TAG, "parsJsonObj: "+e.getMessage());
@@ -294,5 +297,82 @@ public class CommentsFragment extends Fragment{
 
 
 
+    @Override
+    public void onItemClick(View view, final int position) {
+        //delete listener
+        if(myComment(position)) {
+            DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    switch (which) {
+                        case DialogInterface.BUTTON_POSITIVE:
+                            //Yes button clicked
+                        deletedItemPosition=deleteComment(adapter.getItem(position).getId(),position);
+                            break;
 
+                        case DialogInterface.BUTTON_NEGATIVE:
+                            //No button clicked
+                            dialog.dismiss();
+                            break;
+                    }
+                }
+            };
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            builder.setMessage(R.string.delete).setPositiveButton(R.string.yes, dialogClickListener)
+                    .setNegativeButton(R.string.no, dialogClickListener).show();
+        }
+
+    }
+
+    boolean myComment(int position){
+       boolean myComment=false;
+       String myId="";
+        final boolean loggedOut = AccessToken.getCurrentAccessToken() == null;
+        if(!loggedOut){
+            myId= Profile.getCurrentProfile().getId();
+        }
+        boolean actLoggedIn=false;
+
+        SharedPreferences prefs = getActivity().getSharedPreferences("profile", Activity.MODE_PRIVATE);
+        if(prefs.getString("user_id",null)!=null){
+            myId=prefs.getString("user_id",null);
+            actLoggedIn=true;
+        }
+        if(!loggedOut || actLoggedIn)
+        {
+            if(myId.equals(adapter.getItem(position).getUser_id()))
+                myComment=true;
+        }
+
+       return myComment;
+    }
+
+    public int deleteComment(int id,int position) {
+        Log.d(TAG, "deletePost: ");
+
+        Map<String,String> params=new HashMap<>();
+        params.put("id",""+id);
+        JSONObject deleteJson=new JSONObject(params);
+
+        initVolleyCallback();
+        mVolleyService =new FetchJson(mResultCallback,getContext());
+        mVolleyService.postDataVolley("delete",deleteCommentUrl,deleteJson);
+
+        return position;
+    }
+
+    @Override
+    public void onNameClick(View view, int position) {
+        Intent intent =new Intent(getContext(), ProfileActivity.class);
+        intent.putExtra("user_id",adapter.getItem(position).getUser_id());
+        startActivity(intent);
+    }
+
+    @Override
+    public void sendRefresh(int data) {
+        if(data==1){
+            refresh();
+        }
+    }
 }

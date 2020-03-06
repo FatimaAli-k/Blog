@@ -84,6 +84,9 @@ public class WritePostActivity extends AppCompatActivity implements CatDropDownF
 
     FrameLayout imgFrame;
     ImageButton cancelPic;
+    boolean updatePost=false;
+    int postId;
+    String updatePostUrl;
 
     ProgressDialog mProgressDialog;
 
@@ -94,13 +97,24 @@ public class WritePostActivity extends AppCompatActivity implements CatDropDownF
         setContentView(R.layout.create_post);
         Button sendPost=findViewById(R.id.sendPostBtn);
 
-//        Button goBack=findViewById(R.id.goBack);
+
         title=findViewById(R.id.titleEditTxt);
         content=findViewById(R.id.detailsEditTxt);
         imgFrame=findViewById(R.id.imgFrame);
         cancelPic=findViewById(R.id.cancelPic);
 
+        Bundle bundle=getIntent().getBundleExtra("post");
 
+        if(bundle != null){
+            title.setText(bundle.getString("title"));
+            content.setText(bundle.getString("content"));
+            cat_Id=bundle.getInt("cat_id");
+            postId=bundle.getInt("post_id");
+            updatePost=true;
+            checkTitle=true;
+            checkContent=true;
+
+        }
 
 
 
@@ -120,6 +134,9 @@ public class WritePostActivity extends AppCompatActivity implements CatDropDownF
 
         uploadImg=findViewById(R.id.uploadImg);
         Button openGallary=findViewById(R.id.getImgFromGallary);
+        if(updatePost)
+            openGallary.setVisibility(View.GONE);
+
         openGallary.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -131,12 +148,13 @@ public class WritePostActivity extends AppCompatActivity implements CatDropDownF
 
 
         sendPostUrl=baseUrl.getSendPostUrl();
+        updatePostUrl=baseUrl.getUrl(baseUrl.getUpdatePost());
 
 
        sendPost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d(TAG, "onClick: "+imageFile);
+
                 if(checkPostData()) {
                    if(imageFile != null) {
                         if (checkPermission())
@@ -145,6 +163,9 @@ public class WritePostActivity extends AppCompatActivity implements CatDropDownF
                             requestPermission();
                     }
                    else if(imageFile == null)
+                       if(updatePost)
+                           sendUpdatedPost(postId,title.getText().toString(), content.getText().toString(),cat_Id);
+                       else
                        sendPostToDb(userID, title.getText().toString(), content.getText().toString(), cat_Id);
 
 
@@ -193,6 +214,20 @@ public class WritePostActivity extends AppCompatActivity implements CatDropDownF
 
     }
 
+    private void sendUpdatedPost(int postId, String title, String content, int cat_id) {
+        Map<String,String> params=new HashMap<String, String>();
+        params.put("id",""+postId);
+        params.put("title",title);
+        params.put("content",content);
+        params.put("category_id",""+cat_Id);
+//        params.put("image",img);
+
+        JSONObject sendObj =new JSONObject(params);
+        initVolleyCallback();
+        mVolleyService =new FetchJson(mResultCallback,getApplicationContext());
+        mVolleyService.postDataVolley("updatePost",updatePostUrl,sendObj);
+    }
+
 
     public void sendPostToDb(String userId, String title,String content,int cat_Id){
         Log.d(TAG, "sendPostToDb: "+userId+"/"+title+"/"+content+"/"+cat_Id);
@@ -216,6 +251,9 @@ public class WritePostActivity extends AppCompatActivity implements CatDropDownF
                 Log.d(TAG, "Volley requester " + requestType);
                 Log.d(TAG, "Volley JSON post" + response);
 
+                if(requestType.equals("updatePost")){
+                    finish();
+                }
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(intent);
                 finish();
@@ -237,7 +275,7 @@ public class WritePostActivity extends AppCompatActivity implements CatDropDownF
                 Log.d(TAG, "Volley requester " + requestType);
                 Log.d(TAG, "Volley JSON post" + error);
 
-                Toast.makeText(getApplicationContext(),"hm"+error,Toast.LENGTH_LONG).show();
+//                Toast.makeText(getApplicationContext(),"hm"+error,Toast.LENGTH_LONG).show();
 
 
 
@@ -300,21 +338,6 @@ public class WritePostActivity extends AppCompatActivity implements CatDropDownF
     void uploadPostWithImg(String userId, final String title, String content, int cat_Id){
 
 
-//        mProgressDialog = new ProgressDialog(WritePostActivity.this);
-//        mProgressDialog.setMessage("uploading...");
-//        mProgressDialog.setIndeterminate(true);
-//
-//        mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-////        mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-//        mProgressDialog.setCancelable(false);
-//        mProgressDialog.show();
-//
-//        mProgressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-//            @Override
-//            public void onCancel(DialogInterface dialog) {
-//                // uploadTask.cancel(true);
-//            }
-//        });
         int llPadding = 30;
         LinearLayout ll = new LinearLayout(this);
         ll.setOrientation(LinearLayout.HORIZONTAL);
@@ -364,14 +387,12 @@ public class WritePostActivity extends AppCompatActivity implements CatDropDownF
         Ion.with(getApplicationContext())
                 .load(sendPostUrl)
 //
-//                 .uploadProgressDialog(mProgressDialog)
+//
                 .uploadProgressHandler(new ProgressCallback() {
                     @Override
                     public void onProgress(long uploaded, long total) {
 
-//                        mProgressDialog.setIndeterminate(true);
-//                        mProgressDialog.setMax((int)total);
-//                        mProgressDialog.setProgress((int)uploaded);
+//
                         tvText.setText((getResources().getString(R.string.uploading)+" "+uploaded*100/total+"%"));
 
 //                        Toast.makeText(getApplicationContext(), uploaded+"/"+total,Toast.LENGTH_SHORT).show();
@@ -396,12 +417,9 @@ public class WritePostActivity extends AppCompatActivity implements CatDropDownF
 //                        mProgressDialog.dismiss();
                         dialog.dismiss();
 
-                        // When the loop is finished, updates the notification
-//                        mBuilder.setContentText("Upload complete")
-//                                // Removes the progress bar
-//                                .setProgress(0, 0, false);
+
                         Log.d(TAG, "onCompleted: "+result);
-//                        mNotifyManager.notify(notificationId, mBuilder.build());
+//
                         if (e != null) {
                             Log.e(TAG, "error/ "+e );
                             Toast.makeText(getApplicationContext(), R.string.upload_failed, Toast.LENGTH_LONG).show();
