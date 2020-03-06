@@ -15,6 +15,7 @@ import androidx.fragment.app.DialogFragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.blog.R;
+import com.example.blog.controller.tools.SwipeDismissTouchListener;
 import com.example.blog.model.Comments;
 import com.facebook.AccessToken;
 
@@ -61,8 +62,19 @@ public class CommentsDialogFragment extends DialogFragment  {
 
         if(window == null) return;
         WindowManager.LayoutParams params = window.getAttributes();
-        params.width = (int)(getResources().getDisplayMetrics().widthPixels*0.80);
-        params.height = (int)(getResources().getDisplayMetrics().heightPixels*0.80);
+        params.width = (int)(getResources().getDisplayMetrics().widthPixels*0.90);
+        params.height = (int)(getResources().getDisplayMetrics().heightPixels*0.90);
         window.setAttributes(params);
+        window.getDecorView().setOnTouchListener(new SwipeDismissTouchListener(window.getDecorView(), null, new SwipeDismissTouchListener.DismissCallbacks() {
+            @Override
+            public boolean canDismiss(Object token) {
+                return true;
+            }
+
+            @Override
+            public void onDismiss(View view, Object token) {
+                dismiss();
+            }
+        }));
     }
 }

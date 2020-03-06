@@ -36,6 +36,7 @@ import com.android.volley.VolleyError;
 import com.example.blog.MainActivity;
 import com.example.blog.R;
 import com.example.blog.URLs;
+import com.example.blog.controller.tools.SwipeDismissTouchListener;
 import com.example.blog.controller.tools.TextValidator;
 import com.example.blog.controller.tools.volley.FetchJson;
 import com.example.blog.controller.tools.volley.IResult;
@@ -185,6 +186,17 @@ public class EditProfileDialogFragment extends DialogFragment  {
         params.width = (int)(getResources().getDisplayMetrics().widthPixels);
 //        params.height = (int)(getResources().getDisplayMetrics().heightPixels*0.50);
         window.setAttributes(params);
+        window.getDecorView().setOnTouchListener(new SwipeDismissTouchListener(window.getDecorView(), null, new SwipeDismissTouchListener.DismissCallbacks() {
+            @Override
+            public boolean canDismiss(Object token) {
+                return true;
+            }
+
+            @Override
+            public void onDismiss(View view, Object token) {
+                dismiss();
+            }
+        }));
     }
 
     @Override
