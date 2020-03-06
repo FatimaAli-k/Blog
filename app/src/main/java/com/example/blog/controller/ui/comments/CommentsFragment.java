@@ -137,13 +137,13 @@ public class CommentsFragment extends Fragment implements CommentsRecyclerViewAd
         });
 
 
-        TextView refreshComments=root.findViewById(R.id.comment_refresh);
-        refreshComments.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-               refresh();
-            }
-        });
+//        TextView refreshComments=root.findViewById(R.id.comment_refresh);
+//        refreshComments.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//               refresh();
+//            }
+//        });
 
 
 

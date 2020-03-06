@@ -31,7 +31,7 @@
             android:layout_gravity="right"
 
             android:paddingLeft="14dp"
-            android:drawableLeft="@drawable/ic_refresh_black_24dp"
+
             />
     </FrameLayout>
 
