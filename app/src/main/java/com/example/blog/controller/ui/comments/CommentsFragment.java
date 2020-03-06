@@ -76,7 +76,9 @@ public class CommentsFragment extends Fragment implements CommentsRecyclerViewAd
                              ViewGroup container, Bundle savedInstanceState) {
        View root = inflater.inflate(R.layout.fragment_comments, container,false);
 
+       if(getActivity().equals(MainActivity.class))
         ((MainActivity) getActivity()).setOnCommentListener(this);
+
         int postId;
 
 

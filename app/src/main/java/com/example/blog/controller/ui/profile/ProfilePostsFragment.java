@@ -340,6 +340,12 @@ public class ProfilePostsFragment extends Fragment implements ClickListenerInter
 
         cf.show(ft, "dialog");
 
+//        Bundle bundle = new Bundle();
+//
+//     bundle.putParcelable("post",adapter.getItem(position));
+
+
+
     }
 
     @Override

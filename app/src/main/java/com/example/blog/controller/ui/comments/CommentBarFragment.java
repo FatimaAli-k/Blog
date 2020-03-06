@@ -21,6 +21,7 @@ import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.fragment.app.Fragment;
 
 import com.android.volley.VolleyError;
+import com.example.blog.MainActivity;
 import com.example.blog.R;
 import com.example.blog.URLs;
 import com.example.blog.controller.tools.volley.FetchJson;
@@ -142,6 +143,8 @@ public class CommentBarFragment extends Fragment {
                 comment.setText("");
                 comment.clearFocus();
                 Toast.makeText(getContext(),R.string.comment_sent,Toast.LENGTH_LONG).show();
+
+                if(getActivity().equals(MainActivity.class))
                 passData(1);
 
 
