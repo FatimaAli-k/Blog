@@ -39,10 +39,10 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/comments_recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
 
 
-        tools:listitem="@layout/comment_single_item">
+       >
 
 
     </androidx.recyclerview.widget.RecyclerView>

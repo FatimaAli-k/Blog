@@ -71,7 +71,7 @@ public class ProfilePostsFragment extends Fragment implements ClickListenerInter
     int deletedItemPosition;
 
     ProgressBar loading;
-    TextView retry;
+    TextView retry,postsNum;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -96,6 +96,7 @@ public class ProfilePostsFragment extends Fragment implements ClickListenerInter
         recyclerView.setLayoutManager(layoutManager);
         adapter = new ProfilePostsRecyclerAdapter(getContext(),myProfile);
 
+        postsNum=root.findViewById(R.id.totalPosts);
        retry=root.findViewById(R.id.refesh);
         retry.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -257,6 +258,10 @@ public class ProfilePostsFragment extends Fragment implements ClickListenerInter
         try {
 
 
+            postsNum.setText(getResources().getString(R.string.total_posts )+" : "+response.getString("total"));
+
+
+
             if(response.getInt("last_page")>11) {
                 if (TOTAL_PAGES != response.getInt("last_page")) {
                     TOTAL_PAGES++;
@@ -268,7 +273,7 @@ public class ProfilePostsFragment extends Fragment implements ClickListenerInter
             }
 
             JSONArray data=response.getJSONArray("data");
-//           Toast.makeText(getContext(),""+data.length(),Toast.LENGTH_LONG).show();
+
             for(int i=0;i<data.length();i++){
 
                 JSONObject obj=data.getJSONObject(i);

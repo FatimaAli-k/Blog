@@ -15,8 +15,10 @@
     <string name="menu_login">تسجيل الدخول</string>
     <string name="menu_logout">تسجيل الخروج</string>
 
-    //edit text hints
+    //text hints/labels
     <string name="search_users">بحث عن مستخدم</string>
+    <string name="total_posts">عدد التدوينات</string>
+    <string name="points">النقاط</string>
 
 
     //edit text errors

@@ -65,7 +65,7 @@ public class EditProfileDialogFragment extends DialogFragment  {
     EditText userName;
     Button chooseImg,save,cancel;
     ImageView profilePic;
-    boolean nameCheck=true,picUpdate=false;
+    boolean nameCheck=true;
 
     private static final String TAG = "EditProfileDialogFragme";
     String updateProfileUrl;
@@ -132,20 +132,20 @@ public class EditProfileDialogFragment extends DialogFragment  {
             @Override
             public void onClick(View view) {
                 if(nameCheck){
-//                    name=userName.getText().toString();
-//                    if(picUpdate){
-//                        if (checkPermission())
-//                        {
-//
-//                        }
-//
-//                         else
-//                            requestPermission();
-//
-//                    }
-//                    else{
-                        updateNoImg(userId,name,pic);
-//                    }
+                    name=userName.getText().toString();
+                    if(imageFile !=null){
+                        if (checkPermission())
+                        {
+                            updateWithImg(userId,name);
+                        }
+
+                         else
+                            requestPermission();
+
+                    }
+                    else{
+                        updateNoImg(userId,name);
+                    }
 
 
 
@@ -305,7 +305,7 @@ public class EditProfileDialogFragment extends DialogFragment  {
                 })
 
                 .setTimeout(60 * 60 * 1000)
-                .setMultipartFile("input_img", "file", imageFile)
+                .setMultipartFile("picture", "file", imageFile)
                 .setMultipartParameter("id",userId)
                 .setMultipartParameter("name",name)
                 .asJsonObject()
@@ -324,6 +324,8 @@ public class EditProfileDialogFragment extends DialogFragment  {
                             Toast.makeText(getContext(), R.string.upload_failed, Toast.LENGTH_LONG).show();
                             return;
                         }
+                        passData(1);
+                        dismiss();
                         Toast.makeText(getContext(), R.string.upload_complete, Toast.LENGTH_LONG).show();
                        //
                     }
@@ -331,13 +333,12 @@ public class EditProfileDialogFragment extends DialogFragment  {
 
     }
 
-    public void updateNoImg(String userId, String name, String pic){
+    public void updateNoImg(String userId, String name){
 
         Log.d(TAG, "updateNoImg: "+userId);
         Map<String,String> params=new HashMap<String, String>();
         params.put("id",userId);
         params.put("name",name);
-        params.put("picture",pic);
         JSONObject sendObj =new JSONObject(params);
         initVolleyCallback();
         mVolleyService =new FetchJson(mResultCallback,getContext());

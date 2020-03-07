@@ -47,13 +47,11 @@ public class CategoriesFragment extends Fragment implements CategoriesRecyclerVi
         View view = inflater.inflate(R.layout.fragment_categories, container,false);
 
 
-        String url=baseUrl.getCategoriesUrl();
-        initVolleyCallback();
-        mVolleyService =new FetchJson(mResultCallback,getContext());
+
+        if(catList.isEmpty())
+        loadCat();
 
 
-        mVolleyService.getArrayDataVolley("GETCALL",url);
-//
 
 
 
@@ -71,6 +69,16 @@ public class CategoriesFragment extends Fragment implements CategoriesRecyclerVi
 
         return view;
     }
+
+    private void loadCat() {
+     catList=new ArrayList<>();
+        initVolleyCallback();
+        String url=baseUrl.getCategoriesUrl();
+        mVolleyService =new FetchJson(mResultCallback,getContext());
+        mVolleyService.getArrayDataVolley("GETCALL",url);
+//
+    }
+
     @Override
     public void onItemClick(View view, int position) {
 //        Toast.makeText(getContext(), "pos: " + position+" id: "+ catList.get(position).getId(), Toast.LENGTH_SHORT).show();
@@ -115,6 +123,7 @@ public class CategoriesFragment extends Fragment implements CategoriesRecyclerVi
     void parsJsonArray(JSONArray response){
 
 
+
         try {
 
             for (int i = 0; i < response.length(); i++) {
@@ -135,9 +144,9 @@ public class CategoriesFragment extends Fragment implements CategoriesRecyclerVi
 
         }catch (JSONException e) {
             e.printStackTrace();
-            Toast.makeText(getContext(),
-                    "Error: " + e.getMessage(),
-                    Toast.LENGTH_LONG).show();
+//            Toast.makeText(getContext(),
+//                    "Error: " + e.getMessage(),
+//                    Toast.LENGTH_LONG).show();
         }
 
     }

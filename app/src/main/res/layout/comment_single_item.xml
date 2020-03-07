@@ -15,7 +15,7 @@
 
          android:layout_margin="10dp"
          android:elevation="3dp"
-         app:cardBackgroundColor="#D7E7D8"
+         app:cardBackgroundColor="#C1CBCE"
          app:cardCornerRadius="30dp"
          app:layout_constraintEnd_toEndOf="parent"
          app:layout_constraintStart_toStartOf="parent"
@@ -40,7 +40,9 @@
                  android:textColor="#000"
                  android:textDirection="rtl"
                  android:textSize="20sp"
-                 android:textStyle="bold" />
+                 android:textStyle="bold"
+
+                 />
 
 
              <TextView

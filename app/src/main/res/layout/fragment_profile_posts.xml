@@ -19,6 +19,26 @@ android:id="@+id/profileRelativeLayout"
     android:visibility="gone"
 
     />
+    <LinearLayout
+        android:id="@+id/layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="10dp"
+        android:layoutDirection="rtl"
+
+        >
+    <TextView
+        android:id="@+id/totalPosts"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/myfont"
+        android:textSize="20sp"
+        android:layout_marginRight="5dp"
+
+        />
+
+    </LinearLayout>
     <ProgressBar
         android:id="@+id/progressBar3"
         style="?android:attr/progressBarStyle"
@@ -33,6 +53,7 @@ android:id="@+id/profileRelativeLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
        android:layout_margin="5dp"
+        android:layout_below="@+id/layout"
         >
 
     </androidx.recyclerview.widget.RecyclerView>

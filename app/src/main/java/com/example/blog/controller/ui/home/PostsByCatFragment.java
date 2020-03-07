@@ -415,9 +415,10 @@ public class PostsByCatFragment extends Fragment implements  SwipeRefreshLayout.
 
         }catch (JSONException e) {
             e.printStackTrace();
-            Toast.makeText(getContext(),
-                    "Error: " + e.getMessage(),
-                    Toast.LENGTH_LONG).show();
+//            Toast.makeText(getContext(),
+//                    "Error: " + e.getMessage(),
+//                    Toast.LENGTH_LONG).show();
+            Log.d(TAG, "parsJsonObj: "+e.getMessage());
         }
 
         return postsList;
