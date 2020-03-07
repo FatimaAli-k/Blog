@@ -34,6 +34,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:background="@drawable/bg_edittext"
+        android:layout_margin="5dp"
         >
         <ImageButton
             android:id="@+id/clearBtn"
@@ -42,12 +44,13 @@
             android:src="@drawable/ic_close_black_24dp"
             android:background="@drawable/bg_button"
             android:layout_gravity="center"
+            android:layout_margin="10dp"
             />
     <EditText
         android:id="@+id/search"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/bg_edittext"
+
         android:padding="7dp"
         android:hint="@string/search_users"
         android:layout_weight="1"
