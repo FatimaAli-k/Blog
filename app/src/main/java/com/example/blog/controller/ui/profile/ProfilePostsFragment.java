@@ -423,7 +423,7 @@ public class ProfilePostsFragment extends Fragment implements ClickListenerInter
 
     }
 
-//edit
+     //edit
     @Override
     public void onCommentClick(View view, int position) {
         Intent intent =new Intent(getContext(), WritePostActivity.class);

@@ -58,6 +58,7 @@ public class MainActivity extends AppCompatActivity implements CatDropDownFragme
     String myId,myName;
     Boolean actLoggedIn=false;
     SharedPreferences prefs;
+    boolean loggedOut;
 
     private FragmentInterface fragmentInterfaceListener;
     private CommentFragmentInterface comentFragmentInterfaceListener;
@@ -76,7 +77,7 @@ public class MainActivity extends AppCompatActivity implements CatDropDownFragme
 
 
         setSupportActionBar(toolbar);
-        final boolean loggedOut = AccessToken.getCurrentAccessToken() == null;
+        loggedOut = AccessToken.getCurrentAccessToken() == null;
 
         prefs = getSharedPreferences("profile", Activity.MODE_PRIVATE);
         if(prefs.getString("user_id",null)!=null){
@@ -137,25 +138,9 @@ public class MainActivity extends AppCompatActivity implements CatDropDownFragme
         nameTextView=headerView.findViewById(R.id.nameTextView);
         emailTextView=headerView.findViewById(R.id.emailTextView);
 
-        profilePic.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //go to profile
-                if(!loggedOut) {
-                    Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
-                    intent.putExtra("user_id", Profile.getCurrentProfile().getId());
-                    startActivity(intent);
-//                navController.navigate(R.id.nav_profile);
-                }
-                else if(actLoggedIn){
-                    Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
-                    intent.putExtra("user_id",prefs.getString("user_id",null));
-                    startActivity(intent);
+        profilePic.setOnClickListener(myProfileClickListener);
+        nameTextView.setOnClickListener(myProfileClickListener);
 
-                }
-
-            }
-        });
 
 
         if(actLoggedIn){
@@ -228,6 +213,25 @@ public class MainActivity extends AppCompatActivity implements CatDropDownFragme
 
 
     }
+    //go to my profile
+    View.OnClickListener myProfileClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(android.view.View view) {
+            //go to profile
+            if(!loggedOut) {
+                Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
+                intent.putExtra("user_id", Profile.getCurrentProfile().getId());
+                startActivity(intent);
+//                navController.navigate(R.id.nav_profile);
+            }
+            else if(actLoggedIn){
+                Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
+                intent.putExtra("user_id",prefs.getString("user_id",null));
+                startActivity(intent);
+
+            }
+        }
+    };
 
     public FloatingActionButton getFloatingActionButton() {
         return fab;

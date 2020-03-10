@@ -1,5 +1,7 @@
 package com.example.blog.controller.ui.bloggers;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -8,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
@@ -109,6 +112,9 @@ public class BloggersFragment extends Fragment implements SwipeRefreshLayout.OnR
             @Override
             public void onClick(View view) {
                 onRefresh();
+                clear.setVisibility(View.INVISIBLE);
+                hideKeyboard(getActivity());
+                search.clearFocus();
             }
         });
 
@@ -116,6 +122,7 @@ public class BloggersFragment extends Fragment implements SwipeRefreshLayout.OnR
             @Override public void validate(TextView textView, String text) {
 
                 if(! text.isEmpty()){
+                    clear.setVisibility(View.VISIBLE);
                     searchForUsers(search.getText().toString());
                 }
 //
@@ -170,6 +177,12 @@ public class BloggersFragment extends Fragment implements SwipeRefreshLayout.OnR
 
 
         return root;
+    }
+    void hideKeyboard(Activity activity) {
+        View view = activity.getCurrentFocus();
+        InputMethodManager manager = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+        assert manager != null && view != null;
+        manager.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
     }
 
     private void searchForUsers(String searchData) {
@@ -407,4 +420,5 @@ public class BloggersFragment extends Fragment implements SwipeRefreshLayout.OnR
     public void onCatClick(View view, int position) {
 
     }
+
 }

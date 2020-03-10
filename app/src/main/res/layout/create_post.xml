@@ -93,10 +93,10 @@
                         android:padding="10dp"
                         android:gravity="top"
 
-                        android:maxHeight="350dp"
+                        android:maxHeight="250dp"
                         android:background="@drawable/bg_edittext"
                         android:textSize="25dp"
-                        android:minHeight="300dp"
+                        android:minHeight="200dp"
                         android:textDirection="rtl"/>
 
 
@@ -106,6 +106,37 @@
 
 
         </com.google.android.material.textfield.TextInputLayout>
+
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/bg_edittext"
+            android:padding="5dp"
+            >
+            <LinearLayout
+                android:id="@+id/tagsLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_gravity="right"
+                >
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/tagText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingRight="10dp"
+                android:paddingLeft="10dp"
+                android:textSize="20sp"
+                android:hint="الكلمات المفتاحية"
+                android:background="@drawable/bg_edittext_empty"
+                android:textDirection="rtl"
+                android:inputType="textFilter"
+
+                />
+            </LinearLayout>
+
+
+        </HorizontalScrollView>
 
 
         <Button

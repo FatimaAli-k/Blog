@@ -145,8 +145,7 @@ public class RegisterActivity extends AppCompatActivity {
                     //on success log in and go to main page
                     progress.show();
                     makeApiCall(fullname.getText().toString(),username.getText().toString(),password.getText().toString());
-//                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-//                    startActivity(intent);
+//
                 }
                 else
                     Toast.makeText(getApplicationContext(),R.string.check_fields_for_error,Toast.LENGTH_LONG).show();

@@ -5,6 +5,7 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.ProgressDialog;
 import android.app.Service;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -19,6 +20,9 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
+import android.view.KeyboardShortcutGroup;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -35,6 +39,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
@@ -60,7 +65,9 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -88,10 +95,11 @@ public class WritePostActivity extends AppCompatActivity implements CatDropDownF
     boolean updatePost=false;
     int postId;
     String updatePostUrl;
-
     ProgressDialog mProgressDialog;
-
     Button sendPost;
+    EditText tag;
+    List<String> tagList;
+    int c=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,7 +107,7 @@ public class WritePostActivity extends AppCompatActivity implements CatDropDownF
         setContentView(R.layout.create_post);
         sendPost=findViewById(R.id.sendPostBtn);
 
-
+        tag=findViewById(R.id.tagText);
         title=findViewById(R.id.titleEditTxt);
         content=findViewById(R.id.detailsEditTxt);
         imgFrame=findViewById(R.id.imgFrame);
@@ -136,8 +144,8 @@ public class WritePostActivity extends AppCompatActivity implements CatDropDownF
 
         uploadImg=findViewById(R.id.uploadImg);
         Button openGallary=findViewById(R.id.getImgFromGallary);
-        if(updatePost)
-            openGallary.setVisibility(View.GONE);
+//        if(updatePost)
+//            openGallary.setVisibility(View.GONE);
 
         openGallary.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -157,19 +165,23 @@ public class WritePostActivity extends AppCompatActivity implements CatDropDownF
             @Override
             public void onClick(View view) {
 
+                getTags();
+
                 if(checkPostData()) {
                     buttonInactive();
                    if(imageFile != null) {
-                        if (checkPermission())
-                            uploadPostWithImg(userID, title.getText().toString(), content.getText().toString(), cat_Id);
-                        else
+                        if (checkPermission()) {
+                            uploadPostWithImg(userID, title.getText().toString(), content.getText().toString(), cat_Id,getTags());
+
+
+                        }else
                             requestPermission();
                     }
                    else if(imageFile == null)
                        if(updatePost)
-                           sendUpdatedPost(postId,title.getText().toString(), content.getText().toString(),cat_Id);
+                           sendUpdatedPost(postId,title.getText().toString(), content.getText().toString(),cat_Id,getTags());
                        else
-                       sendPostToDb(userID, title.getText().toString(), content.getText().toString(), cat_Id);
+                       sendPostToDb(userID, title.getText().toString(), content.getText().toString(), cat_Id,getTags());
 
 
                 }
@@ -215,6 +227,68 @@ public class WritePostActivity extends AppCompatActivity implements CatDropDownF
             }
         });
 
+
+        final LinearLayout tagLL=findViewById(R.id.tagsLayout);
+        tagList=new ArrayList<>();
+        tag.addTextChangedListener(new TextValidator(tag) {
+            @Override public void validate(TextView textView, String text) {
+
+//                if(tagList.size()>0) {
+//                    tag.setHint("");
+//
+//                }
+                if(!text.equals(" ")&& !text.equals("")) {
+                    if (text.endsWith(" ")) {
+                        LayoutInflater vi = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                        final View v = vi.inflate(R.layout.tag, null);
+                        LinearLayoutCompat.LayoutParams lparams = new LinearLayoutCompat.LayoutParams(
+                                LinearLayoutCompat.LayoutParams.WRAP_CONTENT, LinearLayoutCompat.LayoutParams.WRAP_CONTENT);
+                        v.setLayoutParams(lparams);
+                        tagLL.addView(v);
+                        TextView tagName = v.findViewById(R.id.tagName);
+                        TextView tagId = v.findViewById(R.id.tagId);
+                        LinearLayout tagBody=v.findViewById(R.id.tagBody);
+
+                        tagId.setText(""+c++);
+                        tagName.setText(text.replace(" ", ""));
+
+                        tagList.add(tagName.getText().toString());
+                        Toast.makeText(getApplicationContext(),"/"+tagList.size(),Toast.LENGTH_SHORT).show();
+
+                        tag.setText("");
+                        tagBody.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                tagLL.removeView(v);
+                                TextView id =view.findViewById(R.id.tagId);
+                                tagList.set(Integer.parseInt(id.getText().toString()),"");
+//                                c--;
+//                                Toast.makeText(getApplicationContext(),"/"+id.getText(),Toast.LENGTH_SHORT).show();
+                                for(int i=0;i<tagList.size();i++) {
+                                    Log.d(TAG, "onClick: "+tagList.toString());
+                                    Toast.makeText(getApplicationContext(), "/" + tagList.get(i), Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+                    }
+                }
+
+            }
+        });
+
+    }
+
+
+    String getTags() {
+        String tagsStr="";
+        if(tagList.size()>0) {
+            for (int i = 0; i < tagList.size(); i++) {
+                if (!tagList.get(i).equals(""))
+                    tagsStr += tagList.get(i) + ",";
+
+            }
+        }
+        return tagsStr;
     }
 
     private void buttonInactive() {
@@ -226,13 +300,14 @@ public class WritePostActivity extends AppCompatActivity implements CatDropDownF
         sendPost.setClickable(true);
     }
 
-    private void sendUpdatedPost(int postId, String title, String content, int cat_id) {
+    private void sendUpdatedPost(int postId, String title, String content, int cat_id,String tags) {
         Map<String,String> params=new HashMap<String, String>();
         params.put("id",""+postId);
         params.put("title",title);
         params.put("content",content);
-        params.put("category_id",""+cat_Id);
-//        params.put("image",img);
+        params.put("category_id",""+cat_id);
+//        if(!tags.equals(""))
+        params.put("tags",tags);
 
         JSONObject sendObj =new JSONObject(params);
         initVolleyCallback();
@@ -241,7 +316,7 @@ public class WritePostActivity extends AppCompatActivity implements CatDropDownF
     }
 
 
-    public void sendPostToDb(String userId, String title,String content,int cat_Id){
+    public void sendPostToDb(String userId, String title,String content,int cat_Id,String tags){
         Log.d(TAG, "sendPostToDb: "+userId+"/"+title+"/"+content+"/"+cat_Id);
 
         Map<String,String> params=new HashMap<String, String>();
@@ -249,6 +324,8 @@ public class WritePostActivity extends AppCompatActivity implements CatDropDownF
         params.put("title",title);
         params.put("content",content);
         params.put("category_id",""+cat_Id);
+        if(!tags.equals(""))
+        params.put("tags",tags);
         JSONObject sendObj =new JSONObject(params);
         initVolleyCallback();
         mVolleyService =new FetchJson(mResultCallback,getApplicationContext());
@@ -350,7 +427,7 @@ public class WritePostActivity extends AppCompatActivity implements CatDropDownF
         return filePath;
     }
 
-    void uploadPostWithImg(String userId, final String title, String content, int cat_Id){
+    void uploadPostWithImg(String userId, final String title, String content, int cat_Id,String tags){
 
 
         int llPadding = 30;
@@ -398,54 +475,95 @@ public class WritePostActivity extends AppCompatActivity implements CatDropDownF
 
 
 
+
         //"https://api.imgur.com/3/upload"
-        Ion.with(getApplicationContext())
-                .load(sendPostUrl)
-//
-//
-                .uploadProgressHandler(new ProgressCallback() {
-                    @Override
-                    public void onProgress(long uploaded, long total) {
-
-//
-                        tvText.setText((getResources().getString(R.string.uploading)+" "+uploaded*100/total+"%"));
-
+        if(updatePost){
+            Ion.with(getApplicationContext())
+                    .load(updatePostUrl)
+                    .uploadProgressHandler(new ProgressCallback() {
+                        @Override
+                        public void onProgress(long uploaded, long total) {
+                            tvText.setText((getResources().getString(R.string.uploading)+" "+uploaded*100/total+"%"));
 //                        Toast.makeText(getApplicationContext(), uploaded+"/"+total,Toast.LENGTH_SHORT).show();
-
-                        Log.d(TAG, "onProgress: "+uploaded+"/"+total);
-
-
-                    }
-                })
-
-                .setTimeout(60 * 60 * 1000)
-                .setMultipartFile("input_img", "file", imageFile)
-                .setMultipartParameter("user_id",userId)
-                .setMultipartParameter("title",title)
-                .setMultipartParameter("content",content)
-                .setMultipartParameter("category_id",""+cat_Id)
-                .asJsonObject()
-                // run a callback on completion
-                .setCallback(new FutureCallback<JsonObject>() {
-                    @Override
-                    public void onCompleted(Exception e, JsonObject result) {
-//                        mProgressDialog.dismiss();
-                        dialog.dismiss();
-
-
-                        Log.d(TAG, "onCompleted: "+result);
-//
-                        if (e != null) {
-                            Log.e(TAG, "error/ "+e );
-                            Toast.makeText(getApplicationContext(), R.string.upload_failed, Toast.LENGTH_LONG).show();
-                            return;
+                            Log.d(TAG, "onProgress: "+uploaded+"/"+total);
                         }
-                        Toast.makeText(getApplicationContext(), R.string.upload_complete, Toast.LENGTH_LONG).show();
-                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                        startActivity(intent);
-                        finish();
-                    }
-                });
+                    })
+
+                    .setTimeout(60 * 60 * 1000)
+                    .setMultipartFile("image", "file", imageFile)
+                    .setMultipartParameter("id",""+postId)
+                    .setMultipartParameter("title",title)
+                    .setMultipartParameter("content",content)
+                    .setMultipartParameter("category_id",""+cat_Id)
+                    .setMultipartParameter("tags",tags)
+
+                    .asJsonObject()
+                    // run a callback on completion
+                    .setCallback(new FutureCallback<JsonObject>() {
+                        @Override
+                        public void onCompleted(Exception e, JsonObject result) {
+//                        mProgressDialog.dismiss();
+                            dialog.dismiss();
+
+
+                            Log.d(TAG, "onCompleted: "+result);
+                            buttonActive();
+//
+                            if (e != null) {
+                                Log.e(TAG, "error/ "+e );
+                                Toast.makeText(getApplicationContext(), R.string.upload_failed, Toast.LENGTH_LONG).show();
+                                return;
+                            }
+                            Toast.makeText(getApplicationContext(), R.string.upload_complete, Toast.LENGTH_LONG).show();
+                            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                            startActivity(intent);
+                            finish();
+                        }
+                    });
+        }
+        else {
+            Ion.with(getApplicationContext())
+                    .load(sendPostUrl)
+                    .uploadProgressHandler(new ProgressCallback() {
+                        @Override
+                        public void onProgress(long uploaded, long total) {
+                            tvText.setText((getResources().getString(R.string.uploading) + " " + uploaded * 100 / total + "%"));
+//                        Toast.makeText(getApplicationContext(), uploaded+"/"+total,Toast.LENGTH_SHORT).show();
+                            Log.d(TAG, "onProgress: " + uploaded + "/" + total);
+                        }
+                    })
+
+                    .setTimeout(60 * 60 * 1000)
+                    .setMultipartFile("input_img", "file", imageFile)
+                    .setMultipartParameter("user_id", userId)
+                    .setMultipartParameter("title", title)
+                    .setMultipartParameter("content", content)
+                    .setMultipartParameter("category_id", "" + cat_Id)
+                    .setMultipartParameter("tags",tags)
+                    .asJsonObject()
+                    // run a callback on completion
+                    .setCallback(new FutureCallback<JsonObject>() {
+                        @Override
+                        public void onCompleted(Exception e, JsonObject result) {
+//                        mProgressDialog.dismiss();
+                            dialog.dismiss();
+
+
+                            Log.d(TAG, "onCompleted: " + result);
+                            buttonActive();
+//
+                            if (e != null) {
+                                Log.e(TAG, "error/ " + e);
+                                Toast.makeText(getApplicationContext(), R.string.upload_failed, Toast.LENGTH_LONG).show();
+                                return;
+                            }
+                            Toast.makeText(getApplicationContext(), R.string.upload_complete, Toast.LENGTH_LONG).show();
+                            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                            startActivity(intent);
+                            finish();
+                        }
+                    });
+        }
 
     }
 

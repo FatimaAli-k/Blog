@@ -22,10 +22,10 @@
 
 
     //edit text errors
-    <string name="empty_field_error">field required</string>
-    <string name="min_char_error">min 6 char</string>
+    <string name="empty_field_error">حقل مطلوب</string>
+    <string name="min_char_error">الحد الأدنى 6 احرف او ارقام</string>
     <string name="email_format_error">must enter valid email</string>
-    <string name="password_mismatch_error">password does not match</string>
+    <string name="password_mismatch_error">عدم تطابق الرمز السري</string>
 
     //sort menu
     <string name="latest">احدث التدوينات</string>
@@ -33,27 +33,27 @@
     <string name="most_viewed">يتصدر الان</string>
 
     //dialog
-    <string name="delete">are you sure you want to delete this post</string>
-    <string name="yes">yes</string>
-    <string name="no">no</string>
-    <string name="uploading">uploading..</string>
+    <string name="delete">حذف؟</string>
+    <string name="yes">نعم</string>
+    <string name="no">لا</string>
+    <string name="uploading">تحميل...</string>
 
     //toast messages
     <string name="no_comments">لايوجد اي تعليقات</string>
     <string name="must_login_to_post">يجب تسجيل الدخول</string>
-    <string name="check_fields_for_error">check fields for error</string>
+    <string name="check_fields_for_error">تحقق من الحقول للخطأ</string>
     <string name="comment_sent">تم ارسال التعليق</string>
-    <string name="comment_not_sent">error try again</string>
-    <string name="login_credentials_wrong">wrong password or email</string>
-    <string name="server_error">something went wrong, try again</string>
+    <string name="comment_not_sent">خطأ، حاول مرة أخرى</string>
+    <string name="login_credentials_wrong">خطأ في الرمز السري او المعرف</string>
+    <string name="server_error">حدث خطأ ما, حاول مرة أخرى</string>
     <string name="no_posts">لايوجد اي تدوينات</string>
-    <string name="upload_complete">File upload complete</string>
-    <string name="upload_failed">Error uploading file</string>
+    <string name="upload_complete">تم الرفع</string>
+    <string name="upload_failed">فشل الرفع</string>
     <string name="delete_complete">تم الحذف</string>
-    <string name="delete_failed">delete failed</string>
+    <string name="delete_failed"> فشل الحذف</string>
 
     //loading errors
-    <string name="no_connection">no connection...</string>
+    <string name="no_connection">لا يوجد اتصال...</string>
     <string name="error">error</string>
     <string name="retry">retry</string>
 

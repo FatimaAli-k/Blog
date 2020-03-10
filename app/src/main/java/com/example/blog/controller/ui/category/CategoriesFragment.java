@@ -5,7 +5,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -39,25 +41,19 @@ public class CategoriesFragment extends Fragment implements CategoriesRecyclerVi
     RelativeLayout catRelativeLayout;
     ArrayList<Categories>catList=new ArrayList<>();
     URLs baseUrl=new URLs();
-
+    ProgressBar loading;
+    TextView errorText;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_categories, container,false);
-
+        errorText= view.findViewById(R.id.ErrorTextView);
+        loading=view.findViewById(R.id.progressBar5);
 
 
         if(catList.isEmpty())
         loadCat();
-
-
-
-
-
-
-
-
 
         RecyclerView recyclerView = view.findViewById(R.id.categories_recycler_view);
         catRelativeLayout = view.findViewById(R.id.catRelativeLayout);
@@ -71,6 +67,8 @@ public class CategoriesFragment extends Fragment implements CategoriesRecyclerVi
     }
 
     private void loadCat() {
+        loading.setVisibility(View.VISIBLE);
+        errorText.setVisibility(View.GONE);
      catList=new ArrayList<>();
         initVolleyCallback();
         String url=baseUrl.getCategoriesUrl();
@@ -106,6 +104,8 @@ public class CategoriesFragment extends Fragment implements CategoriesRecyclerVi
             public void notifySuccessJsonArray(String requestType,JSONArray response) {
                 Log.d(TAG, "Volley requester " + requestType);
                 Log.d(TAG, "Volley JSON post" + response);
+
+                loading.setVisibility(View.GONE);
                 parsJsonArray(response);
 
 //                Toast.makeText(getContext(),"//"+response,Toast.LENGTH_LONG).show();
@@ -116,6 +116,10 @@ public class CategoriesFragment extends Fragment implements CategoriesRecyclerVi
             public void notifyError(String requestType, VolleyError error) {
                 Log.d(TAG, "Volley requester " + requestType);
                 Log.d(TAG, "Volley JSON post" + error);
+                errorText.setText(R.string.no_connection);
+                errorText.setVisibility(View.VISIBLE);
+
+                loading.setVisibility(View.GONE);
             }
         };
     }

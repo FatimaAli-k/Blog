@@ -102,17 +102,17 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:layout_marginHorizontal="70dp"
+        android:layout_marginRight="70dp"
+        android:layout_marginLeft="70dp"
         app:layout_constraintEnd_toStartOf="@+id/guideline_right"
         app:layout_constraintStart_toStartOf="@+id/guideline_left"
         app:layout_constraintTop_toBottomOf="@id/inputLayout"
         android:text="  الدخول بحساب المعهد"
         android:fontFamily="@font/myfont"
-
         android:background="@drawable/bg_button2"
         android:button="@null"
         android:drawableRight="?android:attr/listChoiceIndicatorMultiple"
-        ></CheckBox>
+        />
 
     <Button
         android:id="@+id/login"
