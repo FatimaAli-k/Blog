@@ -127,6 +127,8 @@ public class HomeFragment extends Fragment implements  SwipeRefreshLayout.OnRefr
                             sortby=1;
                         else sortby=2;
                         sortBtn.setText(title);
+
+                        loading.setVisibility(View.VISIBLE);
                         onRefresh();
                         return true;
                     }
@@ -188,6 +190,7 @@ public class HomeFragment extends Fragment implements  SwipeRefreshLayout.OnRefr
 
 //        Parcelable state = layoutManager.onSaveInstanceState();
 //        layoutManager.onRestoreInstanceState(state);
+
 
         loading.setVisibility(View.VISIBLE);
         loadFirstPage();
@@ -266,29 +269,9 @@ public class HomeFragment extends Fragment implements  SwipeRefreshLayout.OnRefr
     }
 
     private void loadFirstPage() {
-        Log.d(TAG, "loadFirstPage: ");
-////        List<Posts> movies = Movie.createMovies(adapter.getItemCount());
-////        progressBar.setVisibility(View.GONE);
-//        Posts post;
-////
-//        ArrayList<Posts> postsList=new ArrayList<>();
-//
-//        for(int i=0;i<10;i++){
-//
-//            post=new Posts();
-////                    post.setImage("https://square.github.io/picasso/static/sample.png");
-//            post.setTitle(""+i);
-//
-//            postsList.add(post);
-//        }
-//        adapter.addAll(postsList);
-//
-//        if (currentPage <= TOTAL_PAGES) adapter.addLoadingFooter();
-//        else isLastPage = true;
 
 
-//        String url="https://api.themoviedb.org/3/tv/popular?api_key=ee462a4199c4e7ec8d93252494ba661b&language=en-US&page=1";
-        initVolleyCallback();
+        Log.d(TAG, "loadFirstPage: "); initVolleyCallback();
         mVolleyService =new FetchJson(mResultCallback,getContext());
         mVolleyService.postDataVolley("GETCALL",firstPageUrl,getParams(sortby,sortByCat,catId));
 //

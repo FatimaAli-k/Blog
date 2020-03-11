@@ -64,13 +64,17 @@
 
             </LinearLayout>
             <TextView
-                android:padding="10dp"
+
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingBottom="5dp"
                 android:id="@+id/postTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="خاطرة"
                 android:fontFamily="@font/myfont"
-                android:textSize="26sp"
+                android:textStyle="bold"
+                android:textSize="20sp"
                 android:layout_gravity="center"
 
                 />
@@ -85,14 +89,16 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
             <TextView
-                android:padding="10dp"
+
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
                 android:id="@+id/postDetails"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:maxLines="3"
                 android:text="فصبرٌ جميل لن تستطيع الأمّة أنْ تحقّق نهضة شاملة في حياتها ما لم تغيّر مفهومها عن الصبر، وتؤمن بأنّ الصبر هو الصبر على أداء الواجب وتحمّل المكاره في سبيل مقاومة الظلم والطغيان والترفّع عن الهموم الصغيرة من أج"
                 android:fontFamily="@font/myfont"
-                android:textSize="20sp"
+                android:textSize="18sp"
                 />
 
             <TextView
@@ -144,11 +150,11 @@
                     android:background="@drawable/bg_button_tag"
                     android:text="@string/menu_categories"
                     android:textSize="14sp"
-                    android:paddingRight="10dp"
-                    android:paddingLeft="10dp"
+                    android:paddingRight="5dp"
+                    android:paddingLeft="5dp"
                     android:textStyle="italic"
                     android:layout_gravity="center"
-                    android:layout_margin="10dp"
+                    android:layout_margin="5dp"
 
                     />
 

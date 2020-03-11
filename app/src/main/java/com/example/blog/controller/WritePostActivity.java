@@ -253,7 +253,7 @@ public class WritePostActivity extends AppCompatActivity implements CatDropDownF
                         tagName.setText(text.replace(" ", ""));
 
                         tagList.add(tagName.getText().toString());
-                        Toast.makeText(getApplicationContext(),"/"+tagList.size(),Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(getApplicationContext(),"/"+tagList.size(),Toast.LENGTH_SHORT).show();
 
                         tag.setText("");
                         tagBody.setOnClickListener(new View.OnClickListener() {
@@ -266,7 +266,7 @@ public class WritePostActivity extends AppCompatActivity implements CatDropDownF
 //                                Toast.makeText(getApplicationContext(),"/"+id.getText(),Toast.LENGTH_SHORT).show();
                                 for(int i=0;i<tagList.size();i++) {
                                     Log.d(TAG, "onClick: "+tagList.toString());
-                                    Toast.makeText(getApplicationContext(), "/" + tagList.get(i), Toast.LENGTH_SHORT).show();
+//                                    Toast.makeText(getApplicationContext(), "/" + tagList.get(i), Toast.LENGTH_SHORT).show();
                                 }
                             }
                         });
