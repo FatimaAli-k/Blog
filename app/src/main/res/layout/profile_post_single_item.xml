@@ -79,6 +79,13 @@
                     android:textDirection="ltr"/>
 
             </LinearLayout>
+            <View
+                android:id="@+id/divider6"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_margin="5dp"
+                android:background="?android:attr/listDivider" />
+
             <TextView
 
                 android:paddingLeft="10dp"
