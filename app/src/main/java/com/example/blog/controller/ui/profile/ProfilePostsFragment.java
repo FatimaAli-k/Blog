@@ -287,6 +287,7 @@ public class ProfilePostsFragment extends Fragment implements ClickListenerInter
                 int status=obj.getInt("status");
                 int cat_id=obj.getInt("category_id");
                 String userId=obj.getString("user_id");
+                String commentsCount=obj.getString("cmd_count");
 
                 if(image != null && !image.equals(""))
                     image=baseUrl.getImagePath()+image;
@@ -302,6 +303,7 @@ public class ProfilePostsFragment extends Fragment implements ClickListenerInter
                 post.setStatus(status);
                 post.setContent(content);
                 post.setUser_id(userId);
+                post.setCommentsCount(commentsCount);
 
                 JSONObject cat=obj.getJSONObject("cat");
                 String catName=cat.getString("name");

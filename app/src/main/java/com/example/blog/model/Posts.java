@@ -9,7 +9,7 @@ public class Posts implements Parcelable {
     int id,rate,views,status,category_id;
     String user_id,title,content,image,tags;
     String created_at;
-    String username;
+    String username,commentsCount;
 
     public String getCategory_name() {
         return category_name;
@@ -17,6 +17,14 @@ public class Posts implements Parcelable {
 
     public void setCategory_name(String category_name) {
         this.category_name = category_name;
+    }
+
+    public String getCommentsCount() {
+        return commentsCount;
+    }
+
+    public void setCommentsCount(String commentsCount) {
+        this.commentsCount = commentsCount;
     }
 
     String category_name;
@@ -57,6 +65,7 @@ public class Posts implements Parcelable {
         username=in.readString();
         profilePic=in.readString();
         category_name=in.readString();
+        commentsCount=in.readString();
     }
     @Override
     public void writeToParcel(Parcel parcel, int i) {
@@ -74,6 +83,7 @@ public class Posts implements Parcelable {
         parcel.writeString(username);
         parcel.writeString(profilePic);
         parcel.writeString(category_name);
+        parcel.writeString(commentsCount);
     }
 
     @Override

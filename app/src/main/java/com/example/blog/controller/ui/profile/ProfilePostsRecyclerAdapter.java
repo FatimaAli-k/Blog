@@ -106,6 +106,7 @@ public class ProfilePostsRecyclerAdapter extends RecyclerView.Adapter<RecyclerVi
 
 //                postVH.catId.setText(""+posts.getCategory_id());
                 postVH.viewCount.setText(""+posts.getViews());
+                postVH.commentsCount.setText(posts.getCommentsCount());
 
                 postVH.catBtn.setText(posts.getCategory_name());
 
@@ -213,7 +214,7 @@ public class ProfilePostsRecyclerAdapter extends RecyclerView.Adapter<RecyclerVi
      * Main list's content ViewHolder
      */
     protected class PostVH extends RecyclerView.ViewHolder {
-        TextView postTitle,postDetails,seeMore,postId,viewCount,timeStamp,catId;
+        TextView postTitle,postDetails,seeMore,postId,viewCount,timeStamp,catId,commentsCount;
         ImageView postPic;
         LinearLayout contentll,catLL;
         Button catBtn;
@@ -231,6 +232,7 @@ public class ProfilePostsRecyclerAdapter extends RecyclerView.Adapter<RecyclerVi
             delete = itemView.findViewById(R.id.deletePost);
             edit=itemView.findViewById(R.id.editPost);
             timeStamp=itemView.findViewById(R.id.time);
+            commentsCount = itemView.findViewById(R.id.commentsCount);
 
 //            catLL=itemView.findViewById(R.id.post_catLL);
 

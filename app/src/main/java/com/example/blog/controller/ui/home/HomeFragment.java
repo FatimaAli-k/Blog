@@ -402,6 +402,7 @@ public class HomeFragment extends Fragment implements  SwipeRefreshLayout.OnRefr
                int status=obj.getInt("status");
                int cat_id=obj.getInt("category_id");
                String userId=obj.getString("user_id");
+               String commentsCount=obj.getString("cmd_count");
 
                if(image != null && !image.equals(""))
                    image=baseUrl.getImagePath()+image;
@@ -417,6 +418,7 @@ public class HomeFragment extends Fragment implements  SwipeRefreshLayout.OnRefr
                 post.setStatus(status);
                 post.setContent(content);
                 post.setUser_id(userId);
+                post.setCommentsCount(commentsCount);
 
                 JSONObject user=obj.getJSONObject("user");
                 String userName=user.getString("name");

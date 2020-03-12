@@ -33,11 +33,6 @@ public class FullPostFragment extends Fragment {
           View root = inflater.inflate(R.layout.full_post, container, false);
 //
 
-
-
-
-
-
             postPic=root.findViewById(R.id.post_pic);
             postTitle=root.findViewById(R.id.postTitle);
             postDetails=root.findViewById(R.id.postDetails);
@@ -62,6 +57,7 @@ public class FullPostFragment extends Fragment {
         postDetails.setText(post.getContent());
         postId.setText(""+post.getId());
         viewCount.setText(""+post.getViews());
+        comments.setText(post.getCommentsCount());
         TimeAgo timeago=new TimeAgo();
 
         String time= timeago.covertTimeToText(post.getCreated_at());

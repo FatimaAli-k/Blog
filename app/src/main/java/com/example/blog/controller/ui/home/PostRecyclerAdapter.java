@@ -117,6 +117,7 @@ public class PostRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
                 postVH.catId.setText(""+posts.getCategory_id());
                 postVH.viewCount.setText(""+posts.getViews());
+                postVH.comments.setText(posts.getCommentsCount());
 
                 postVH.catBtn.setText(posts.getCategory_name());
 

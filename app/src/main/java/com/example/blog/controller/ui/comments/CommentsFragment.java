@@ -1,6 +1,7 @@
 package com.example.blog.controller.ui.comments;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -76,7 +77,8 @@ public class CommentsFragment extends Fragment implements CommentsRecyclerViewAd
                              ViewGroup container, Bundle savedInstanceState) {
        View root = inflater.inflate(R.layout.fragment_comments, container,false);
 
-       if(getActivity().equals(MainActivity.class))
+
+       if(getActivity().getLocalClassName().equalsIgnoreCase("MainActivity"))
         ((MainActivity) getActivity()).setOnCommentListener(this);
 
         int postId;

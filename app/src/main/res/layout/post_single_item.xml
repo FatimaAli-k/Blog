@@ -191,6 +191,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:paddingLeft="10dp"
+                android:drawablePadding="5dp"
                 android:drawableLeft="@drawable/ic_comment_black_24dp"
                 android:textDirection="ltr"/>
 

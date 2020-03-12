@@ -68,13 +68,6 @@ public class CatDropDownFragment extends Fragment {
         initVolleyCallback();
         mVolleyService =new FetchJson(mResultCallback,getContext());
         mVolleyService.getArrayDataVolley("getArray",getCatUrl);
-//        Categories categories=new Categories(0,"others");
-//        catList.add(categories);
-//        categories=new Categories(2,"smthin");
-//        catList.add(categories);
-//        categories=new Categories(46,"hmmm");
-//        catList.add(categories);
-
 
 
         addCat.setOnClickListener(new View.OnClickListener() {

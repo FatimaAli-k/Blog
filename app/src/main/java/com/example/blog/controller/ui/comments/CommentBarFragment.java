@@ -144,7 +144,7 @@ public class CommentBarFragment extends Fragment {
                 comment.clearFocus();
                 Toast.makeText(getContext(),R.string.comment_sent,Toast.LENGTH_LONG).show();
 
-                if(getActivity().equals(MainActivity.class))
+              if(getActivity().getLocalClassName().equalsIgnoreCase("MainActivity"))
                 passData(1);
 
 
@@ -183,6 +183,7 @@ public class CommentBarFragment extends Fragment {
         public void onCommentSent(int data);
     }
     public void passData(int data) {
+        Log.e(TAG, "passData: "+data );
         dataPasser.onCommentSent(data);
     }
 }
